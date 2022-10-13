@@ -34,6 +34,12 @@ $ npm install
 
 ## Running the app
 
+Set the following environment variables before starting:
+
+- MYSQL_USER
+- MYSQL_PASSWORD
+- JWT_KEY
+
 ```bash
 # development
 $ npm run start
