@@ -10,14 +10,14 @@ const router = createRouter({
       path: "/",
       name: RouteNames.HOME,
       component: HomeView,
-      meta: {
-        requiredSignIn: true,
-      },
     },
     {
       path: "/sign-in",
       name: RouteNames.SIGN_IN,
       component: () => import("@/views/SignInView.vue"),
+      meta: {
+        public: true,
+      },
     },
   ],
 });
@@ -29,6 +29,7 @@ router.beforeEach(async (to, _from, next) => {
     try {
       await userStore.validateToken();
     } catch (error) {
+      userStore.removeUser();
       next({
         name: RouteNames.SIGN_IN,
         query: to.matched.some((route) => route.name !== RouteNames.SIGN_IN)
@@ -38,7 +39,7 @@ router.beforeEach(async (to, _from, next) => {
     }
   }
 
-  if (to.matched.some((route) => route.meta.requiredSignIn)) {
+  if (to.matched.some((route) => !route.meta.public)) {
     if (userStore.user) {
       next();
     } else {

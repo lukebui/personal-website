@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useForm, Field, ErrorMessage } from "vee-validate";
+import { useForm, Field } from "vee-validate";
 import * as yup from "yup";
 import { useUserStore } from "@/store/users";
 import { useRoute, useRouter } from "vue-router";
@@ -40,33 +40,55 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <div class="min-h-screen flex items-center">
-    <form class="form-control w-full max-w-lg mx-auto" @submit="onSubmit">
+    <form class="w-full max-w-lg mx-auto" @submit="onSubmit">
       <fieldset class="min-w-0 disabled:opacity-50" :disabled="isSubmitting">
-        <div>
-          <label class="label" for="email">Email</label>
-          <Field name="email" #="{ field }" validate-on-input>
-            <input
-              class="input input-primary w-full"
-              type="email"
-              id="email"
-              :="field"
-              autofocus
-            />
-          </Field>
-          <ErrorMessage name="email" class="text-error"></ErrorMessage>
-        </div>
-        <div>
-          <label class="label" for="password">Password</label>
-          <Field name="password" #="{ field }" validate-on-input>
-            <input
-              class="input input-primary w-full"
-              type="password"
-              id="password"
-              :="field"
-            />
-          </Field>
-          <ErrorMessage name="password" class="text-error"></ErrorMessage>
-        </div>
+        <Field
+          as="div"
+          class="form-control"
+          name="email"
+          #="{ field, errorMessage }"
+        >
+          <label class="label" for="email">
+            <span class="label-text"> Email </span>
+          </label>
+          <input
+            class="input input-primary w-full"
+            type="email"
+            id="email"
+            :="field"
+            autofocus
+          />
+          <div class="min-h-[2rem]">
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {{ errorMessage }}
+              </span>
+            </label>
+          </div>
+        </Field>
+        <Field
+          as="div"
+          class="form-control"
+          name="password"
+          #="{ field, errorMessage }"
+        >
+          <label class="label" for="password">
+            <span class="label-text"> Password </span>
+          </label>
+          <input
+            class="input input-primary w-full"
+            type="password"
+            id="password"
+            :="field"
+          />
+          <div class="min-h-[2rem]">
+            <label class="label">
+              <span class="label-text-alt text-error">
+                {{ errorMessage }}
+              </span>
+            </label>
+          </div>
+        </Field>
         <button
           class="btn btn-primary mt-4"
           type="submit"
