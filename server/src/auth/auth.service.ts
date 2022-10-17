@@ -38,11 +38,12 @@ export class AuthService {
     return _.omit(user, 'password');
   }
 
-  async login(user: Omit<User, 'password'>) {
+  async signIn(user: Omit<User, 'password'>) {
     const payload: JWTPayload = { email: user.email, uid: user.uid };
 
     return {
-      access_token: this.jwtService.sign(payload),
+      user,
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }
