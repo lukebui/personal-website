@@ -1,6 +1,14 @@
 <script setup lang="ts">
 import { useForm, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
+import { useUserStore } from "@/store/users";
+import { useRoute, useRouter } from "vue-router";
+import { RouteNames } from "@/utils";
+
+const { validateUser } = useUserStore();
+
+const route = useRoute();
+const router = useRouter();
 
 const signInFormSchema = yup
   .object({
@@ -14,8 +22,19 @@ const { meta, handleSubmit, isSubmitting } = useForm<
   validationSchema: signInFormSchema,
 });
 
-const onSubmit = handleSubmit((values) => {
-  console.log(values);
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    await validateUser(values.email, values.password);
+
+    const redirect = route.query.redirect;
+    if (redirect && typeof redirect === "string") {
+      router.push({ path: decodeURI(redirect) });
+    } else {
+      router.push({ name: RouteNames.HOME });
+    }
+  } catch (error) {
+    alert(error);
+  }
 });
 </script>
 
