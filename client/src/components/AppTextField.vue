@@ -110,11 +110,11 @@ const localInputType = computed((): TextFieldInputType => {
         @click="onInputClick"
         @blur="onBlur"
       />
-      <div class="absolute inset-y-0 right-0 flex items-center">
+      <div class="absolute inset-y-0 right-px flex items-center">
         <button
           type="button"
           v-if="type === 'password'"
-          class="inline-flex items-center rounded-md border border-transparent p-2 text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed dark:text-white dark:disabled:text-gray-500"
+          class="inline-flex items-center rounded-md p-2 text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed dark:text-white dark:disabled:text-gray-500"
           @click="showPassword = !showPassword"
         >
           <EyeIcon v-if="showPassword" class="h-5 w-5" />
