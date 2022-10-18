@@ -1,5 +1,17 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { RouterView } from "vue-router";
+import { useSystemStore } from "./store/system";
+
+const systemStore = useSystemStore();
+
+onMounted(() => {
+  systemStore.loadDarkMode();
+});
+
+document.addEventListener("visibilitychange", () => {
+  systemStore.loadDarkMode();
+});
 </script>
 
 <template>
