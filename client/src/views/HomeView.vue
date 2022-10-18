@@ -3,6 +3,7 @@ import { useUserStore } from "@/store/users";
 import { RouteNames } from "@/utils";
 import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
+import AppButton from "../components/AppButton.vue";
 
 const textFromServer = ref("");
 
@@ -24,9 +25,7 @@ const signOut = () => {
   <header>
     <nav class="flex p-2">
       <div class="flex-grow"></div>
-      <button class="btn btn-sm btn-primary btn-outline" @click="signOut">
-        Sign Out
-      </button>
+      <AppButton @click="signOut"> Sign Out </AppButton>
     </nav>
   </header>
   <main>

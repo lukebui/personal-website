@@ -3,8 +3,9 @@ import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { useUserStore } from "@/store/users";
 import { useRoute, useRouter } from "vue-router";
-import { RouteNames } from "@/utils";
+import { ButtonType, ComponentColor, RouteNames } from "@/utils";
 import AppTextField from "../components/AppTextField.vue";
+import AppButton from "../components/AppButton.vue";
 
 const { validateUser } = useUserStore();
 
@@ -40,19 +41,23 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="flex min-h-screen items-center">
-    <form class="mx-auto w-full max-w-lg" @submit="onSubmit">
+  <main class="flex min-h-screen items-center py-10">
+    <form class="mx-auto w-full max-w-sm" @submit="onSubmit">
       <fieldset class="min-w-0" :disabled="isSubmitting">
-        <AppTextField label="Email" name="email" autofocus />
-        <AppTextField label="Password" name="password" type="password" />
-        <button
-          class="btn btn-primary mt-4"
-          type="submit"
-          :disabled="!meta.dirty || !meta.valid"
-        >
-          Submit
-        </button>
+        <div class="space-y-2">
+          <AppTextField label="Email" name="email" autofocus validate-on-blur />
+          <AppTextField label="Password" name="password" type="password" />
+        </div>
+        <div class="mt-4">
+          <AppButton
+            :type="ButtonType.SUBMIT"
+            :color="ComponentColor.PRIMARY"
+            :disabled="!meta.dirty || !meta.valid"
+          >
+            Submit
+          </AppButton>
+        </div>
       </fieldset>
     </form>
-  </div>
+  </main>
 </template>
