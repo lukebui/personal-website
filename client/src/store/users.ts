@@ -35,7 +35,7 @@ export const useUserStore = defineStore(StoreNames.USERS, {
         throw new Error("Token cannot be empty.");
       }
 
-      const response = await fetch("http://localhost:3000/verify-token", {
+      const response = await fetch("http://localhost:3000/auth/verify-token", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -17,6 +17,7 @@ const router = createRouter({
       component: () => import("@/views/SignInView.vue"),
       meta: {
         public: true,
+        signIn: true,
       },
     },
   ],
@@ -36,30 +37,29 @@ router.beforeEach(async (to, _from, next) => {
           ? { redirect: encodeURI(to.fullPath) }
           : undefined,
       });
+      return;
     }
   }
 
-  if (to.matched.some((route) => !route.meta.public)) {
-    if (userStore.user) {
-      next();
-    } else {
-      next({
-        name: RouteNames.SIGN_IN,
-        query: { redirect: encodeURI(to.fullPath) },
-      });
-    }
-  } else {
-    if (userStore.user) {
-      const redirect = to.query.redirect;
-      if (redirect && typeof redirect === "string") {
-        next({ path: decodeURI(redirect) });
-      } else {
-        next({ name: RouteNames.HOME });
-      }
-    } else {
-      next();
-    }
+  if (to.matched.some((route) => !route.meta.public) && !userStore.user) {
+    next({
+      name: RouteNames.SIGN_IN,
+      query: { redirect: encodeURI(to.fullPath) },
+    });
+    return;
   }
+
+  if (to.matched.some((route) => route.meta.signIn) && userStore.user) {
+    next(
+      to.query.redirect && typeof to.query.redirect === "string"
+        ? { path: decodeURI(to.query.redirect) }
+        : { name: RouteNames.HOME }
+    );
+
+    return;
+  }
+
+  next();
 });
 
 export default router;
