@@ -95,7 +95,7 @@ const localInputType = computed((): TextFieldInputType => {
       <input
         v-model="value"
         :id="localId"
-        class="block w-full rounded-md bg-white shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-800 dark:disabled:text-gray-500 sm:text-sm"
+        class="block w-full rounded-md bg-white shadow-sm disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 disabled:text-gray-500 dark:bg-gray-800 dark:text-white dark:disabled:bg-gray-700 dark:disabled:text-gray-400 sm:text-sm"
         :class="{
           'pr-9': type === 'password',
           'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500':
@@ -114,7 +114,7 @@ const localInputType = computed((): TextFieldInputType => {
         <button
           type="button"
           v-if="type === 'password'"
-          class="inline-flex items-center rounded-md p-2 text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed dark:text-white dark:disabled:text-gray-500"
+          class="inline-flex items-center rounded-md p-2 text-gray-500 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed dark:text-white dark:hover:bg-gray-700 dark:disabled:text-gray-500"
           @click="showPassword = !showPassword"
         >
           <EyeIcon v-if="showPassword" class="h-5 w-5" />

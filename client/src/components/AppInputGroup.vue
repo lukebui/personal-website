@@ -18,20 +18,22 @@ defineProps({
       <span>
         {{ label }}
       </span>
-      <span class="text-red-500" v-if="required">*</span>
+      <span class="text-red-500" v-if="required">&nbsp;*</span>
     </label>
     <div class="mt-1">
       <slot></slot>
     </div>
-    <p
-      v-if="!errorMessage"
-      class="text-sm text-gray-500 dark:text-gray-300"
-      :id="`${id}-description`"
-    >
-      {{ description }}
-    </p>
-    <p class="text-sm text-red-500" :id="`${id}-error`">
-      {{ errorMessage }}
-    </p>
+    <div v-if="description || errorMessage" class="mt-1">
+      <p
+        v-if="!errorMessage"
+        class="text-xs text-gray-500 dark:text-gray-300"
+        :id="`${id}-description`"
+      >
+        {{ description }}
+      </p>
+      <p class="text-xs text-red-500" :id="`${id}-error`">
+        {{ errorMessage }}
+      </p>
+    </div>
   </fieldset>
 </template>
