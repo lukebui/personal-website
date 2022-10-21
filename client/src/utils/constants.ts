@@ -15,6 +15,7 @@ export enum LocalStorageKeys {
 
 export enum ComponentColor {
   PRIMARY = "primary",
+  SECONDARY = "secondary",
   INFO = "info",
   SUCCESS = "success",
   ERROR = "error",
@@ -33,11 +34,6 @@ export enum ButtonType {
   BUTTON = "button",
   SUBMIT = "submit",
   RESET = "reset",
-}
-
-export enum ButtonStyle {
-  NORMAL = "normal",
-  OUTLINE = "outline",
 }
 
 export enum AppThemes {

@@ -1,5 +1,6 @@
 import AppButton from "../components/AppButton.vue";
-import { ButtonStyle, ComponentColor } from "../utils";
+import { ComponentColor } from "../utils";
+import { PlusIcon } from "@heroicons/vue/24/solid";
 
 export default {
   title: "Components/Elements/Button",
@@ -7,14 +8,17 @@ export default {
 };
 
 const Template = (args) => ({
-  components: { AppButton },
+  components: { AppButton, PlusIcon },
   setup() {
     return { args };
   },
   template: `
   <div :class="['flex flex-wrap gap-2']">
     <AppButton v-for="(color, colorIndex) in args.colors" :key="colorIndex" v-bind="args.component" :color="color">
-      Click me!
+      <PlusIcon v-if="args.component && args.component.round" class="h-6 w-6" />
+      <span v-else>
+        Click me!
+      </span>
     </AppButton>
   </div>`,
 });
@@ -30,7 +34,15 @@ export const Outline = Template.bind({});
 Outline.args = {
   colors: buttonColors,
   component: {
-    buttonStyle: ButtonStyle.OUTLINE,
+    outline: true,
+  },
+};
+
+export const Round = Template.bind({});
+Round.args = {
+  colors: buttonColors,
+  component: {
+    round: true,
   },
 };
 
@@ -46,7 +58,7 @@ export const OutlineDisabled = Template.bind({});
 OutlineDisabled.args = {
   colors: buttonColors,
   component: {
-    buttonStyle: ButtonStyle.OUTLINE,
+    outline: true,
     disabled: true,
   },
 };
