@@ -6,6 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ButtonType, ComponentColor, RouteNames } from "@/utils";
 import AppTextField from "../components/AppTextField.vue";
 import AppButton from "../components/AppButton.vue";
+import TheEmptyLayout from "../components/TheEmptyLayout.vue";
 
 const { validateUser } = useUserStore();
 
@@ -41,23 +42,32 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <main class="flex min-h-screen items-center py-10">
-    <form class="mx-auto w-full max-w-sm" @submit="onSubmit">
-      <fieldset class="min-w-0" :disabled="isSubmitting">
-        <div class="space-y-2">
-          <AppTextField label="Email" name="email" autofocus validate-on-blur />
-          <AppTextField label="Password" name="password" type="password" />
-        </div>
-        <div class="mt-4">
-          <AppButton
-            :type="ButtonType.SUBMIT"
-            :color="ComponentColor.PRIMARY"
-            :disabled="!meta.dirty || !meta.valid"
-          >
-            Submit
-          </AppButton>
-        </div>
-      </fieldset>
-    </form>
-  </main>
+  <TheEmptyLayout>
+    <div
+      class="mx-auto flex min-h-[screen-16] max-w-7xl items-center py-10 px-2 sm:px-6 lg:px-8"
+    >
+      <form class="mx-auto w-full max-w-sm" @submit="onSubmit">
+        <fieldset class="min-w-0" :disabled="isSubmitting">
+          <div class="space-y-2">
+            <AppTextField
+              label="Email"
+              name="email"
+              autofocus
+              validate-on-blur
+            />
+            <AppTextField label="Password" name="password" type="password" />
+          </div>
+          <div class="mt-4">
+            <AppButton
+              :type="ButtonType.SUBMIT"
+              :color="ComponentColor.PRIMARY"
+              :disabled="!meta.dirty || !meta.valid"
+            >
+              Submit
+            </AppButton>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </TheEmptyLayout>
 </template>
