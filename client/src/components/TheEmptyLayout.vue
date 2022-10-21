@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { ComponentSize } from "@/utils";
-import { useColorMode } from "@/composables";
-import AppButton from "./AppButton.vue";
-
-import { SunIcon, MoonIcon, Cog8ToothIcon } from "@heroicons/vue/24/solid";
-
-const { colorMode, toggleColorMode } = useColorMode();
+import TheColorModeToggle from "./TheColorModeToggle.vue";
 </script>
 
 <template>
@@ -15,11 +9,7 @@ const { colorMode, toggleColorMode } = useColorMode();
         class="mx-auto flex h-16 max-w-7xl items-center justify-between px-2 sm:px-6 lg:px-8"
       >
         <div>&nbsp;</div>
-        <AppButton @click="toggleColorMode" :size="ComponentSize.X_SMALL">
-          <SunIcon v-if="colorMode === 'light'" class="h-4 w-4" />
-          <MoonIcon v-else-if="colorMode === 'dark'" class="h-4 w-4" />
-          <Cog8ToothIcon v-else-if="colorMode === 'auto'" class="h-4 w-4" />
-        </AppButton>
+        <TheColorModeToggle />
       </nav>
     </header>
     <main class="w-full">
