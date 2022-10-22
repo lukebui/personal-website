@@ -14,4 +14,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @ApiPropertyOptional()
   isActive?: boolean;
+
+  @ApiPropertyOptional()
+  isAdmin?: boolean;
 }

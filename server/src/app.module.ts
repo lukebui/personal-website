@@ -3,8 +3,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     AuthModule,
     UsersModule,
+    CaslModule,
   ],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
