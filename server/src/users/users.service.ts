@@ -21,7 +21,7 @@ export class UsersService {
     createUserDto.password = await this.hashPassword(createUserDto.password);
 
     return this.usersRepository.save(
-      this.usersRepository.create(createUserDto),
+      this.usersRepository.create({ ...createUserDto, isActive: true }),
     );
   }
 
