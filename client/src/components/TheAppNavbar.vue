@@ -10,6 +10,7 @@ import {
   MenuItems,
 } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { UserCircleIcon } from "@heroicons/vue/24/solid";
 import AppButton from "./AppButton.vue";
 import { useUserStore } from "@/store/users";
 import { RouteNames } from "@/utils";
@@ -89,13 +90,14 @@ const signOut = () => {
           <Menu as="div" class="relative">
             <div>
               <MenuButton as="template">
-                <AppButton round :size="ComponentSize.X_SMALL">
+                <AppButton round :size="ComponentSize.SMALL">
                   <span class="sr-only">Open user menu</span>
-                  <img
+                  <!-- <img
                     class="h-8 w-8 rounded-full"
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                     alt=""
-                  />
+                  /> -->
+                  <UserCircleIcon class="h-6 w-6" />
                 </AppButton>
               </MenuButton>
             </div>
@@ -153,7 +155,7 @@ const signOut = () => {
         <DisclosureButton
           v-for="(item, itemIndex) in navigation"
           :key="itemIndex"
-          as="template"
+          as="div"
         >
           <RouterLink :to="item.to" custom #="{ isActive, href, navigate }">
             <a
