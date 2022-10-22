@@ -7,7 +7,7 @@ export const useUserStore = defineStore(StoreNames.USERS, {
   }),
   actions: {
     async validateUser(email: string, password: string): Promise<true> {
-      const response = await fetch("http://localhost:3000/auth/sign-in", {
+      const response = await fetch("http://localhost:3000/v1/auth/sign-in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,11 +35,14 @@ export const useUserStore = defineStore(StoreNames.USERS, {
         throw new Error("Token cannot be empty.");
       }
 
-      const response = await fetch("http://localhost:3000/auth/verify-token", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3000/v1/auth/verify-token",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const result: UserRecord = await response.json();
