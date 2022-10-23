@@ -91,7 +91,7 @@ const localInputType = computed((): TextFieldInputType => {
     :required="required"
     :disabled="disabled"
   >
-    <div class="relative mt-1 rounded-md shadow-sm">
+    <div class="relative rounded-md shadow-sm">
       <input
         v-model="value"
         :id="localId"

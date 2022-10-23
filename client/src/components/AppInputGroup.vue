@@ -20,7 +20,7 @@ defineProps({
       </span>
       <span class="text-red-500" v-if="required">&nbsp;*</span>
     </label>
-    <div class="mt-0.5">
+    <div class="mt-1">
       <slot></slot>
     </div>
     <div v-if="description || errorMessage" class="mt-1">

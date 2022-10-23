@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppEditForm from "./AppEditForm.vue";
 import AppTextField from "./AppTextField.vue";
+import AppTextarea from "./AppTextarea.vue";
 import * as yup from "yup";
 import { IndividualGender, type Individual } from "@/store/contacts";
 import * as _ from "lodash";
@@ -129,7 +130,7 @@ watch(initialValues, () => {
       <AppTextField label="Middle Name" name="middleName"></AppTextField>
       <AppTextField label="Last Name" name="lastName"></AppTextField>
       <AppTextField label="Alias" name="alias"></AppTextField>
-      <AppTextField label="Notes" name="note"></AppTextField>
+      <AppTextarea label="Notes" name="note" autoresize></AppTextarea>
       <AppTextField label="Gender" required name="gender"></AppTextField>
     </div>
   </AppEditForm>
