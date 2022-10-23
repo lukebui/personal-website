@@ -5,8 +5,9 @@ export enum RouteNames {
 }
 
 export enum StoreNames {
-  USERS = "users",
+  CONTACTS = "contacts",
   SYSTEM = "system",
+  USERS = "users",
 }
 
 export enum LocalStorageKeys {
