@@ -6,7 +6,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ButtonType, ComponentColor, RouteNames } from "@/utils";
 import AppTextField from "../components/AppTextField.vue";
 import AppButton from "../components/AppButton.vue";
-import TheEmptyLayout from "../components/TheEmptyLayout.vue";
+import TheEmptyLayout from "../components/AppEmptyLayout.vue";
 
 const { validateUser } = useUserStore();
 

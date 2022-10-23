@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheAppNavbar from "./TheAppNavbar.vue";
+import TheAppNavbar from "./AppNavbar.vue";
 </script>
 
 <template>

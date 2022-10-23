@@ -3,8 +3,8 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { RouteNames } from "@/utils";
 import { type RouteLocationRaw, RouterLink } from "vue-router";
-import TheColorModeToggle from "./TheColorModeToggle.vue";
-import TheProfileDropdown from "./TheProfileDropdown.vue";
+import TheColorModeToggle from "./AppColorModeToggle.vue";
+import TheProfileDropdown from "./AppProfileDropdown.vue";
 
 const navigation: { name: string; to: RouteLocationRaw }[] = [
   { name: "Home", to: { name: RouteNames.HOME } },

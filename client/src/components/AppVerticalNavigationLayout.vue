@@ -7,8 +7,8 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-import TheColorModeToggle from "./TheColorModeToggle.vue";
-import TheProfileDropdown from "./TheProfileDropdown.vue";
+import TheColorModeToggle from "./AppColorModeToggle.vue";
+import TheProfileDropdown from "./AppProfileDropdown.vue";
 import AppVerticalNavbar from "./AppVerticalNavbar.vue";
 import type { NavigationBarLink, NavigationBarLinkGroup } from "@/utils";
 
