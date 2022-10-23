@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
-import { RouteNames } from "@/utils/constants";
+import { RouteNames } from "@/enums";
 import { useUserStore } from "@/store/users";
 
 const router = createRouter({

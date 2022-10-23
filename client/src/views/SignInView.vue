@@ -3,7 +3,7 @@ import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { useUserStore } from "@/store/users";
 import { useRoute, useRouter } from "vue-router";
-import { ButtonType, ComponentColor, RouteNames } from "@/utils";
+import { ButtonType, ComponentColor, RouteNames } from "@/enums";
 import AppTextField from "../components/AppTextField.vue";
 import AppButton from "../components/AppButton.vue";
 import TheEmptyLayout from "../components/AppEmptyLayout.vue";

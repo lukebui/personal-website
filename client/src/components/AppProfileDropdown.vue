@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ComponentSize } from "@/utils";
+import { ComponentSize, RouteNames } from "@/enums";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { UserCircleIcon } from "@heroicons/vue/24/solid";
 import AppButton from "./AppButton.vue";
 import { useUserStore } from "@/store/users";
-import { RouteNames } from "@/utils";
 import { useRouter } from "vue-router";
 import type { PropType } from "vue";
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type PropType } from "vue";
+import { computed, ref } from "vue";
 import {
   Dialog,
   DialogPanel,
@@ -10,12 +10,13 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 import TheColorModeToggle from "./AppColorModeToggle.vue";
 import TheProfileDropdown from "./AppProfileDropdown.vue";
 import AppVerticalNavbar from "./AppVerticalNavbar.vue";
-import type { NavigationBarLink, NavigationBarLinkGroup } from "@/utils";
+import { useSystemStore } from "@/store/system";
 
-defineProps({
-  navigation: Array as PropType<(NavigationBarLink | NavigationBarLinkGroup)[]>,
+const systemStore = useSystemStore();
+
+const navigation = computed(() => {
+  return systemStore.navLinks;
 });
-
 const sidebarOpen = ref(false);
 </script>
 
@@ -77,7 +78,10 @@ const sidebarOpen = ref(false);
                   <!-- Place logo here -->
                 </div>
                 <div class="mt-5 px-2">
-                  <AppVerticalNavbar :navigation="navigation" />
+                  <AppVerticalNavbar
+                    :navigation="navigation"
+                    @navigate="sidebarOpen = false"
+                  />
                 </div>
               </div>
               <div class="flex flex-shrink-0 gap-2 p-4">
@@ -115,7 +119,7 @@ const sidebarOpen = ref(false);
     </div>
     <div class="flex flex-1 flex-col md:pl-64">
       <div
-        class="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 dark:bg-gray-800 sm:pl-3 sm:pt-3 md:hidden"
+        class="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 dark:bg-gray-900 sm:pl-3 sm:pt-3 md:hidden"
       >
         <button
           type="button"

@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import { BookOpenIcon, HomeIcon } from "@heroicons/vue/24/solid";
 import { RouterView } from "vue-router";
-import AppVerticalNavigationLayout from "./components/AppVerticalNavigationLayout.vue";
-import { RouteNames, NavigationBarLink, NavigationBarLinkGroup } from "./utils";
+import { NavigationBarLink, NavigationBarLinkGroup } from "./utils";
+import { RouteNames } from "./enums";
+import { useSystemStore } from "@/store/system";
 
-const navigation: (NavigationBarLink | NavigationBarLinkGroup)[] = [
-  new NavigationBarLink("Home", { name: RouteNames.HOME }, false, HomeIcon),
-  new NavigationBarLink(
-    "Contacts",
-    { name: RouteNames.CONTACTS },
-    false,
-    BookOpenIcon
-  ),
+const links: (NavigationBarLink | NavigationBarLinkGroup)[] = [
+  new NavigationBarLink("Home", { name: RouteNames.HOME }),
+  new NavigationBarLink("Contacts", { name: RouteNames.CONTACTS }),
 ];
+
+const systemStore = useSystemStore();
+
+systemStore.setNavLinks(links);
 </script>
 
 <template>
-  <AppVerticalNavigationLayout :navigation="navigation">
-    <RouterView />
-  </AppVerticalNavigationLayout>
+  <RouterView />
 </template>

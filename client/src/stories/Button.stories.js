@@ -1,5 +1,5 @@
 import AppButton from "../components/AppButton.vue";
-import { ComponentColor } from "../utils";
+import { ComponentColor } from "../enums";
 import { PlusIcon } from "@heroicons/vue/24/solid";
 
 export default {

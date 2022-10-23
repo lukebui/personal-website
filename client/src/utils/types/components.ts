@@ -19,7 +19,6 @@ export class NavigationBarLink {
   constructor(
     public name: string,
     public to: RouteLocationRaw,
-    public isExternalLink: boolean,
     public icon?: Component,
     public count?: number
   ) {}
@@ -37,5 +36,4 @@ export class NavigationBarLinkGroup {
 export type ChildrenNavigationLink = {
   name: string;
   to: RouteLocationRaw;
-  isExternalLink: Boolean;
 };
