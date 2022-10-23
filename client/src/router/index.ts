@@ -12,8 +12,9 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/about",
-      component: () => import("@/views/AboutView.vue"),
+      path: "/contacts",
+      name: RouteNames.CONTACTS,
+      component: () => import("@/views/ContactsView.vue"),
     },
     {
       path: "/sign-in",

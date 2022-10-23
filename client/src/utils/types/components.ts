@@ -1,3 +1,6 @@
+import type { Component } from "vue";
+import type { RouteLocationRaw } from "vue-router";
+
 export type TextFieldInputType =
   | "number"
   | "date"
@@ -11,3 +14,28 @@ export type TextFieldInputType =
   | "time"
   | "url"
   | "week";
+
+export class NavigationBarLink {
+  constructor(
+    public name: string,
+    public to: RouteLocationRaw,
+    public isExternalLink: boolean,
+    public icon?: Component,
+    public count?: number
+  ) {}
+}
+
+export class NavigationBarLinkGroup {
+  constructor(
+    public name: string,
+    public children: ChildrenNavigationLink[],
+    public icon?: Component,
+    public count?: number
+  ) {}
+}
+
+export type ChildrenNavigationLink = {
+  name: string;
+  to: RouteLocationRaw;
+  isExternalLink: Boolean;
+};
