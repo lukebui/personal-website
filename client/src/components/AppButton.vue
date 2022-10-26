@@ -46,7 +46,7 @@ defineProps({
       'border-transparent bg-amber-500 text-white shadow-sm hover:bg-amber-600 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-amber-500':
         color === ComponentColor.WARNING && !outline,
 
-      'border-gray-900  dark:border-white': color === undefined && outline,
+      'border-gray-400 dark:border-white': color === undefined && outline,
       'border-indigo-600 bg-transparent text-indigo-600 shadow-sm hover:bg-indigo-100 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-transparent dark:border-indigo-500 dark:text-indigo-500 dark:hover:bg-indigo-600 dark:hover:text-white dark:disabled:text-indigo-500 dark:disabled:hover:bg-transparent':
         color === ComponentColor.PRIMARY && outline,
       'border-gray-500 bg-transparent text-gray-500 shadow-sm hover:bg-gray-100 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-white dark:border-gray-300 dark:text-gray-300 dark:hover:bg-gray-500 dark:hover:text-white dark:disabled:text-gray-300 dark:disabled:hover:bg-transparent':

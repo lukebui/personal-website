@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps({
-  id: String,
+  forId: String,
   label: String,
   required: Boolean,
   disabled: Boolean,
@@ -12,7 +12,7 @@ defineProps({
 <template>
   <fieldset class="min-w-0" :disabled="disabled">
     <label
-      :for="id"
+      :for="forId"
       class="block text-sm font-medium text-gray-700 dark:text-gray-300"
     >
       <span>
@@ -27,11 +27,11 @@ defineProps({
       <p
         v-if="!errorMessage"
         class="text-xs text-gray-500 dark:text-gray-300"
-        :id="`${id}-description`"
+        :id="`${forId}-description`"
       >
         {{ description }}
       </p>
-      <p class="text-xs text-red-500" :id="`${id}-error`">
+      <p class="text-xs text-red-500" :id="`${forId}-error`">
         {{ errorMessage }}
       </p>
     </div>

@@ -84,7 +84,7 @@ const localInputType = computed((): TextFieldInputType => {
 
 <template>
   <AppInputGroup
-    :id="localId"
+    :for-id="localId"
     :label="label"
     :description="description"
     :error-message="errorMessage"
