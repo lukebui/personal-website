@@ -24,6 +24,8 @@ export class NavigationBarLink {
   ) {}
 }
 
+export type OptionType = string | number | boolean | Record<string, any>;
+
 export class NavigationBarLinkGroup {
   constructor(
     public name: string,

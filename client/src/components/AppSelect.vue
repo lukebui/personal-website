@@ -1,0 +1,265 @@
+<script setup lang="ts">
+import { useField } from "vee-validate";
+import { computed, toRefs, type PropType } from "vue";
+import { v4 as uuidv4 } from "uuid";
+import type * as yup from "yup";
+import _ from "lodash";
+import { useOptionIdErrors } from "../composables";
+import AppInputGroup from "./AppInputGroup.vue";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+} from "@headlessui/vue";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
+import type { OptionType } from "@/utils";
+
+const props = defineProps({
+  id: String,
+  label: String,
+  description: String,
+  name: { type: String, default: "" },
+  options: {
+    type: Array as PropType<OptionType[]>,
+    required: true,
+    validator(value: OptionType[]) {
+      return !!value.length;
+    },
+  },
+  optionId: {
+    type: [String, Function] as PropType<
+      string | ((option: OptionType) => string)
+    >,
+  },
+  optionValue: {
+    type: [String, Function] as PropType<
+      string | ((option: OptionType) => OptionType)
+    >,
+  },
+  optionText: {
+    type: [String, Function] as PropType<
+      string | ((option: OptionType) => string)
+    >,
+  },
+  returnValue: Boolean,
+  rules: [String, Object, Function] as PropType<
+    | yup.AnySchema
+    | string
+    | ((value: unknown) => boolean | string | Promise<boolean | string>)
+    | ((value: unknown) => boolean | string | Promise<boolean | string>)[]
+    | Record<string, unknown>
+  >,
+  modelValue: null,
+  disabled: Boolean,
+  optionDisabled: Function as PropType<
+    (option: unknown, index: number) => boolean
+  >,
+  multiple: Boolean,
+  required: Boolean,
+});
+const defaultId = uuidv4();
+
+const {
+  id,
+  label,
+  description,
+  name,
+  options,
+  optionId,
+  optionText,
+  optionValue,
+  returnValue,
+  rules,
+  modelValue,
+  disabled,
+  optionDisabled,
+  multiple,
+} = toRefs(props);
+
+const localId = computed(() => {
+  return id?.value ? id.value : defaultId;
+});
+
+const { errorMessage, value, setErrors } = useField<OptionType | OptionType[]>(
+  name,
+  rules,
+  {
+    standalone: !name.value,
+    initialValue: !name.value
+      ? modelValue?.value
+        ? modelValue
+        : multiple.value
+        ? []
+        : undefined
+      : undefined,
+  }
+);
+
+const getOptionId = (option: OptionType): string => {
+  if (!optionId?.value) return `${option}`;
+
+  if (typeof optionId?.value === "string") {
+    return `${_.get(option, optionId?.value)}`;
+  } else {
+    return `${optionId?.value?.(option)}`;
+  }
+};
+const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
+
+const getValueText = (selectedValues: OptionType | OptionType[]): string => {
+  if (_.isArray(selectedValues)) {
+    const selectedOptionTexts = _.compact(
+      selectedValues.map((tempValue) => {
+        const option = options.value.find((option) =>
+          _.isEqual(getOptionValue(option), tempValue)
+        );
+        return option ? getOptionText(option) : undefined;
+      })
+    );
+
+    return selectedOptionTexts.length
+      ? selectedOptionTexts.join(", ")
+      : "\u2800";
+  } else {
+    const selectedOption = options.value.find((option) =>
+      _.isEqual(getOptionValue(option), selectedValues)
+    );
+    return selectedOption ? getOptionText(selectedOption) : "\u2800";
+  }
+};
+
+const getOptionText = (option: OptionType): string => {
+  if (!optionText?.value) return `${option}`;
+
+  if (typeof optionText.value === "string") {
+    return _.get(option, optionText.value);
+  } else {
+    return optionText.value(option);
+  }
+};
+
+const getOptionValue = (option: OptionType): OptionType => {
+  if (returnValue.value) {
+    return option;
+  } else {
+    if (typeof optionValue?.value === "string") {
+      return _.get(option, optionValue.value);
+    } else {
+      return optionValue?.value?.(option) || option;
+    }
+  }
+};
+
+const localOptionDisabled = (option: unknown, index: number): boolean => {
+  if (!optionDisabled?.value) return false;
+
+  return optionDisabled.value(option, index);
+};
+
+const localDisabled = computed(() => {
+  return hasOptionIdError.value || disabled.value;
+});
+
+const onUpdateModelValue = (event: OptionType | OptionType[]) => {
+  if (_.isArray(event)) {
+    // Sort the selected values according to their positions in the original option array
+    value.value = event.sort((a, b) => {
+      const aIndex = options.value.findIndex((option) =>
+        _.isEqual(getOptionValue(option), a)
+      );
+
+      const bIndex = options.value.findIndex((option) =>
+        _.isEqual(getOptionValue(option), b)
+      );
+
+      return aIndex < bIndex ? -1 : aIndex > bIndex ? 1 : 0;
+    });
+  } else {
+    value.value = event;
+  }
+};
+</script>
+
+<template>
+  <AppInputGroup
+    :for-id="localId"
+    :label="label"
+    :description="description"
+    :error-message="errorMessage"
+    :required="required"
+    :disabled="localDisabled"
+  >
+    <Listbox
+      as="div"
+      :model-value="value"
+      @update:model-value="onUpdateModelValue"
+      :multiple="multiple"
+      :disabled="localDisabled"
+    >
+      <div class="relative mt-1">
+        <ListboxButton
+          class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 sm:text-sm"
+        >
+          <span v-if="value" class="block truncate">{{
+            getValueText(value)
+          }}</span>
+          <span v-else>&nbsp;</span>
+          <span
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+          >
+            <ChevronUpDownIcon
+              class="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
+          </span>
+        </ListboxButton>
+
+        <transition
+          leave-active-class="transition ease-in duration-100"
+          leave-from-class="opacity-100"
+          leave-to-class="opacity-0"
+        >
+          <ListboxOptions
+            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          >
+            <ListboxOption
+              as="template"
+              v-for="(option, optionIndex) in options"
+              :key="optionIndex"
+              :value="getOptionValue(option)"
+              v-slot="{ active, selected }"
+              :disabled="localOptionDisabled(option, optionIndex)"
+            >
+              <li
+                :class="[
+                  active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                  'relative cursor-default select-none py-2 pl-3 pr-9',
+                ]"
+              >
+                <span
+                  :class="[
+                    selected ? 'font-semibold' : 'font-normal',
+                    'block truncate',
+                  ]"
+                >
+                  {{ getOptionText(option) }}</span
+                >
+
+                <span
+                  v-if="selected"
+                  :class="[
+                    active ? 'text-white' : 'text-indigo-600',
+                    'absolute inset-y-0 right-0 flex items-center pr-4',
+                  ]"
+                >
+                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                </span>
+              </li>
+            </ListboxOption>
+          </ListboxOptions>
+        </transition>
+      </div>
+    </Listbox>
+  </AppInputGroup>
+</template>
