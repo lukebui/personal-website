@@ -13,7 +13,7 @@ import {
   ListboxOptions,
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-import type { OptionType } from "@/utils";
+import type { InputOption } from "@/utils";
 
 const props = defineProps({
   id: String,
@@ -21,25 +21,25 @@ const props = defineProps({
   description: String,
   name: { type: String, default: "" },
   options: {
-    type: Array as PropType<OptionType[]>,
+    type: Array as PropType<InputOption[]>,
     required: true,
-    validator(value: OptionType[]) {
+    validator(value: InputOption[]) {
       return !!value.length;
     },
   },
   optionId: {
     type: [String, Function] as PropType<
-      string | ((option: OptionType) => string)
+      string | ((option: InputOption) => string)
     >,
   },
   optionValue: {
     type: [String, Function] as PropType<
-      string | ((option: OptionType) => OptionType)
+      string | ((option: InputOption) => InputOption)
     >,
   },
   optionText: {
     type: [String, Function] as PropType<
-      string | ((option: OptionType) => string)
+      string | ((option: InputOption) => string)
     >,
   },
   returnValue: Boolean,
@@ -81,22 +81,20 @@ const localId = computed(() => {
   return id?.value ? id.value : defaultId;
 });
 
-const { errorMessage, value, setErrors } = useField<OptionType | OptionType[]>(
-  name,
-  rules,
-  {
-    standalone: !name.value,
-    initialValue: !name.value
-      ? modelValue?.value
-        ? modelValue
-        : multiple.value
-        ? []
-        : undefined
-      : undefined,
-  }
-);
+const { errorMessage, value, setErrors } = useField<
+  InputOption | InputOption[]
+>(name, rules, {
+  standalone: !name.value,
+  initialValue: !name.value
+    ? modelValue?.value
+      ? modelValue
+      : multiple.value
+      ? []
+      : undefined
+    : undefined,
+});
 
-const getOptionId = (option: OptionType): string => {
+const getOptionId = (option: InputOption): string => {
   if (!optionId?.value) return `${option}`;
 
   if (typeof optionId?.value === "string") {
@@ -107,7 +105,7 @@ const getOptionId = (option: OptionType): string => {
 };
 const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
 
-const getValueText = (selectedValues: OptionType | OptionType[]): string => {
+const getValueText = (selectedValues: InputOption | InputOption[]): string => {
   if (_.isArray(selectedValues)) {
     const selectedOptionTexts = _.compact(
       selectedValues.map((tempValue) => {
@@ -129,7 +127,7 @@ const getValueText = (selectedValues: OptionType | OptionType[]): string => {
   }
 };
 
-const getOptionText = (option: OptionType): string => {
+const getOptionText = (option: InputOption): string => {
   if (!optionText?.value) return `${option}`;
 
   if (typeof optionText.value === "string") {
@@ -139,7 +137,7 @@ const getOptionText = (option: OptionType): string => {
   }
 };
 
-const getOptionValue = (option: OptionType): OptionType => {
+const getOptionValue = (option: InputOption): InputOption => {
   if (returnValue.value) {
     return option;
   } else {
@@ -161,7 +159,7 @@ const localDisabled = computed(() => {
   return hasOptionIdError.value || disabled.value;
 });
 
-const onUpdateModelValue = (event: OptionType | OptionType[]) => {
+const onUpdateModelValue = (event: InputOption | InputOption[]) => {
   if (_.isArray(event)) {
     // Sort the selected values according to their positions in the original option array
     value.value = event.sort((a, b) => {
