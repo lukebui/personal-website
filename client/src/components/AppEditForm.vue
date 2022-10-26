@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useForm } from "vee-validate";
-import { ref, toRefs, type PropType } from "vue";
+import { ref, toRefs, watch, type PropType } from "vue";
 import type * as yup from "yup";
 import AppButton from "./AppButton.vue";
 import { ButtonType, ComponentColor } from "@/enums";
 
 const props = defineProps({
   formSchema: { type: Object as PropType<yup.AnySchema>, required: true },
-  initialValues: { type: Object, default: () => null },
+  initialValues: { type: Object },
   saveItem: {
     type: Function as PropType<
       (formData: unknown, item?: unknown) => void | Promise<void>
@@ -40,8 +40,6 @@ const onSubmit = handleSubmit(async (values) => {
 
     await saveItem.value(formData);
 
-    resetForm();
-
     emit("saved");
   } catch (error) {
     alert(error);
@@ -63,9 +61,19 @@ const onDelete = async () => {
 };
 
 const onCancel = () => {
-  resetForm();
   emit("cancelled");
 };
+
+watch(
+  () => initialValues?.value,
+  (newInitialValues) => {
+    if (newInitialValues) {
+      resetForm(newInitialValues);
+    } else {
+      resetForm();
+    }
+  }
+);
 </script>
 
 <template>

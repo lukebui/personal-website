@@ -8,29 +8,72 @@ import * as _ from "lodash";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { ref, toRefs, watch, type PropType } from "vue";
-import { computed } from "vue";
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
+import AppButton from "./AppButton.vue";
+import AppSwitch from "./AppSwitch.vue";
+import AppSelect from "./AppSelect.vue";
 
 const props = defineProps({
-  item: { type: Object as PropType<Individual>, default: () => null },
+  item: { type: Object as PropType<Individual> },
 });
 
-defineEmits(["cancelled", "saved", "deleted"]);
+const emit = defineEmits(["cancelled", "saved", "deleted"]);
 
 const { item } = toRefs(props);
 
 const formSchema = yup
   .object({
-    id: yup.number(),
-    firstName: yup.string().nullable().label("First Name"),
-    middleName: yup.string().nullable().label("Middle Name"),
-    lastName: yup.string().nullable().label("Last Name"),
+    id: yup.number().nullable(),
+    firstName: yup
+      .string()
+      .nullable()
+      .label("First Name")
+      .transform((value: string | null) => value && value.trim()),
+    middleName: yup
+      .string()
+      .nullable()
+      .label("Middle Name")
+      .transform((value: string | null) => value && value.trim()),
+    lastName: yup
+      .string()
+      .nullable()
+      .label("Last Name")
+      .transform((value: string | null) => value && value.trim()),
     alias: yup.string().nullable().label("Alias"),
     note: yup.string().nullable().label("Notes"),
-    gender: yup.string().oneOf(_.values(IndividualGender)).label("Gender"),
+    gender: yup
+      .string()
+      .required()
+      .oneOf(_.values(IndividualGender))
+      .label("Gender"),
+    dateOfBirth: yup
+      .date()
+      .nullable()
+      .label("Date of birth")
+      .transform((value, _originalValue, schema) => {
+        if (schema.isType(value)) return value;
+
+        return null;
+      }),
+    dateOfDeath: yup
+      .date()
+      .nullable()
+      .label("Date of death")
+      .transform((value, _originalValue, schema) => {
+        if (schema.isType(value)) return value;
+
+        return null;
+      }),
+    hasDied: yup.boolean().label("Has died").nullable(),
   })
   .defined();
 
 type FormData = yup.InferType<typeof formSchema>;
+
+const genders: { name: string; value: IndividualGender }[] = [
+  { name: "Male", value: IndividualGender.MALE },
+  { name: "Female", value: IndividualGender.FEMALE },
+];
 
 const token = useStorage(LocalStorageKeys.ACCESS_TOKEN, null, undefined, {
   serializer: StorageSerializers.string,
@@ -70,7 +113,7 @@ const saveItem = async (values: unknown) => {
 };
 
 const deleteItem = async () => {
-  if (!item.value) return;
+  if (!item?.value) return;
 
   const response = await fetch(
     `http://localhost:3000/v1/individuals/${item.value.id}`,
@@ -86,10 +129,10 @@ const deleteItem = async () => {
   if (!response.ok) throw new Error((await response.json()).message);
 };
 
-const formKey = ref(0);
+const initialValues = ref();
 
-const initialValues = computed(() => {
-  if (item.value) {
+const resetForm = () => {
+  if (item?.value) {
     const formData: FormData = {
       id: item.value.id,
       firstName: item.value.firstName,
@@ -98,28 +141,40 @@ const initialValues = computed(() => {
       alias: item.value.alias,
       note: item.value.note,
       gender: item.value.gender,
+      dateOfBirth: item.value.dateOfBirth,
+      dateOfDeath: item.value.dateOfDeath,
+      hasDied: item.value.hasDied,
     };
-
-    return formData;
+    initialValues.value = formData;
+  } else {
+    initialValues.value = {};
   }
-  return formSchema.getDefault();
-});
+};
 
-watch(initialValues, () => {
-  formKey.value++;
-});
+watch(
+  () => item?.value,
+  () => {
+    resetForm();
+  },
+  { immediate: true }
+);
+
+const onCancel = () => {
+  emit("cancelled");
+};
 </script>
 
 <template>
   <AppEditForm
+    v-if="initialValues"
     :form-schema="formSchema"
     :save-item="saveItem"
     :delete-item="item ? deleteItem : undefined"
-    :key="formKey"
     :initial-values="initialValues"
     @saved="$emit('saved')"
     @deleted="$emit('deleted')"
-    @cancelled="$emit('cancelled')"
+    @cancelled="onCancel"
+    #="{ formData }"
   >
     <div class="mb-4 space-y-3">
       <AppTextField
@@ -130,8 +185,41 @@ watch(initialValues, () => {
       <AppTextField label="Middle Name" name="middleName"></AppTextField>
       <AppTextField label="Last Name" name="lastName"></AppTextField>
       <AppTextField label="Alias" name="alias"></AppTextField>
+      <AppSelect
+        label="Gender"
+        required
+        name="gender"
+        :options="genders"
+        option-id="value"
+        option-value="value"
+        option-text="name"
+      ></AppSelect>
+      <AppTextField
+        label="Date of birth"
+        name="dateOfBirth"
+        type="date"
+      ></AppTextField>
       <AppTextarea label="Notes" name="note" autoresize></AppTextarea>
-      <AppTextField label="Gender" required name="gender"></AppTextField>
+      <Disclosure #="{ open }">
+        <div class="pt-2">
+          <DisclosureButton as="template">
+            <AppButton outline>
+              {{ open ? "Less" : "More" }}
+            </AppButton>
+          </DisclosureButton>
+        </div>
+        <DisclosurePanel>
+          <div class="space-y-3">
+            <AppSwitch name="hasDied" label="Has died" right-label> </AppSwitch>
+            <AppTextField
+              :disabled="!formData.hasDied"
+              label="Date of death"
+              name="dateOfDeath"
+              type="date"
+            ></AppTextField>
+          </div>
+        </DisclosurePanel>
+      </Disclosure>
     </div>
   </AppEditForm>
 </template>

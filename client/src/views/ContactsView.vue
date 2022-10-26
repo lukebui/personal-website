@@ -20,18 +20,30 @@ onBeforeMount(async () => {
   await fetch();
 });
 
-const onCancel = () => {
+const formKey = ref(0);
+
+const resetForm = () => {
   individualToEdit.value = undefined;
+  formKey.value++;
+};
+
+const editItem = (item: Individual) => {
+  individualToEdit.value = item;
+  formKey.value++;
+};
+
+const onCancel = () => {
+  resetForm();
   return fetch();
 };
 
 const onSave = () => {
-  individualToEdit.value = undefined;
+  resetForm();
   return fetch();
 };
 
 const onDelete = () => {
-  individualToEdit.value = undefined;
+  resetForm();
   return fetch();
 };
 </script>
@@ -43,13 +55,14 @@ const onDelete = () => {
         <div
           v-for="individual in individuals"
           :key="individual.id"
-          @click="individualToEdit = individual"
+          @click="editItem(individual)"
           class="cursor-pointer"
         >
-          <pre>{{ individual }}</pre>
+          <pre class="whitespace-pre-wrap">{{ individual }}</pre>
         </div>
         <div class="mx-auto max-w-lg">
           <ContactsEditIndividualForm
+            :key="formKey"
             :item="individualToEdit"
             @saved="onSave"
             @deleted="onDelete"

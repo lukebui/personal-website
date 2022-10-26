@@ -15,6 +15,9 @@ export interface Individual {
   alias: string | null;
   note: string | null;
   gender: IndividualGender;
+  hasDied: boolean;
+  dateOfBirth: Date | null;
+  dateOfDeath: Date | null;
 }
 
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {
