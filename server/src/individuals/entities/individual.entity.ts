@@ -26,4 +26,22 @@ export class Individual {
     enum: IndividualGender,
   })
   gender: IndividualGender;
+
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  dateOfBirth: Date;
+
+  @Column({
+    type: 'date',
+    nullable: true,
+  })
+  dateOfDeath: Date;
+
+  @Column({
+    type: 'boolean',
+    nullable: true,
+  })
+  hasDied: boolean;
 }
