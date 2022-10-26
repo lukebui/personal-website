@@ -124,3 +124,9 @@ const localInputType = computed((): TextFieldInputType => {
     </div>
   </AppInputGroup>
 </template>
+
+<style scoped lang="postcss">
+input[type="date"]::-webkit-calendar-picker-indicator {
+  @apply dark:invert;
+}
+</style>
