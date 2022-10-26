@@ -13,7 +13,7 @@ import {
   ListboxOptions,
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-import type { InputOption } from "@/utils";
+import type { InputOption } from "@/types";
 
 const props = defineProps({
   id: String,

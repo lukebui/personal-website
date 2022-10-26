@@ -1,6 +1,6 @@
 import { computed, watch, type Ref } from "vue";
 import _ from "lodash";
-import type { InputOption } from "@/utils";
+import type { InputOption } from "@/types";
 
 export function useOptionIdErrors(
   options: Ref<InputOption[]>,

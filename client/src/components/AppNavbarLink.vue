@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { NavigationBarLink } from "@/utils";
+import type { NavigationBarLink } from "@/types";
 import type { PropType } from "vue";
 import AppLink from "./AppLink.vue";
 

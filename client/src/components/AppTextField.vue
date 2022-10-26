@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TextFieldInputType } from "@/utils";
+import type { TextFieldInputType } from "@/types";
 import AppInputGroup from "./AppInputGroup.vue";
 import { v4 as uuidv4 } from "uuid";
 import { ref, toRefs, type PropType, computed } from "vue";

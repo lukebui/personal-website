@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { UserRecord } from "@/utils";
+import type { UserRecord } from "@/types";
 import { LocalStorageKeys, StoreNames } from "@/enums";
 
 export const useUserStore = defineStore(StoreNames.USERS, {

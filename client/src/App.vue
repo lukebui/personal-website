@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { NavigationBarLink, NavigationBarLinkGroup } from "./utils";
+import { NavigationBarLink, NavigationBarLinkGroup } from "./types";
 import { RouteNames } from "./enums";
 import { useSystemStore } from "@/store/system";
 

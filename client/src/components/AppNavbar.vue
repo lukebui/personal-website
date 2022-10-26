@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-import type { NavigationBarLink, NavigationBarLinkGroup } from "@/utils";
+import type { NavigationBarLink, NavigationBarLinkGroup } from "@/types";
 import TheColorModeToggle from "./AppColorModeToggle.vue";
 import TheProfileDropdown from "./AppProfileDropdown.vue";
 import type { PropType } from "vue";

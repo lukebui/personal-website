@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { NavigationBarLink, NavigationBarLinkGroup } from "@/utils";
+import type { NavigationBarLink, NavigationBarLinkGroup } from "@/types";
 import { StoreNames } from "@/enums";
 
 export const useSystemStore = defineStore(StoreNames.SYSTEM, {

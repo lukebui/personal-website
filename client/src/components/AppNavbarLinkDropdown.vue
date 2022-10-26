@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { NavigationBarLinkGroup } from "@/utils";
+import type { NavigationBarLinkGroup } from "@/types";
 import type { PropType } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 

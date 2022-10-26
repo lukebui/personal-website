@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { NavigationBarLink, NavigationBarLinkGroup } from "@/utils";
+import type { NavigationBarLink, NavigationBarLinkGroup } from "@/types";
 import type { PropType } from "vue";
 import AppLink from "./AppLink.vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";

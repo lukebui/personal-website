@@ -1,4 +1,4 @@
-import { NavigationBarLink, type NavigationBarLinkGroup } from "@/utils";
+import { NavigationBarLink, type NavigationBarLinkGroup } from "@/types";
 
 export const useCheckNavigationLink = () => {
   const isLink = (
