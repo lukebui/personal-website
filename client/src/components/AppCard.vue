@@ -1,0 +1,77 @@
+<script setup lang="ts">
+import AppProgress from "./AppProgress.vue";
+import { ComponentSize } from "@/enums";
+
+defineProps({
+  noPadding: Boolean,
+  well: Boolean,
+  grayHeader: Boolean,
+  grayFooter: Boolean,
+  mobileFullWidth: Boolean,
+  divider: Boolean,
+  loading: Boolean,
+  disabled: Boolean,
+  round: {
+    type: Boolean,
+    default: true,
+  },
+});
+</script>
+
+<template>
+  <div
+    :class="{
+      'relative shadow': true,
+      'rounded-lg': !mobileFullWidth && round,
+      'sm:rounded-lg': mobileFullWidth && round,
+    }"
+  >
+    <div
+      :class="{
+        'absolute top-0 -z-[1] h-full w-full overflow-hidden': true,
+        'rounded-lg': !mobileFullWidth && round,
+        'sm:rounded-lg': mobileFullWidth && round,
+        'bg-white dark:bg-gray-900': !well,
+        'bg-gray-50 dark:bg-gray-800': well,
+        'divide-y': divider,
+      }"
+    >
+      <AppProgress
+        v-if="loading"
+        continuous
+        :size="ComponentSize.X_SMALL"
+      ></AppProgress>
+    </div>
+    <fieldset class="min-w-0" :disabled="disabled">
+      <div
+        v-if="$slots.header"
+        :class="{
+          'rounded-t-lg': round,
+          'px-4 py-4 sm:px-6': !noPadding,
+          'bg-gray-100 dark:bg-gray-800': grayHeader && !well,
+          'bg-gray-200 dark:bg-gray-700': grayHeader && well,
+        }"
+      >
+        <slot name="header" />
+      </div>
+      <div
+        :class="{
+          'px-4 py-5 sm:p-6': !noPadding,
+        }"
+      >
+        <slot />
+      </div>
+      <div
+        v-if="$slots.footer"
+        :class="{
+          'rounded-b-lg': round,
+          'px-4 py-4 sm:px-6': !noPadding,
+          'bg-gray-100 dark:bg-gray-800': grayFooter && !well,
+          'bg-gray-200 dark:bg-gray-700': grayFooter && well,
+        }"
+      >
+        <slot name="footer" />
+      </div>
+    </fieldset>
+  </div>
+</template>
