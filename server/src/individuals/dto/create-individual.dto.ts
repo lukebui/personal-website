@@ -1,8 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IndividualGender } from 'src/enums/IndividualGender.enum';
 import { Type } from 'class-transformer';
+import { IsNotEmpty, ValidateIf } from 'class-validator';
 
 export class CreateIndividualDto {
+  @ValidateIf((object: CreateIndividualDto) => !object.alias)
+  @IsNotEmpty({ message: 'First name or Alias cannot be empty.' })
   @ApiProperty()
   firstName: string | null;
 

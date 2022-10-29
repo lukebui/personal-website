@@ -18,7 +18,7 @@ export class Individual {
   @Column({ nullable: true })
   alias: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'longtext' })
   note: string;
 
   @Column({
