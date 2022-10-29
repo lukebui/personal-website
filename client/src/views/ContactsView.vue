@@ -84,7 +84,7 @@ const editDialog = ref(false);
                         ].join(" ")
                       }}
                     </span>
-                    <span v-if="individual.alias">
+                    <span v-if="individual.alias" class="font-light">
                       ({{ individual.alias }})
                     </span>
                   </p>
