@@ -4,7 +4,7 @@ import AppTextField from "./AppTextField.vue";
 import AppTextarea from "./AppTextarea.vue";
 import * as yup from "yup";
 import { IndividualGender, type Individual } from "@/store/contacts";
-import * as _ from "lodash";
+import _ from "lodash";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
@@ -80,35 +80,22 @@ const token = useStorage(LocalStorageKeys.ACCESS_TOKEN, null, undefined, {
 });
 
 const saveItem = async (values: unknown) => {
-  if (item?.value) {
-    const response = await fetch(
-      `http://localhost:3000/v1/individuals/${item.value.id}`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error((await response.json()).message);
-    }
-  } else {
-    const response = await fetch("http://localhost:3000/v1/individuals", {
-      method: "POST",
+  const response = await fetch(
+    `http://localhost:3000/v1/individuals${
+      item?.value ? "/" + item.value.id : ""
+    }`,
+    {
+      method: item?.value ? "PATCH" : "POST",
       headers: {
         Authorization: `Bearer ${token.value}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(values),
-    });
-
-    if (!response.ok) {
-      throw new Error((await response.json()).message);
     }
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
   }
 };
 
