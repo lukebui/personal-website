@@ -7,7 +7,7 @@ import { IndividualGender, type Individual } from "@/store/contacts";
 import * as _ from "lodash";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
-import { ref, toRefs, watch, type PropType } from "vue";
+import { computed, ref, toRefs, watch, type PropType } from "vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import AppButton from "./AppButton.vue";
 import AppSwitch from "./AppSwitch.vue";
@@ -162,6 +162,10 @@ watch(
 const onCancel = () => {
   emit("cancelled");
 };
+
+const shouldDefaultShowMore = computed(() => {
+  return item?.value?.hasDied;
+});
 </script>
 
 <template>
@@ -200,7 +204,7 @@ const onCancel = () => {
         type="date"
       ></AppTextField>
       <AppTextarea label="Notes" name="note" autoresize></AppTextarea>
-      <Disclosure #="{ open }">
+      <Disclosure :default-open="shouldDefaultShowMore" #="{ open }">
         <div class="pt-2">
           <DisclosureButton as="template">
             <AppButton outline>
