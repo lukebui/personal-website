@@ -15,6 +15,7 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  full: Boolean,
 });
 </script>
 
@@ -24,6 +25,7 @@ defineProps({
       'relative shadow': true,
       'rounded-lg': !mobileFullWidth && round,
       'sm:rounded-lg': mobileFullWidth && round,
+      'min-h-full': full,
     }"
   >
     <div
@@ -31,8 +33,8 @@ defineProps({
         'absolute top-0 -z-[1] h-full w-full overflow-hidden': true,
         'rounded-lg': !mobileFullWidth && round,
         'sm:rounded-lg': mobileFullWidth && round,
-        'bg-white dark:bg-gray-900': !well,
-        'bg-gray-50 dark:bg-gray-800': well,
+        'bg-white dark:bg-gray-800': !well,
+        'bg-gray-50 dark:bg-gray-700': well,
         'divide-y': divider,
       }"
     >
@@ -48,8 +50,8 @@ defineProps({
         :class="{
           'rounded-t-lg': round,
           'px-4 py-4 sm:px-6': !noPadding,
-          'bg-gray-100 dark:bg-gray-800': grayHeader && !well,
-          'bg-gray-200 dark:bg-gray-700': grayHeader && well,
+          'bg-gray-100 dark:bg-gray-700': grayHeader && !well,
+          'bg-gray-200 dark:bg-gray-600': grayHeader && well,
         }"
       >
         <slot name="header" />
@@ -66,8 +68,8 @@ defineProps({
         :class="{
           'rounded-b-lg': round,
           'px-4 py-4 sm:px-6': !noPadding,
-          'bg-gray-100 dark:bg-gray-800': grayFooter && !well,
-          'bg-gray-200 dark:bg-gray-700': grayFooter && well,
+          'bg-gray-100 dark:bg-gray-700': grayFooter && !well,
+          'bg-gray-200 dark:bg-gray-600': grayFooter && well,
         }"
       >
         <slot name="footer" />

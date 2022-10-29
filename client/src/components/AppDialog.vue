@@ -58,7 +58,10 @@ const closeDialog = () => {
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
         <div
-          class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          class="flex min-h-full w-full items-end justify-center text-center sm:items-center"
+          :class="{
+            'p-4 sm:p-0': !full,
+          }"
         >
           <TransitionChild
             as="template"
@@ -72,21 +75,26 @@ const closeDialog = () => {
             <DialogPanel
               class="relative transform overflow-hidden text-left shadow-xl transition-all"
               :class="{
-                'rounded-lg sm:my-8 sm:w-full sm:max-w-xs':
+                'w-full rounded-lg sm:my-8 sm:max-w-xs':
                   size === ComponentSize.X_SMALL && !full,
-                'rounded-lg sm:my-8 sm:w-full sm:max-w-sm':
+                'w-full rounded-lg sm:my-8 sm:max-w-sm':
                   size === ComponentSize.SMALL && !full,
-                'rounded-lg sm:my-8 sm:w-full sm:max-w-md':
+                'w-full rounded-lg sm:my-8 sm:max-w-md':
                   size === ComponentSize.MEDIUM && !full,
-                'rounded-lg sm:my-8 sm:w-full sm:max-w-lg':
+                'w-full rounded-lg sm:my-8 sm:max-w-lg':
                   size === ComponentSize.LARGE && !full,
-                'rounded-lg sm:my-8 sm:w-full sm:max-w-xl':
+                'w-full rounded-lg sm:my-8 sm:max-w-xl':
                   size === ComponentSize.X_LARGE && !full,
                 'h-screen w-screen': full,
               }"
             >
               <div class="h-full w-full overflow-auto">
-                <AppCard well :loading="loading" :disabled="disabled">
+                <AppCard
+                  :loading="loading"
+                  :disabled="disabled"
+                  :full="full"
+                  :round="full ? false : undefined"
+                >
                   <slot :close="closeDialog"></slot>
                 </AppCard>
               </div>
