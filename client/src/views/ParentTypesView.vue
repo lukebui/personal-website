@@ -59,9 +59,7 @@ const editItem = (item: ParentType) => {
           },
         ]"
         title="Manage parent types"
-        :actions="[
-          { name: 'Add', action: addItem, color: ComponentColor.PRIMARY },
-        ]"
+        :actions="[{ name: 'Add', action: addItem, primary: true }]"
       ></AppHeading>
       <AppSimpleTable>
         <thead>

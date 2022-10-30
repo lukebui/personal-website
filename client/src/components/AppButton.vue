@@ -56,7 +56,7 @@ defineProps({
 
 <style scoped lang="scss">
 button {
-  @apply items-center font-medium focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-800;
+  @apply items-center font-medium focus:outline-none focus:ring-2 focus:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-800;
 
   &.button-text {
     @apply border-0;
@@ -71,9 +71,9 @@ button {
       @apply text-gray-900 hover:text-gray-500 focus:ring-indigo-500 disabled:hover:text-gray-900 dark:text-white dark:hover:text-gray-300 dark:disabled:hover:text-white;
     }
     &.button-text-0 {
-      @apply bg-transparent text-gray-900 backdrop-blur-lg hover:backdrop-brightness-90 focus:ring-indigo-500 focus:ring-offset-0  disabled:hover:backdrop-brightness-100 dark:text-white dark:hover:backdrop-brightness-150 dark:focus:ring-indigo-500 dark:focus:ring-offset-0 dark:disabled:hover:backdrop-brightness-100;
+      @apply text-gray-900 backdrop-blur-lg hover:backdrop-brightness-90 focus:ring-indigo-500 focus:ring-offset-0 disabled:hover:backdrop-brightness-100 dark:text-white dark:hover:backdrop-brightness-150 dark:focus:ring-indigo-500 dark:focus:ring-offset-0 dark:disabled:hover:backdrop-brightness-100;
       &.button-outline {
-        @apply border-gray-300 shadow-sm dark:border-white;
+        @apply border-gray-300 bg-white shadow-sm dark:border-gray-600 dark:bg-gray-800;
       }
       &.button-outline-0 {
         @apply border-transparent shadow-none;
@@ -87,10 +87,10 @@ button {
     }
     &.button-text-0 {
       &.button-outline {
-        @apply border-indigo-600 bg-transparent text-indigo-600 shadow-sm hover:bg-indigo-100 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-transparent dark:border-indigo-500 dark:text-indigo-500 dark:hover:bg-indigo-600 dark:hover:text-white dark:disabled:text-indigo-500 dark:disabled:hover:bg-transparent;
+        @apply border-indigo-600 bg-transparent text-indigo-600 shadow-sm hover:bg-indigo-100 focus:ring-indigo-500 focus:ring-offset-2 disabled:hover:bg-transparent dark:border-indigo-500 dark:text-indigo-500 dark:hover:bg-indigo-600 dark:hover:text-white dark:disabled:text-indigo-500 dark:disabled:hover:bg-transparent;
       }
       &.button-outline-0 {
-        @apply border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-indigo-600;
+        @apply border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-2 disabled:hover:bg-indigo-600;
       }
     }
   }
@@ -101,10 +101,10 @@ button {
     }
     &.button-text-0 {
       &.button-outline {
-        @apply border-gray-500 bg-transparent text-gray-500 shadow-sm hover:bg-gray-100 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-white dark:border-gray-300 dark:text-gray-300 dark:hover:bg-gray-500 dark:hover:text-white dark:disabled:text-gray-300 dark:disabled:hover:bg-transparent;
+        @apply border-gray-500 bg-transparent text-gray-500 shadow-sm hover:bg-gray-100 focus:ring-gray-500 focus:ring-offset-2 disabled:hover:bg-white dark:border-gray-300 dark:text-gray-300 dark:hover:bg-gray-500 dark:hover:text-white dark:disabled:text-gray-300 dark:disabled:hover:bg-transparent;
       }
       &.button-outline-0 {
-        @apply border-transparent bg-gray-500 text-white shadow-sm hover:bg-gray-600 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-gray-500;
+        @apply border-transparent bg-gray-500 text-white shadow-sm hover:bg-gray-600 focus:ring-gray-500 focus:ring-offset-2 disabled:hover:bg-gray-500;
       }
     }
   }
@@ -114,10 +114,10 @@ button {
     }
     &.button-text-0 {
       &.button-outline {
-        @apply border-cyan-600 bg-transparent text-cyan-600 shadow-sm hover:bg-cyan-100 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-transparent dark:hover:bg-cyan-600 dark:hover:text-white dark:disabled:text-cyan-600 dark:disabled:hover:bg-transparent;
+        @apply border-cyan-600 bg-transparent text-cyan-600 shadow-sm hover:bg-cyan-100 focus:ring-cyan-500 focus:ring-offset-2 disabled:hover:bg-transparent dark:hover:bg-cyan-600 dark:hover:text-white dark:disabled:text-cyan-600 dark:disabled:hover:bg-transparent;
       }
       &.button-outline-0 {
-        @apply border-transparent bg-cyan-600 text-white shadow-sm hover:bg-cyan-700 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-cyan-600;
+        @apply border-transparent bg-cyan-600 text-white shadow-sm hover:bg-cyan-700 focus:ring-cyan-500 focus:ring-offset-2 disabled:hover:bg-cyan-600;
       }
     }
   }
@@ -127,10 +127,10 @@ button {
     }
     &.button-text-0 {
       &.button-outline {
-        @apply border-green-600 bg-transparent text-green-600 shadow-sm hover:bg-green-100 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-transparent dark:hover:bg-green-600 dark:hover:text-white dark:disabled:text-green-600 dark:disabled:hover:bg-transparent;
+        @apply border-green-600 bg-transparent text-green-600 shadow-sm hover:bg-green-100 focus:ring-green-500 focus:ring-offset-2 disabled:hover:bg-transparent dark:hover:bg-green-600 dark:hover:text-white dark:disabled:text-green-600 dark:disabled:hover:bg-transparent;
       }
       &.button-outline-0 {
-        @apply border-transparent bg-green-600 text-white shadow-sm hover:bg-green-700 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-green-600;
+        @apply border-transparent bg-green-600 text-white shadow-sm hover:bg-green-700 focus:ring-green-500 focus:ring-offset-2 disabled:hover:bg-green-600;
       }
     }
   }
@@ -140,10 +140,10 @@ button {
     }
     &.button-text-0 {
       &.button-outline {
-        @apply border-red-600 bg-transparent text-red-600 shadow-sm hover:bg-red-100 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-transparent dark:hover:bg-red-600 dark:hover:text-white dark:disabled:text-red-600 dark:disabled:hover:bg-transparent;
+        @apply border-red-600 bg-transparent text-red-600 shadow-sm hover:bg-red-100 focus:ring-red-500 focus:ring-offset-2 disabled:hover:bg-transparent dark:hover:bg-red-600 dark:hover:text-white dark:disabled:text-red-600 dark:disabled:hover:bg-transparent;
       }
       &.button-outline-0 {
-        @apply border-transparent bg-red-600 text-white shadow-sm hover:bg-red-700 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-red-600;
+        @apply border-transparent bg-red-600 text-white shadow-sm hover:bg-red-700 focus:ring-red-500 focus:ring-offset-2 disabled:hover:bg-red-600;
       }
     }
   }
@@ -153,10 +153,10 @@ button {
     }
     &.button-text-0 {
       &.button-outline {
-        @apply border-amber-500 bg-transparent text-amber-500 shadow-sm hover:bg-amber-100 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-transparent dark:hover:bg-amber-500 dark:hover:text-white dark:disabled:text-amber-500 dark:disabled:hover:bg-transparent;
+        @apply border-amber-500 bg-transparent text-amber-500 shadow-sm hover:bg-amber-100 focus:ring-amber-500 focus:ring-offset-2 disabled:hover:bg-transparent dark:hover:bg-amber-500 dark:hover:text-white dark:disabled:text-amber-500 dark:disabled:hover:bg-transparent;
       }
       &.button-outline-0 {
-        @apply border-transparent bg-amber-500 text-white shadow-sm hover:bg-amber-600 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-white disabled:hover:bg-amber-500;
+        @apply border-transparent bg-amber-500 text-white shadow-sm hover:bg-amber-600 focus:ring-amber-500 focus:ring-offset-2 disabled:hover:bg-amber-500;
       }
     }
   }

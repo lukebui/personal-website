@@ -5,8 +5,8 @@ import { computed, onBeforeMount, ref } from "vue";
 import ContactsEditIndividualForm from "../components/ContactsEditIndividualForm.vue";
 import AppDialog from "@/components/AppDialog.vue";
 import AppButton from "@/components/AppButton.vue";
-import { ComponentColor } from "@/enums";
 import AppCard from "@/components/AppCard.vue";
+import AppHeading from "@/components/AppHeading.vue";
 
 const contactsStore = useContactsStore();
 
@@ -50,20 +50,10 @@ const editDialog = ref(false);
   <AppDefaultLayout>
     <div class="container mx-auto px-2 sm:px-6 lg:px-8">
       <div class="space-y-4 py-10">
-        <div class="md:flex md:items-center md:justify-between">
-          <div class="min-w-0 flex-1">
-            <h2
-              class="text-2xl font-bold leading-7 dark:text-white sm:truncate sm:text-3xl sm:tracking-tight"
-            >
-              Manage Contacts
-            </h2>
-          </div>
-          <div class="mt-4 flex md:mt-0 md:ml-4">
-            <AppButton @click="addItem" :color="ComponentColor.PRIMARY">
-              Add
-            </AppButton>
-          </div>
-        </div>
+        <AppHeading
+          title="Manage Contacts"
+          :actions="[{ name: 'Add', action: addItem, primary: true }]"
+        />
         <AppCard well>
           <div class="flex flex-wrap justify-center gap-2 md:justify-start">
             <AppButton
