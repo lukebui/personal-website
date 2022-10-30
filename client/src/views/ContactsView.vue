@@ -17,7 +17,7 @@ const individuals = computed(() => {
 const individualToEdit = ref<Individual>();
 
 const fetch = async () => {
-  await contactsStore.findAll();
+  await contactsStore.findAllIndividuals();
 };
 
 onBeforeMount(async () => {
@@ -64,7 +64,7 @@ const editDialog = ref(false);
             </AppButton>
           </div>
         </div>
-        <AppCard>
+        <AppCard well>
           <div class="flex flex-wrap justify-center gap-2 md:justify-start">
             <AppButton
               v-for="individual in individuals"

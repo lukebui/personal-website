@@ -20,12 +20,18 @@ export interface Individual {
   dateOfDeath: Date | null;
 }
 
+export interface ParentType {
+  id: number;
+  type: string;
+}
+
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {
   state: () => ({
     individuals: [] as Individual[],
+    parentTypes: [] as ParentType[],
   }),
   actions: {
-    async findAll() {
+    async findAllIndividuals() {
       const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
       const response = await fetch("http://localhost:3000/v1/individuals", {
         headers: {
@@ -35,6 +41,18 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
 
       if (response.ok) {
         this.individuals = await response.json();
+      }
+    },
+    async findAllParentTypes() {
+      const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
+      const response = await fetch("http://localhost:3000/v1/parent-types", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        this.parentTypes = await response.json();
       }
     },
   },
