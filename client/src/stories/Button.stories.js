@@ -46,6 +46,14 @@ Round.args = {
   },
 };
 
+export const Text = Template.bind({});
+Text.args = {
+  colors: buttonColors,
+  component: {
+    text: true,
+  },
+};
+
 export const Disabled = Template.bind({});
 Disabled.args = {
   colors: buttonColors,
@@ -59,6 +67,24 @@ OutlineDisabled.args = {
   colors: buttonColors,
   component: {
     outline: true,
+    disabled: true,
+  },
+};
+
+export const RoundDisabled = Template.bind({});
+RoundDisabled.args = {
+  colors: buttonColors,
+  component: {
+    round: true,
+    disabled: true,
+  },
+};
+
+export const TextDisabled = Template.bind({});
+TextDisabled.args = {
+  colors: buttonColors,
+  component: {
+    text: true,
     disabled: true,
   },
 };
