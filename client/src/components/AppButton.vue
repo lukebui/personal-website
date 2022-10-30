@@ -71,12 +71,12 @@ button {
       @apply text-gray-900 hover:text-gray-500 focus:ring-indigo-500 disabled:hover:text-gray-900 dark:text-white dark:hover:text-gray-300 dark:disabled:hover:text-white;
     }
     &.button-text-0 {
-      @apply bg-transparent text-gray-900 shadow-none backdrop-blur-lg hover:backdrop-brightness-90 focus:ring-indigo-500 focus:ring-offset-0  disabled:hover:backdrop-brightness-100 dark:text-white dark:hover:backdrop-brightness-150 dark:focus:ring-indigo-500 dark:focus:ring-offset-0 dark:disabled:hover:backdrop-brightness-100;
+      @apply bg-transparent text-gray-900 backdrop-blur-lg hover:backdrop-brightness-90 focus:ring-indigo-500 focus:ring-offset-0  disabled:hover:backdrop-brightness-100 dark:text-white dark:hover:backdrop-brightness-150 dark:focus:ring-indigo-500 dark:focus:ring-offset-0 dark:disabled:hover:backdrop-brightness-100;
       &.button-outline {
-        @apply border-gray-400 dark:border-white;
+        @apply border-gray-300 shadow-sm dark:border-white;
       }
       &.button-outline-0 {
-        @apply border-transparent;
+        @apply border-transparent shadow-none;
       }
     }
   }
