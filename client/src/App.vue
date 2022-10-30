@@ -7,6 +7,7 @@ import { useSystemStore } from "@/store/system";
 const links: (NavigationBarLink | NavigationBarLinkGroup)[] = [
   new NavigationBarLink("Home", { name: RouteNames.HOME }),
   new NavigationBarLink("Contacts", { name: RouteNames.CONTACTS }),
+  new NavigationBarLink("References", { name: RouteNames.REFERENCES }),
 ];
 
 const systemStore = useSystemStore();

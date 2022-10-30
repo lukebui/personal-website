@@ -1,6 +1,8 @@
 export enum RouteNames {
   HOME = "home",
   CONTACTS = "contacts",
+  CONTACTS_PARENT_TYPES = "contact-parent-types",
+  REFERENCES = "references",
   SIGN_IN = "sign-in",
 }
 

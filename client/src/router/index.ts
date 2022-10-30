@@ -13,8 +13,23 @@ const router = createRouter({
     },
     {
       path: "/contacts",
-      name: RouteNames.CONTACTS,
-      component: () => import("@/views/ContactsView.vue"),
+      children: [
+        {
+          path: "",
+          name: RouteNames.CONTACTS,
+          component: () => import("@/views/ContactsView.vue"),
+        },
+        {
+          path: "parent-types",
+          name: RouteNames.CONTACTS_PARENT_TYPES,
+          component: () => import("@/views/ParentTypesView.vue"),
+        },
+      ],
+    },
+    {
+      path: "/references",
+      name: RouteNames.REFERENCES,
+      component: () => import("@/views/ReferencesView.vue"),
     },
     {
       path: "/sign-in",
