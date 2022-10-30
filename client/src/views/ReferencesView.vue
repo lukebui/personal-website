@@ -3,10 +3,10 @@ import AppCard from "@/components/AppCard.vue";
 import AppDefaultLayout from "@/components/AppDefaultLayout.vue";
 import AppLink from "@/components/AppLink.vue";
 import { RouteNames } from "@/enums";
-import { NavigationBarLinkGroup } from "@/types";
+import { StyledNavigationBarLinkGroup } from "@/types";
 
-const items: NavigationBarLinkGroup[] = [
-  new NavigationBarLinkGroup("Contacts", [
+const items: StyledNavigationBarLinkGroup[] = [
+  new StyledNavigationBarLinkGroup("Contacts", [
     { name: "All contacts", to: { name: RouteNames.CONTACTS } },
     { name: "Parent types", to: { name: RouteNames.CONTACTS_PARENT_TYPES } },
   ]),

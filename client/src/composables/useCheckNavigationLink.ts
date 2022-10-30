@@ -1,10 +1,13 @@
-import { NavigationBarLink, type NavigationBarLinkGroup } from "@/types";
+import {
+  StyledNavigationLink,
+  type StyledNavigationBarLinkGroup,
+} from "@/types";
 
 export const useCheckNavigationLink = () => {
   const isLink = (
-    item: NavigationBarLink | NavigationBarLinkGroup
-  ): item is NavigationBarLink => {
-    return item instanceof NavigationBarLink;
+    item: StyledNavigationLink | StyledNavigationBarLinkGroup
+  ): item is StyledNavigationLink => {
+    return item instanceof StyledNavigationLink;
   };
 
   return { isLink };

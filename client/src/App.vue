@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { NavigationBarLink, NavigationBarLinkGroup } from "./types";
+import { StyledNavigationLink, StyledNavigationBarLinkGroup } from "./types";
 import { RouteNames } from "./enums";
 import { useSystemStore } from "@/store/system";
 
-const links: (NavigationBarLink | NavigationBarLinkGroup)[] = [
-  new NavigationBarLink("Home", { name: RouteNames.HOME }),
-  new NavigationBarLink("Contacts", { name: RouteNames.CONTACTS }),
-  new NavigationBarLink("References", { name: RouteNames.REFERENCES }),
+const links: (StyledNavigationLink | StyledNavigationBarLinkGroup)[] = [
+  new StyledNavigationLink("Home", { name: RouteNames.HOME }),
+  new StyledNavigationLink("Contacts", { name: RouteNames.CONTACTS }),
+  new StyledNavigationLink("References", { name: RouteNames.REFERENCES }),
 ];
 
 const systemStore = useSystemStore();

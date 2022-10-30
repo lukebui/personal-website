@@ -1,13 +1,18 @@
 import { defineStore } from "pinia";
-import type { NavigationBarLink, NavigationBarLinkGroup } from "@/types";
+import type {
+  StyledNavigationLink,
+  StyledNavigationBarLinkGroup,
+} from "@/types";
 import { StoreNames } from "@/enums";
 
 export const useSystemStore = defineStore(StoreNames.SYSTEM, {
   state: () => ({
-    navLinks: [] as (NavigationBarLink | NavigationBarLinkGroup)[],
+    navLinks: [] as (StyledNavigationLink | StyledNavigationBarLinkGroup)[],
   }),
   actions: {
-    setNavLinks(links: (NavigationBarLink | NavigationBarLinkGroup)[]) {
+    setNavLinks(
+      links: (StyledNavigationLink | StyledNavigationBarLinkGroup)[]
+    ) {
       this.navLinks = links;
     },
   },

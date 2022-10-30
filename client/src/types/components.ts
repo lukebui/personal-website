@@ -15,7 +15,12 @@ export type TextFieldInputType =
   | "url"
   | "week";
 
-export class NavigationBarLink {
+export type NavigationLink = {
+  name: string;
+  to: RouteLocationRaw;
+};
+
+export class StyledNavigationLink implements NavigationLink {
   constructor(
     public name: string,
     public to: RouteLocationRaw,
@@ -24,18 +29,13 @@ export class NavigationBarLink {
   ) {}
 }
 
-export type InputOption = string | number | boolean | Record<string, any>;
-
-export class NavigationBarLinkGroup {
+export class StyledNavigationBarLinkGroup {
   constructor(
     public name: string,
-    public children: ChildrenNavigationLink[],
+    public children: NavigationLink[],
     public icon?: Component,
     public count?: number
   ) {}
 }
 
-export type ChildrenNavigationLink = {
-  name: string;
-  to: RouteLocationRaw;
-};
+export type InputOption = string | number | boolean | Record<string, any>;

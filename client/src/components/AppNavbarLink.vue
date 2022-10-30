@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { NavigationBarLink } from "@/types";
+import type { StyledNavigationLink } from "@/types";
 import type { PropType } from "vue";
 import AppLink from "./AppLink.vue";
 
 defineProps({
   item: {
-    type: Object as PropType<NavigationBarLink>,
+    type: Object as PropType<StyledNavigationLink>,
     required: true,
   },
   icon: Boolean,

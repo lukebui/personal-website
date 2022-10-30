@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-import type { NavigationBarLink, NavigationBarLinkGroup } from "@/types";
+import type { StyledNavigationLink, StyledNavigationBarLinkGroup } from "@/types";
 import TheColorModeToggle from "./AppColorModeToggle.vue";
 import TheProfileDropdown from "./AppProfileDropdown.vue";
 import type { PropType } from "vue";
@@ -12,7 +12,7 @@ import AppVerticalNavbar from "./AppVerticalNavbar.vue";
 
 defineProps({
   navigation: {
-    type: Array as PropType<(NavigationBarLink | NavigationBarLinkGroup)[]>,
+    type: Array as PropType<(StyledNavigationLink | StyledNavigationBarLinkGroup)[]>,
   },
   icon: Boolean,
   badge: Boolean,

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { NavigationBarLink, NavigationBarLinkGroup } from "@/types";
+import type { StyledNavigationLink, StyledNavigationBarLinkGroup } from "@/types";
 import type { PropType } from "vue";
 import AppVerticalNavbarItem from "./AppVerticalNavbarItem.vue";
 
 defineProps({
   navigation: {
-    type: Array as PropType<(NavigationBarLink | NavigationBarLinkGroup)[]>,
+    type: Array as PropType<(StyledNavigationLink | StyledNavigationBarLinkGroup)[]>,
   },
   icon: Boolean,
   badge: Boolean,

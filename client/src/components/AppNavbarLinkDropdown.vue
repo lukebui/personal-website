@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { NavigationBarLinkGroup } from "@/types";
+import type { StyledNavigationBarLinkGroup } from "@/types";
 import type { PropType } from "vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 defineProps({
   item: {
-    type: Object as PropType<NavigationBarLinkGroup>,
+    type: Object as PropType<StyledNavigationBarLinkGroup>,
     required: true,
   },
   position: {
