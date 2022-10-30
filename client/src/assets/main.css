@@ -7,3 +7,41 @@
     @apply container mx-auto px-2 py-10 sm:px-6 lg:px-8;
   }
 }
+
+@layer components {
+  table.simple-table {
+    @apply min-w-full divide-y divide-gray-300 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg;
+  }
+
+  table.simple-table > thead {
+    @apply bg-gray-50 dark:bg-gray-700;
+  }
+
+  table.simple-table > thead > tr > th {
+    @apply px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white;
+  }
+
+  table.simple-table > thead > tr > th.simple-table-actions {
+    @apply relative py-3.5 pl-3 pr-4 sm:pr-6;
+  }
+
+  table.simple-table > thead > tr > th:first-child {
+    @apply py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6;
+  }
+
+  table.simple-table > tbody {
+    @apply divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800;
+  }
+
+  table.simple-table > tbody > tr > td {
+    @apply whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300;
+  }
+
+  table.simple-table > tbody > tr > td.simple-table-actions {
+    @apply relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6;
+  }
+
+  table.simple-table > tbody > tr > td:first-child {
+    @apply whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-white sm:pl-6;
+  }
+}
