@@ -3,6 +3,7 @@ export enum RouteNames {
   CONTACTS = "contacts",
   CONTACTS_PARENT_TYPES = "contact-parent-types",
   REFERENCES = "references",
+  NOT_FOUND = "notFound",
   SIGN_IN = "sign-in",
 }
 

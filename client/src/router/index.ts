@@ -39,6 +39,14 @@ const router = createRouter({
         signIn: true,
       },
     },
+    {
+      path: "/:pathMatch(.*)*",
+      name: RouteNames.NOT_FOUND,
+      component: () => import("@/views/404View.vue"),
+      meta: {
+        public: true,
+      },
+    },
   ],
 });
 
