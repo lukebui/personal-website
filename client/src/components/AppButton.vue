@@ -71,12 +71,12 @@ button {
       @apply text-gray-900 hover:text-gray-500 focus:ring-indigo-500 disabled:hover:text-gray-900 dark:text-white dark:hover:text-gray-300 dark:disabled:hover:text-white;
     }
     &.button-text-0 {
-      @apply text-gray-900 backdrop-blur-lg hover:backdrop-brightness-90 focus:ring-indigo-500 focus:ring-offset-0 disabled:hover:backdrop-brightness-100 dark:text-white dark:hover:backdrop-brightness-150 dark:focus:ring-indigo-500 dark:focus:ring-offset-0 dark:disabled:hover:backdrop-brightness-100;
+      @apply text-gray-900 focus:ring-indigo-500 focus:ring-offset-0 dark:text-white  dark:focus:ring-indigo-500 dark:focus:ring-offset-0;
       &.button-outline {
-        @apply border-gray-300 bg-white shadow-sm dark:border-gray-600 dark:bg-gray-800;
+        @apply border-gray-300 bg-white shadow-sm hover:bg-gray-300 disabled:bg-white dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-600 dark:disabled:hover:bg-gray-800;
       }
       &.button-outline-0 {
-        @apply border-transparent shadow-none;
+        @apply border-transparent shadow-none backdrop-blur-lg hover:backdrop-brightness-90 disabled:hover:backdrop-brightness-100 dark:hover:backdrop-brightness-150 dark:disabled:hover:backdrop-brightness-100;
       }
     }
   }
