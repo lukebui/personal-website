@@ -10,7 +10,7 @@
 
 @layer components {
   table.simple-table {
-    @apply min-w-full divide-y divide-gray-300 overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg;
+    @apply min-w-full divide-y divide-black/10 overflow-hidden shadow ring-1 ring-black ring-opacity-5 dark:divide-gray-600 dark:ring-gray-600 md:rounded-lg;
   }
 
   table.simple-table > thead {

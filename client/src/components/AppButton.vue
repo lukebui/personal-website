@@ -68,7 +68,7 @@ button {
 
   &.button-color-default {
     &.button-text {
-      @apply text-gray-900 hover:text-gray-500 focus:ring-indigo-500 focus:ring-offset-2 disabled:hover:text-gray-900 dark:text-white dark:hover:text-gray-300 dark:disabled:hover:text-white;
+      @apply text-gray-900 hover:text-gray-500 focus:ring-indigo-500 disabled:hover:text-gray-900 dark:text-white dark:hover:text-gray-300 dark:disabled:hover:text-white;
     }
     &.button-text-0 {
       @apply bg-transparent text-gray-900 shadow-none backdrop-blur-lg hover:backdrop-brightness-90 focus:ring-indigo-500 focus:ring-offset-0  disabled:hover:backdrop-brightness-100 dark:text-white dark:hover:backdrop-brightness-150 dark:focus:ring-indigo-500 dark:focus:ring-offset-0 dark:disabled:hover:backdrop-brightness-100;
@@ -83,7 +83,7 @@ button {
 
   &.button-color-primary {
     &.button-text {
-      @apply text-indigo-600 hover:text-indigo-800 focus:ring-indigo-500 focus:ring-offset-2 disabled:hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-white dark:disabled:text-indigo-400;
+      @apply text-indigo-600 hover:text-indigo-800 focus:ring-indigo-500 disabled:hover:text-indigo-600 dark:text-indigo-500 dark:hover:text-white dark:disabled:text-indigo-500;
     }
     &.button-text-0 {
       &.button-outline {
@@ -97,7 +97,7 @@ button {
 
   &.button-color-secondary {
     &.button-text {
-      @apply text-gray-500 hover:text-gray-800 focus:ring-gray-500 focus:ring-offset-2 disabled:hover:text-gray-500 dark:text-gray-500 dark:hover:text-white dark:disabled:text-gray-500;
+      @apply text-gray-500 hover:text-gray-800 focus:ring-gray-500 disabled:hover:text-gray-500 dark:text-gray-500 dark:hover:text-white dark:disabled:text-gray-500;
     }
     &.button-text-0 {
       &.button-outline {
@@ -110,7 +110,7 @@ button {
   }
   &.button-color-info {
     &.button-text {
-      @apply text-cyan-500 hover:text-cyan-800 focus:ring-cyan-500 focus:ring-offset-2 disabled:hover:text-cyan-500 dark:text-cyan-500 dark:hover:text-white dark:disabled:text-cyan-500;
+      @apply text-cyan-500 hover:text-cyan-800 focus:ring-cyan-500 disabled:hover:text-cyan-500 dark:text-cyan-500 dark:hover:text-white dark:disabled:text-cyan-500;
     }
     &.button-text-0 {
       &.button-outline {
@@ -123,7 +123,7 @@ button {
   }
   &.button-color-success {
     &.button-text {
-      @apply text-green-500 hover:text-green-800 focus:ring-green-500 focus:ring-offset-2 disabled:hover:text-green-500 dark:text-green-500 dark:hover:text-white dark:disabled:text-green-500;
+      @apply text-green-500 hover:text-green-800 focus:ring-green-500 disabled:hover:text-green-500 dark:text-green-500 dark:hover:text-white dark:disabled:text-green-500;
     }
     &.button-text-0 {
       &.button-outline {
@@ -136,7 +136,7 @@ button {
   }
   &.button-color-error {
     &.button-text {
-      @apply text-red-500 hover:text-red-800 focus:ring-red-500 focus:ring-offset-2 disabled:hover:text-red-500 dark:text-red-500 dark:hover:text-white dark:disabled:text-red-500;
+      @apply text-red-500 hover:text-red-800 focus:ring-red-500 disabled:hover:text-red-500 dark:text-red-500 dark:hover:text-white dark:disabled:text-red-500;
     }
     &.button-text-0 {
       &.button-outline {
@@ -149,7 +149,7 @@ button {
   }
   &.button-color-warning {
     &.button-text {
-      @apply text-amber-500 hover:text-amber-800 focus:ring-amber-500 focus:ring-offset-2 disabled:hover:text-amber-500 dark:text-amber-500 dark:hover:text-white dark:disabled:text-amber-500;
+      @apply text-amber-500 hover:text-amber-800 focus:ring-amber-500 disabled:hover:text-amber-500 dark:text-amber-500 dark:hover:text-white dark:disabled:text-amber-500;
     }
     &.button-text-0 {
       &.button-outline {

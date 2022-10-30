@@ -35,7 +35,7 @@ export default defineComponent({
     :="$props"
     :to="to"
     custom
-    v-slot="{ isActive, href, navigate }"
+    v-slot="{ isActive, href, navigate, isExactActive }"
   >
     <a
       v-bind="$attrs"
@@ -46,7 +46,13 @@ export default defineComponent({
           navigate(event);
         }
       "
-      :class="isActive ? activeClass : inactiveClass"
+      :class="
+        isExactActive
+          ? exactActiveClass
+          : isActive
+          ? activeClass
+          : inactiveClass
+      "
     >
       <slot :isActive="isActive" />
     </a>
