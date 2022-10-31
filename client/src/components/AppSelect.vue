@@ -199,9 +199,13 @@ const onUpdateModelValue = (event: InputOption | InputOption[]) => {
         <ListboxButton
           class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 dark:bg-gray-800 sm:text-sm"
         >
-          <span v-if="value" class="block truncate">{{
-            getValueText(value)
-          }}</span>
+          <template v-if="value">
+            <slot name="selected-option" :option="value">
+              <span class="block truncate">
+                {{ getValueText(value) }}
+              </span>
+            </slot>
+          </template>
           <span v-else>&nbsp;</span>
           <span
             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
@@ -237,14 +241,16 @@ const onUpdateModelValue = (event: InputOption | InputOption[]) => {
                   'relative cursor-default select-none py-2 pl-3 pr-9',
                 ]"
               >
-                <span
-                  :class="[
-                    selected ? 'font-semibold' : 'font-normal',
-                    'block truncate',
-                  ]"
-                >
-                  {{ getOptionText(option) }}</span
-                >
+                <slot name="option" :option="option" :selected="selected">
+                  <span
+                    :class="[
+                      selected ? 'font-semibold' : 'font-normal',
+                      'block truncate',
+                    ]"
+                  >
+                    {{ getOptionText(option) }}
+                  </span>
+                </slot>
 
                 <span
                   v-if="selected"

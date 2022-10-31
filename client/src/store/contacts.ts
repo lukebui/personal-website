@@ -25,10 +25,17 @@ export interface ParentType {
   type: string;
 }
 
+export interface Parent {
+  type: ParentType;
+  parent: Individual;
+  child: Individual;
+}
+
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {
   state: () => ({
     individuals: [] as Individual[],
     parentTypes: [] as ParentType[],
+    parents: [] as Parent[],
   }),
   actions: {
     async findAllIndividuals() {
@@ -53,6 +60,18 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
 
       if (response.ok) {
         this.parentTypes = await response.json();
+      }
+    },
+    async findAllParents() {
+      const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
+      const response = await fetch("http://localhost:3000/v1/parents", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        this.parents = await response.json();
       }
     },
   },
