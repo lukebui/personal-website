@@ -11,9 +11,10 @@ import { IndividualsService } from './individuals.service';
 import { CreateIndividualDto } from './dto/create-individual.dto';
 import { UpdateIndividualDto } from './dto/update-individual.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ApiVersion } from 'src/enums/ApiVersion.enum';
 
 @ApiTags('Individuals')
-@Controller({ path: 'individuals', version: '1' })
+@Controller({ path: 'individuals', version: ApiVersion.V_1 })
 export class IndividualsController {
   constructor(private readonly individualsService: IndividualsService) {}
 

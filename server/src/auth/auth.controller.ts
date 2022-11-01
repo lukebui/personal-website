@@ -11,9 +11,10 @@ import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { Public } from '../decorators/public.decorator';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { SignInDto } from './dto/signIn.dto';
+import { ApiVersion } from 'src/enums/ApiVersion.enum';
 
 @ApiTags('Authentication')
-@Controller({ path: 'auth', version: '1' })
+@Controller({ path: 'auth', version: ApiVersion.V_1 })
 export class AuthController {
   constructor(private authService: AuthService) {}
 
