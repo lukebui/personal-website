@@ -7,6 +7,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CaslModule } from './casl/casl.module';
 import { IndividualsModule } from './individuals/individuals.module';
+import { ParentsModule } from './parents/parents.module';
+import { ParentTypesModule } from './parent-types/parent-types.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { IndividualsModule } from './individuals/individuals.module';
     UsersModule,
     CaslModule,
     IndividualsModule,
+    ParentsModule,
+    ParentTypesModule,
   ],
   providers: [
     AppService,

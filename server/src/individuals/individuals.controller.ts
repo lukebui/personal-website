@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  Logger,
 } from '@nestjs/common';
 import { IndividualsService } from './individuals.service';
 import { CreateIndividualDto } from './dto/create-individual.dto';
@@ -16,6 +18,8 @@ import { ApiVersion } from 'src/enums/ApiVersion.enum';
 @ApiTags('Individuals')
 @Controller({ path: 'individuals', version: ApiVersion.V_1 })
 export class IndividualsController {
+  private readonly logger = new Logger(IndividualsController.name);
+
   constructor(private readonly individualsService: IndividualsService) {}
 
   @Post()
@@ -24,8 +28,10 @@ export class IndividualsController {
   }
 
   @Get()
-  findAll() {
-    return this.individualsService.findAll();
+  findAllWithParents(@Query('parents') parents: string) {
+    return parents
+      ? this.individualsService.findAllWithParnents()
+      : this.individualsService.findAll();
   }
 
   @Get(':id')
