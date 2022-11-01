@@ -30,6 +30,7 @@ defineProps({
       'group border border-transparent hover:border-gray-300 dark:hover:border-gray-500':
         hover,
     }"
+    data-app-card
   >
     <div
       :class="{

@@ -54,7 +54,6 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
 
       if (response.ok) {
         this.individuals = await response.json();
-        console.log(this.individuals);
       }
     },
     async findAllIndividualsWithParents() {

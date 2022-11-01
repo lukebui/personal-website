@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useField } from "vee-validate";
-import { computed, toRefs, type PropType } from "vue";
+import { computed, ref, toRefs, watch, type PropType } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type * as yup from "yup";
 import _ from "lodash";
@@ -14,6 +14,7 @@ import {
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import type { InputOption } from "@/types";
+import { useElementBounding, useWindowSize } from "@vueuse/core";
 
 const props = defineProps({
   id: String,
@@ -177,6 +178,36 @@ const onUpdateModelValue = (event: InputOption | InputOption[]) => {
     value.value = event;
   }
 };
+
+const optionList = ref<HTMLDivElement>();
+
+const closestOptionListContainer = computed(() => {
+  if (optionList.value) {
+    const card = optionList.value.closest("[data-app-card]");
+    if (card) return card as HTMLElement;
+
+    const listOptionsContainer = optionList.value.closest(
+      "[data-option-list-container]"
+    );
+    if (listOptionsContainer) return listOptionsContainer as HTMLElement;
+  }
+
+  return undefined;
+});
+
+const bottomOptions = ref(true);
+
+watch([optionList, closestOptionListContainer], (values) => {
+  const listBounding = useElementBounding(values[0]);
+  const containerBounding = useElementBounding(values[1]);
+  const windowSize = useWindowSize();
+  if (
+    listBounding.bottom.value > containerBounding.bottom.value ||
+    listBounding.bottom.value > windowSize.height.value
+  ) {
+    bottomOptions.value = false;
+  }
+});
 </script>
 
 <template>
@@ -223,48 +254,54 @@ const onUpdateModelValue = (event: InputOption | InputOption[]) => {
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 sm:text-sm"
+            class="absolute z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 sm:text-sm"
+            :class="{
+              'mt-1': bottomOptions,
+              'bottom-full mb-1': !bottomOptions,
+            }"
           >
-            <ListboxOption
-              as="template"
-              v-for="(option, optionIndex) in options"
-              :key="optionIndex"
-              :value="getOptionValue(option)"
-              v-slot="{ active, selected }"
-              :disabled="localOptionDisabled(option, optionIndex)"
-            >
-              <li
-                :class="[
-                  active
-                    ? 'bg-indigo-600 text-white'
-                    : 'text-gray-900 dark:bg-gray-800 dark:text-white',
-                  'relative cursor-default select-none py-2 pl-3 pr-9',
-                ]"
+            <div ref="optionList">
+              <ListboxOption
+                as="template"
+                v-for="(option, optionIndex) in options"
+                :key="optionIndex"
+                :value="getOptionValue(option)"
+                v-slot="{ active, selected }"
+                :disabled="localOptionDisabled(option, optionIndex)"
               >
-                <slot name="option" :option="option" :selected="selected">
-                  <span
-                    :class="[
-                      selected ? 'font-semibold' : 'font-normal',
-                      'block truncate',
-                    ]"
-                  >
-                    {{ getOptionText(option) }}
-                  </span>
-                </slot>
-
-                <span
-                  v-if="selected"
+                <li
                   :class="[
                     active
-                      ? 'text-white'
-                      : 'text-indigo-600 dark:text-indigo-400',
-                    'absolute inset-y-0 right-0 flex items-center pr-4',
+                      ? 'bg-indigo-600 text-white'
+                      : 'text-gray-900 dark:bg-gray-800 dark:text-white',
+                    'relative cursor-default select-none py-2 pl-3 pr-9',
                   ]"
                 >
-                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                </span>
-              </li>
-            </ListboxOption>
+                  <slot name="option" :option="option" :selected="selected">
+                    <span
+                      :class="[
+                        selected ? 'font-semibold' : 'font-normal',
+                        'block truncate',
+                      ]"
+                    >
+                      {{ getOptionText(option) }}
+                    </span>
+                  </slot>
+
+                  <span
+                    v-if="selected"
+                    :class="[
+                      active
+                        ? 'text-white'
+                        : 'text-indigo-600 dark:text-indigo-400',
+                      'absolute inset-y-0 right-0 flex items-center pr-4',
+                    ]"
+                  >
+                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </li>
+              </ListboxOption>
+            </div>
           </ListboxOptions>
         </transition>
       </div>
