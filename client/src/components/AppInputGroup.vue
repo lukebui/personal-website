@@ -10,8 +10,9 @@ defineProps({
 </script>
 
 <template>
-  <fieldset class="min-w-0" :disabled="disabled">
+  <fieldset class="min-w-0 space-y-1" :disabled="disabled">
     <label
+      v-if="label"
       :for="forId"
       class="block text-sm font-medium text-gray-700 dark:text-gray-300"
     >
@@ -20,10 +21,10 @@ defineProps({
       </span>
       <span class="text-red-500" v-if="required">&nbsp;*</span>
     </label>
-    <div class="mt-1">
+    <div>
       <slot></slot>
     </div>
-    <div v-if="description || errorMessage" class="mt-1">
+    <div v-if="description || errorMessage">
       <p
         v-if="!errorMessage"
         class="text-xs text-gray-500 dark:text-gray-300"

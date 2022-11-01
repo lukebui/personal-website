@@ -195,7 +195,7 @@ const onUpdateModelValue = (event: InputOption | InputOption[]) => {
       :multiple="multiple"
       :disabled="localDisabled"
     >
-      <div class="relative mt-1">
+      <div class="relative">
         <ListboxButton
           class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-50 dark:bg-gray-800 sm:text-sm"
         >
