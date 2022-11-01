@@ -151,13 +151,15 @@ const editDialog = ref(false);
       </div>
     </div>
     <AppDialog v-model="editDialog">
-      <ContactsEditIndividualForm
-        :key="formKey"
-        :item="individualToEdit"
-        @saved="closeDialog"
-        @deleted="closeDialog"
-        @cancelled="closeDialog"
-      />
+      <AppCard well>
+        <ContactsEditIndividualForm
+          :key="formKey"
+          :item="individualToEdit"
+          @saved="closeDialog"
+          @deleted="closeDialog"
+          @cancelled="closeDialog"
+        />
+      </AppCard>
     </AppDialog>
   </AppDefaultLayout>
 </template>
