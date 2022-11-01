@@ -28,11 +28,18 @@ const { formSchema, saveItem, deleteItem, initialValues } = toRefs(props);
 
 type FormData = yup.InferType<typeof formSchema.value>;
 
-const { handleSubmit, meta, resetForm, values, isSubmitting } =
-  useForm<FormData>({
-    validationSchema: formSchema,
-    initialValues: initialValues,
-  });
+const {
+  handleSubmit,
+  meta,
+  resetForm,
+  values,
+  isSubmitting,
+  errors,
+  setFieldValue,
+} = useForm<FormData>({
+  validationSchema: formSchema,
+  initialValues: initialValues,
+});
 
 const onSubmit = handleSubmit(async (values) => {
   try {
@@ -80,7 +87,11 @@ watch(
   <form @submit="onSubmit">
     <fieldset class="min-w-0" :disabled="isDeleting || isSubmitting">
       <div>
-        <slot :formData="values"></slot>
+        <slot
+          :formData="values"
+          :setFieldValue="setFieldValue"
+          :errors="errors"
+        ></slot>
         <div class="flex justify-between gap-2 pt-2">
           <div class="flex gap-2">
             <AppButton

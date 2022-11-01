@@ -26,14 +26,20 @@ export interface ParentType {
 }
 
 export interface Parent {
+  id: number;
   type: ParentType;
   parent: Individual;
   child: Individual;
 }
 
+export interface IndividualWithParents extends Individual {
+  parents: Parent[];
+}
+
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {
   state: () => ({
     individuals: [] as Individual[],
+    individualsWithParents: [] as IndividualWithParents[],
     parentTypes: [] as ParentType[],
     parents: [] as Parent[],
   }),
@@ -48,6 +54,22 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
 
       if (response.ok) {
         this.individuals = await response.json();
+        console.log(this.individuals);
+      }
+    },
+    async findAllIndividualsWithParents() {
+      const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
+      const response = await fetch(
+        "http://localhost:3000/v1/individuals?parents=true",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        this.individualsWithParents = await response.json();
       }
     },
     async findAllParentTypes() {

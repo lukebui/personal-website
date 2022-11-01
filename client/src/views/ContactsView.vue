@@ -1,56 +1,27 @@
 <script setup lang="ts">
 import AppDefaultLayout from "../components/AppDefaultLayout.vue";
-import { type Individual, useContactsStore } from "@/store/contacts";
+import { useContactsStore, type IndividualWithParents } from "@/store/contacts";
 import { computed, onBeforeMount, ref } from "vue";
 import ContactsEditIndividualForm from "../components/ContactsEditIndividualForm.vue";
 import AppDialog from "@/components/AppDialog.vue";
 import AppCard from "@/components/AppCard.vue";
 import AppHeading from "@/components/AppHeading.vue";
-import _ from "lodash";
+import { ComponentSize } from "@/enums";
+import moment from "moment";
 
 const contactsStore = useContactsStore();
 
-const individuals = computed(() => {
-  return contactsStore.individuals;
+const individualsWithParents = computed(() => {
+  return contactsStore.individualsWithParents;
 });
 
-const parentRelationships = computed(() => {
-  return contactsStore.parents;
-});
-
-const contacts = computed(() => {
-  return individuals.value.map((individual) => {
-    const individualParents = parentRelationships.value.filter(
-      (parent) => parent.child.id === individual.id
-    );
-
-    const parentTypes = _.uniqBy(
-      individualParents.map((parent) => parent.type),
-      _.property("id")
-    );
-
-    return {
-      ...individual,
-      parents: parentTypes.map((type) => {
-        return {
-          type,
-          parents: individualParents
-            .filter(
-              (parentRelationship) => parentRelationship.type.id === type.id
-            )
-            .map((parentRelationship) => parentRelationship.parent),
-        };
-      }),
-    };
-  });
-});
-
-const individualToEdit = ref<Individual>();
+const individualToEdit = ref<IndividualWithParents>();
 
 const fetch = async () => {
   await Promise.all([
     contactsStore.findAllIndividuals(),
-    contactsStore.findAllParents(),
+    contactsStore.findAllIndividualsWithParents(),
+    contactsStore.findAllParentTypes(),
   ]);
 };
 
@@ -66,7 +37,7 @@ const addItem = () => {
   editDialog.value = true;
 };
 
-const editItem = (item: Individual) => {
+const editItem = (item: IndividualWithParents) => {
   individualToEdit.value = item;
   formKey.value++;
   editDialog.value = true;
@@ -92,9 +63,9 @@ const editDialog = ref(false);
           class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           <button
-            v-for="contact in contacts"
-            :key="contact.id"
-            @click="editItem(contact)"
+            v-for="individual in individualsWithParents"
+            :key="individual.id"
+            @click="editItem(individual)"
             class="rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <AppCard class="h-full" hover>
@@ -103,46 +74,28 @@ const editDialog = ref(false);
                   <span class="font-semibold">
                     {{
                       [
-                        contact.lastName,
-                        contact.middleName,
-                        contact.firstName,
+                        individual.lastName,
+                        individual.middleName,
+                        individual.firstName,
                       ].join(" ")
                     }}
                   </span>
-                  <span v-if="contact.alias" class="font-light">
-                    ({{ contact.alias }})
+                  <span v-if="individual.alias" class="font-light">
+                    ({{ individual.alias }})
                   </span>
                 </p>
-                <p>Gender: {{ contact.gender }}</p>
-                <p v-if="contact.dateOfBirth">
-                  Date of birth: {{ contact.dateOfBirth }}
+                <p>Gender: {{ individual.gender }}</p>
+                <p v-if="individual.dateOfBirth">
+                  Date of birth:
+                  {{ moment(individual.dateOfBirth).format("DD/MM/YYYY") }}
                 </p>
-                <p v-if="contact.hasDied">Has died</p>
-                <p v-if="contact.dateOfDeath">
-                  Date of death: {{ contact.dateOfDeath }}
+                <p v-if="individual.hasDied">Has died</p>
+                <p v-if="individual.dateOfDeath">
+                  Date of death:
+                  {{ moment(individual.dateOfDeath).format("DD/MM/YYYY") }}
                 </p>
-                <p v-if="contact.note" class="truncate">
-                  Note: {{ contact.note }}
-                </p>
-                <p
-                  v-for="(
-                    parentRelationship, parentRelationshipIndex
-                  ) in contact.parents"
-                  :key="parentRelationshipIndex"
-                >
-                  {{ parentRelationship.type.type }}:
-                  {{
-                    parentRelationship.parents
-                      .map((parent) =>
-                        [
-                          parent.lastName,
-                          parent.middleName,
-                          parent.firstName,
-                          `(${parent.alias})`,
-                        ].join(" ")
-                      )
-                      .join(", ")
-                  }}
+                <p v-if="individual.note" class="truncate">
+                  Note: {{ individual.note }}
                 </p>
               </div>
             </AppCard>
@@ -150,16 +103,14 @@ const editDialog = ref(false);
         </div>
       </div>
     </div>
-    <AppDialog v-model="editDialog">
-      <AppCard well>
-        <ContactsEditIndividualForm
-          :key="formKey"
-          :item="individualToEdit"
-          @saved="closeDialog"
-          @deleted="closeDialog"
-          @cancelled="closeDialog"
-        />
-      </AppCard>
+    <AppDialog v-model="editDialog" :size="ComponentSize.X_LARGE">
+      <ContactsEditIndividualForm
+        :key="formKey"
+        :item="individualToEdit"
+        @saved="closeDialog"
+        @deleted="closeDialog"
+        @cancelled="closeDialog"
+      />
     </AppDialog>
   </AppDefaultLayout>
 </template>
