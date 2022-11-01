@@ -201,12 +201,10 @@ watch([optionList, closestOptionListContainer], (values) => {
   const listBounding = useElementBounding(values[0]);
   const containerBounding = useElementBounding(values[1]);
   const windowSize = useWindowSize();
-  if (
+  bottomOptions.value = !(
     listBounding.bottom.value > containerBounding.bottom.value ||
     listBounding.bottom.value > windowSize.height.value
-  ) {
-    bottomOptions.value = false;
-  }
+  );
 });
 </script>
 
