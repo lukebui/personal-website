@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JWTPayload } from './jwt-payload.interface';
 import { UsersService } from 'src/users/users.service';
-import * as _ from 'lodash';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.usersService.findOneWithUid(payload.uid);
 
     if (user.isActive) {
-      return _.omit(user, 'password');
+      return instanceToPlain(user);
     } else {
       throw new UnauthorizedException();
     }

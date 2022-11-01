@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/entities/user.entity';
-import * as _ from 'lodash';
 import { JwtService } from '@nestjs/jwt';
 import { JWTPayload } from './jwt-payload.interface';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
@@ -15,10 +15,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(
-    email: string,
-    password: string,
-  ): Promise<Omit<User, 'password'> | null> {
+  async validateUser(email: string, password: string): Promise<User | null> {
     let user: User;
     try {
       user = await this.usersService.findOneWithEmail(email);
@@ -35,14 +32,14 @@ export class AuthService {
 
     if (!isValidPassword) return null;
 
-    return _.omit(user, 'password');
+    return user;
   }
 
-  async signIn(user: Omit<User, 'password'>) {
+  async signIn(user: User) {
     const payload: JWTPayload = { email: user.email, uid: user.uid };
 
     return {
-      user,
+      user: instanceToPlain(user),
       accessToken: this.jwtService.sign(payload),
     };
   }
