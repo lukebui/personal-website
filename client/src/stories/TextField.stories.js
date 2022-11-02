@@ -1,4 +1,4 @@
-import AppTextField from "../components/AppTextField.vue";
+import AppTextField from "../components/Base/AppTextField.vue";
 import * as yup from "yup";
 
 export default {
