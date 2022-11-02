@@ -7,15 +7,28 @@ export class Parent {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => ParentType, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => ParentType, {
+    eager: true,
+    nullable: false,
+  })
   @JoinColumn()
   type: ParentType;
 
-  @ManyToOne(() => Individual, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Individual, {
+    eager: true,
+    onDelete: 'CASCADE',
+    nullable: false,
+    orphanedRowAction: 'delete',
+  })
   @JoinColumn()
   parent: Individual;
 
-  @ManyToOne(() => Individual, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => Individual, {
+    eager: true,
+    onDelete: 'CASCADE',
+    nullable: false,
+    orphanedRowAction: 'delete',
+  })
   @JoinColumn()
   child: Individual;
 }

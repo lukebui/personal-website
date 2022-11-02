@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateIf } from 'class-validator';
 import { ParentType } from 'src/parent-types/entities/parent-type.entity';
 import { Individual } from '../entities/individual.entity';
+import { Parent } from 'src/parents/entities/parent.entity';
 
 export class NewParent {
   @ApiProperty()
@@ -46,6 +47,6 @@ export class CreateIndividualDto {
   @ApiProperty()
   hasDied: boolean | null;
 
-  @Type(() => NewParent)
-  newParents?: NewParent[];
+  @Type(() => Parent)
+  parents?: Parent[];
 }

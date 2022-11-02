@@ -29,11 +29,11 @@ export class IndividualsService {
       dateOfDeath: createIndividualDto.dateOfDeath,
       hasDied: createIndividualDto.hasDied,
     });
-    const newParents = createIndividualDto.newParents?.map((newParent) => {
+    const parents = createIndividualDto.parents?.map((newParent) => {
       return this.parentRepository.create(newParent);
     });
 
-    newIndividual.parents = newParents;
+    newIndividual.parents = parents;
 
     return this.individualRepository.save(newIndividual);
   }
@@ -42,8 +42,10 @@ export class IndividualsService {
     return this.individualRepository.find();
   }
 
-  findAllWithParnents() {
-    return this.individualRepository.find({ relations: { parents: true } });
+  findAllWithRelations() {
+    return this.individualRepository.find({
+      relations: { parents: true, children: true },
+    });
   }
 
   findOne(id: number) {
@@ -51,21 +53,9 @@ export class IndividualsService {
   }
 
   async update(id: number, updateIndividualDto: UpdateIndividualDto) {
-    const currentParents = updateIndividualDto.currentParents?.map(
-      (currentParent) => {
-        return this.parentRepository.create({
-          id: currentParent.id,
-          type: currentParent.type,
-          parent: currentParent.parent,
-        });
-      },
+    const parents = updateIndividualDto.parents?.map((newParent) =>
+      this.parentRepository.create(newParent),
     );
-
-    const newParents = updateIndividualDto.newParents?.map((newParent) => {
-      return this.parentRepository.create(newParent);
-    });
-
-    const parents = [...currentParents, ...newParents];
 
     const individual = this.individualRepository.create({
       id: id,
@@ -81,12 +71,7 @@ export class IndividualsService {
       parents,
     });
 
-    await Promise.all([
-      this.individualRepository.save(individual),
-      ...updateIndividualDto.removedParents.map((parent) =>
-        this.parentRepository.delete(parent.id),
-      ),
-    ]);
+    await this.individualRepository.save(individual);
   }
 
   remove(id: number) {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateParentTypeDto } from './dto/create-parent-type.dto';
@@ -30,7 +30,27 @@ export class ParentTypesService {
     return this.parentTypeRepository.update(id, updateParentTypeDto);
   }
 
-  remove(id: number) {
-    return this.parentTypeRepository.delete(id);
+  async remove(id: number) {
+    const parentType = await this.parentTypeRepository.find({
+      where: {
+        id,
+      },
+      relations: { parent: true },
+    });
+
+    if (parentType.length) {
+      if (parentType[0].parent.length)
+        throw new HttpException(
+          'Cannot delete. There are parent data depending on this type.',
+          HttpStatus.FORBIDDEN,
+        );
+
+      return this.parentTypeRepository.delete(id);
+    } else {
+      throw new HttpException(
+        'Cannot find the requested data',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

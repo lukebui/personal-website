@@ -28,9 +28,9 @@ export class IndividualsController {
   }
 
   @Get()
-  findAllWithParents(@Query('parents') parents: string) {
+  findAllWithParents(@Query('relations') parents: string) {
     return parents
-      ? this.individualsService.findAllWithParnents()
+      ? this.individualsService.findAllWithRelations()
       : this.individualsService.findAll();
   }
 
