@@ -68,15 +68,18 @@ const secondaryActions = computed(() => {
               />
               <AppLink
                 :to="item.to"
-                class="rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                class="rounded px-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 inactive-class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 active-class="text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 exact-active-class="text-sm font-medium text-indigo-600 dark:text-indigo-500"
                 :class="{
-                  'ml-4': itemIndex > 0,
+                  'ml-3': itemIndex > 0,
+                  '-mx-1': itemIndex === 0,
                 }"
               >
-                {{ item.name }}
+                <span class="">
+                  {{ item.name }}
+                </span>
               </AppLink>
             </div>
           </li>

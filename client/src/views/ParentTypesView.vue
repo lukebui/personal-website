@@ -49,7 +49,7 @@ const editItem = (item: ParentType) => {
 
 <template>
   <AppDefaultLayout>
-    <div class="mobile-fullwidth-table-spacing space-y-4">
+    <div class="default-spacing space-y-4 py-4 sm:py-10">
       <AppHeading
         :breadcrumbs="[
           { name: 'Contacts', to: { name: RouteNames.CONTACTS } },
@@ -93,7 +93,7 @@ const editItem = (item: ParentType) => {
         :item="parentTypeToEdit"
         @saved="closeDialog"
         @deleted="closeDialog"
-        @cancelled="closeDialog"
+        @cancel="closeDialog"
       />
     </AppDialog>
   </AppDefaultLayout>

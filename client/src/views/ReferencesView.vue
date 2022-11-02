@@ -26,7 +26,7 @@ const items: StyledNavigationBarLinkGroup[] = [
               <ul role="list" class="mt-4 space-y-2">
                 <li v-for="(link, linkIndex) in item.children" :key="linkIndex">
                   <AppLink
-                    class="rounded text-base text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-gray-300 dark:hover:text-white"
+                    class="-mx-1 rounded px-1 text-base text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:text-gray-300 dark:hover:text-white"
                     :to="link.to"
                   >
                     {{ link.name }}
