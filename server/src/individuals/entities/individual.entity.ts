@@ -1,6 +1,8 @@
+import { Expose } from 'class-transformer';
 import { IndividualGender } from 'src/enums/IndividualGender.enum';
 import { Parent } from 'src/parents/entities/parent.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import * as _ from 'lodash';
 
 @Entity()
 export class Individual {
@@ -55,4 +57,11 @@ export class Individual {
     cascade: true,
   })
   children: Parent[];
+
+  @Expose()
+  public get fullName() {
+    return _.compact([this.lastName, this.middleName, this.firstName]).join(
+      ' ',
+    );
+  }
 }
