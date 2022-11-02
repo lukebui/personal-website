@@ -20,12 +20,13 @@ import AppInputGroup from "../Base/AppInputGroup.vue";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
 import { individualSchema, newParentSchema, parentSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
+import AppDeleteConfirmDialog from "../Base/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<IndividualWithParents> },
 });
 
-const emit = defineEmits(["close", "saved"]);
+const emit = defineEmits(["close", "saved", "deleted"]);
 
 const contactsStore = useContactsStore();
 
@@ -138,6 +139,8 @@ const errorMessages = ref<string[]>([]);
 
 const { getErrorMessages } = useErrorMessages();
 
+const deleteConfirmDialog = ref(false);
+
 const onSave = async () => {
   try {
     errorMessages.value = [];
@@ -151,19 +154,8 @@ const onSave = async () => {
   }
 };
 
-const onDelete = async () => {
-  try {
-    errorMessages.value = [];
-    isSubmitting.value = true;
-
-    await deleteItem();
-
-    emit("close");
-  } catch (error) {
-    errorMessages.value = getErrorMessages(error);
-  } finally {
-    isSubmitting.value = false;
-  }
+const onDelete = () => {
+  deleteConfirmDialog.value = true;
 };
 
 const onCancel = () => {
@@ -186,6 +178,11 @@ const removeCurrentParent = (
 ) => {
   removedParents.value.push(currentParents.value[index]);
   remove(index);
+};
+
+const onDeleted = () => {
+  deleteConfirmDialog.value = false;
+  emit("deleted");
 };
 </script>
 
@@ -334,5 +331,13 @@ const removeCurrentParent = (
         </DisclosurePanel>
       </Disclosure>
     </div>
+    <AppDeleteConfirmDialog
+      v-model:show="deleteConfirmDialog"
+      :delete-action="deleteItem"
+      @deleted="onDeleted"
+    >
+      Are you sure you want to delete
+      <strong> {{ item?.fullName }} </strong>? This action cannot be undone.
+    </AppDeleteConfirmDialog>
   </AppForm>
 </template>

@@ -41,6 +41,7 @@ const editDialog = ref(false);
 
 <template>
   <AppDialog v-model="dialog" :size="ComponentSize.X_LARGE">
+    <a href="#" class="sr-only"></a>
     <template v-if="localIndividual">
       <div class="space-y-2">
         <AppHeading
@@ -93,6 +94,7 @@ const editDialog = ref(false);
         v-model:show="editDialog"
         :item="individual"
         @saved="$emit('changed')"
+        @deleted="dialog = false"
       ></EditIndividualDialog>
     </template>
   </AppDialog>

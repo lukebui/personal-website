@@ -10,7 +10,7 @@ const props = defineProps({
   item: Object as PropType<IndividualWithParents>,
 });
 
-const emit = defineEmits(["update:show", "saved"]);
+const emit = defineEmits(["update:show", "saved", "deleted"]);
 
 const { show } = toRefs(props);
 
@@ -33,6 +33,11 @@ const onSaved = () => {
   emit("saved");
   dialog.value = false;
 };
+
+const onDelete = () => {
+  dialog.value = false;
+  emit("deleted");
+};
 </script>
 
 <template>
@@ -41,6 +46,7 @@ const onSaved = () => {
       :item="item"
       @close="dialog = false"
       @saved="onSaved"
+      @deleted="onDelete"
       :key="formKey"
     />
   </AppDialog>
