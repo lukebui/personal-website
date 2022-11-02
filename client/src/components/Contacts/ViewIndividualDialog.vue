@@ -48,8 +48,8 @@ const editDialog = ref(false);
           :title="localIndividual.fullName"
           :actions="[
             { name: 'Edit', action: () => (editDialog = true), primary: true },
-            { name: 'Close', action: () => (dialog = false), primary: false },
           ]"
+          :close-action="() => (dialog = false)"
         ></AppHeading>
         <div>
           <p v-if="localIndividual.alias">
