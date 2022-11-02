@@ -8,7 +8,6 @@ import {
   useContactsStore,
   type IndividualWithParents,
 } from "@/store/contacts";
-import _ from "lodash";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys, ComponentColor, ComponentSize } from "@/enums";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
@@ -19,6 +18,7 @@ import AppSelect from "../Base/AppSelect.vue";
 import { FieldArray } from "vee-validate";
 import AppInputGroup from "../Base/AppInputGroup.vue";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
+import { individualSchema, parentSchema, parentTypeSchema } from "@/schemas";
 
 const contactsStore = useContactsStore();
 
@@ -38,111 +38,9 @@ const emit = defineEmits(["cancelled", "saved", "deleted"]);
 
 const { item } = toRefs(props);
 
-const individualSchema = yup.object({
-  id: yup.number().nullable(),
-  firstName: yup
-    .string()
-    .nullable()
-    .label("First Name")
-    .transform((value: string | null) => value && value.trim()),
-  middleName: yup
-    .string()
-    .nullable()
-    .label("Middle Name")
-    .transform((value: string | null) => value && value.trim()),
-  lastName: yup
-    .string()
-    .nullable()
-    .label("Last Name")
-    .transform((value: string | null) => value && value.trim()),
-  alias: yup.string().nullable().label("Alias"),
-  note: yup.string().nullable().label("Notes"),
-  gender: yup
-    .string()
-    .required()
-    .oneOf(_.values(IndividualGender))
-    .label("Gender"),
-  dateOfBirth: yup
-    .date()
-    .nullable()
-    .label("Date of birth")
-    .transform((value, _originalValue, schema) => {
-      if (schema.isType(value)) return value;
-
-      return null;
-    }),
-  dateOfDeath: yup
-    .date()
-    .nullable()
-    .label("Date of death")
-    .transform((value, _originalValue, schema) => {
-      if (schema.isType(value)) return value;
-
-      return null;
-    }),
-  hasDied: yup.boolean().label("Has died").nullable(),
-});
-
-const parentTypeSchema = yup
-  .object({
-    id: yup.number(),
-    type: yup.string().required().label("Parent Type").defined(),
-  })
-  .defined();
-
-const parentSchema = yup
-  .object({
-    id: yup.number().required(),
-    type: parentTypeSchema,
-    parent: individualSchema,
-    child: individualSchema,
-  })
-  .defined();
-
 const formSchema = yup
   .object({
-    id: yup.number().nullable(),
-    firstName: yup
-      .string()
-      .nullable()
-      .label("First Name")
-      .transform((value: string | null) => value && value.trim()),
-    middleName: yup
-      .string()
-      .nullable()
-      .label("Middle Name")
-      .transform((value: string | null) => value && value.trim()),
-    lastName: yup
-      .string()
-      .nullable()
-      .label("Last Name")
-      .transform((value: string | null) => value && value.trim()),
-    alias: yup.string().nullable().label("Alias"),
-    note: yup.string().nullable().label("Notes"),
-    gender: yup
-      .string()
-      .required()
-      .oneOf(_.values(IndividualGender))
-      .label("Gender"),
-    dateOfBirth: yup
-      .date()
-      .nullable()
-      .label("Date of birth")
-      .transform((value, _originalValue, schema) => {
-        if (schema.isType(value)) return value;
-
-        return null;
-      }),
-    dateOfDeath: yup
-      .date()
-      .nullable()
-      .label("Date of death")
-      .transform((value, _originalValue, schema) => {
-        if (schema.isType(value)) return value;
-
-        return null;
-      }),
-    hasDied: yup.boolean().label("Has died").nullable(),
+    individual: individualSchema,
     currentParents: yup
       .array(parentSchema)
       .label("Parents")
@@ -216,16 +114,18 @@ const initialValues = ref();
 const resetForm = () => {
   if (item?.value) {
     const formData: FormData = {
-      id: item.value.id,
-      firstName: item.value.firstName,
-      middleName: item.value.middleName,
-      lastName: item.value.lastName,
-      alias: item.value.alias,
-      note: item.value.note,
-      gender: item.value.gender,
-      dateOfBirth: item.value.dateOfBirth,
-      dateOfDeath: item.value.dateOfDeath,
-      hasDied: item.value.hasDied,
+      individual: {
+        id: item.value.id,
+        firstName: item.value.firstName,
+        middleName: item.value.middleName,
+        lastName: item.value.lastName,
+        alias: item.value.alias,
+        note: item.value.note,
+        gender: item.value.gender,
+        dateOfBirth: item.value.dateOfBirth,
+        dateOfDeath: item.value.dateOfDeath,
+        hasDied: item.value.hasDied,
+      },
       currentParents: item.value.parents,
       removedParents: [],
       newParents: [],
@@ -282,26 +182,32 @@ const removeCurrentParent = (
   >
     <div class="mb-4 space-y-3">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <AppTextField label="Last Name" name="lastName"></AppTextField>
-        <AppTextField label="Middle Name" name="middleName"></AppTextField>
+        <AppTextField
+          label="Last Name"
+          name="individual.lastName"
+        ></AppTextField>
+        <AppTextField
+          label="Middle Name"
+          name="individual.middleName"
+        ></AppTextField>
         <AppTextField
           label="First Name"
-          name="firstName"
+          name="individual.firstName"
           autofocus
         ></AppTextField>
       </div>
-      <AppTextField label="Nickname" name="alias"></AppTextField>
+      <AppTextField label="Nickname" name="individual.alias"></AppTextField>
       <AppSelect
         label="Gender"
         required
-        name="gender"
+        name="individual.gender"
         :options="genders"
         option-id="value"
         option-text="name"
       ></AppSelect>
       <AppTextField
         label="Date of birth"
-        name="dateOfBirth"
+        name="individual.dateOfBirth"
         type="date"
       ></AppTextField>
       <AppTextarea label="Notes" name="note" autoresize></AppTextarea>

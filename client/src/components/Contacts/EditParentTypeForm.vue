@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import AppEditForm from "../Base/AppEditForm.vue";
 import AppTextField from "../Base/AppTextField.vue";
-import * as yup from "yup";
+import type * as yup from "yup";
 import type { ParentType } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { ref, toRefs, watch, type PropType } from "vue";
+import { parentTypeSchema } from "@/schemas";
 
 const props = defineProps({
   item: { type: Object as PropType<ParentType> },
@@ -15,12 +16,7 @@ const emit = defineEmits(["cancelled", "saved", "deleted"]);
 
 const { item } = toRefs(props);
 
-const formSchema = yup
-  .object({
-    id: yup.number().nullable(),
-    type: yup.string().required().label("Parent type"),
-  })
-  .defined();
+const formSchema = parentTypeSchema;
 
 type FormData = yup.InferType<typeof formSchema>;
 
@@ -102,7 +98,6 @@ const onCancel = () => {
     @saved="$emit('saved')"
     @deleted="$emit('deleted')"
     @cancelled="onCancel"
-    #="{ formData }"
   >
     <div class="mb-4 space-y-3">
       <AppTextField label="Parent type" name="type" autofocus></AppTextField>
