@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppEditForm from "../Base/AppEditForm.vue";
+import AppForm from "../Base/AppForm.vue";
 import AppTextField from "../Base/AppTextField.vue";
 import AppTextarea from "../Base/AppTextarea.vue";
 import * as yup from "yup";
@@ -10,15 +10,22 @@ import {
 } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys, ComponentColor, ComponentSize } from "@/enums";
-import { computed, ref, toRefs, watch, type PropType } from "vue";
+import { computed, ref, toRefs, type PropType } from "vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import AppButton from "../Base/AppButton.vue";
 import AppSwitch from "../Base/AppSwitch.vue";
 import AppSelect from "../Base/AppSelect.vue";
-import { FieldArray } from "vee-validate";
+import { FieldArray, useForm } from "vee-validate";
 import AppInputGroup from "../Base/AppInputGroup.vue";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
-import { individualSchema, parentSchema, parentTypeSchema } from "@/schemas";
+import { individualSchema, newParentSchema, parentSchema } from "@/schemas";
+import { useErrorMessages } from "@/composables";
+
+const props = defineProps({
+  item: { type: Object as PropType<IndividualWithParents> },
+});
+
+const emit = defineEmits(["close", "saved"]);
 
 const contactsStore = useContactsStore();
 
@@ -30,38 +37,28 @@ const parentTypes = computed(() => {
   return contactsStore.parentTypes;
 });
 
-const props = defineProps({
-  item: { type: Object as PropType<IndividualWithParents> },
-});
-
-const emit = defineEmits(["cancelled", "saved", "deleted"]);
-
 const { item } = toRefs(props);
 
-const formSchema = yup
-  .object({
-    individual: individualSchema,
+type FormData = yup.InferType<typeof individualSchema> & {
+  currentParents: yup.InferType<typeof parentSchema>[];
+  removedParents: yup.InferType<typeof parentSchema>[];
+  newParents: yup.InferType<typeof newParentSchema>[];
+};
+
+const formSchema: yup.SchemaOf<FormData> = individualSchema
+  .shape({
     currentParents: yup
       .array(parentSchema)
       .label("Parents")
       .default(() => []),
     newParents: yup
-      .array(
-        yup
-          .object({
-            type: parentTypeSchema,
-            parent: individualSchema,
-          })
-          .defined()
-      )
+      .array(newParentSchema)
       .compact((value) => !value.type && !value.parent)
       .default(() => [])
       .label("Parents"),
     removedParents: yup.array(parentSchema).default(() => []),
   })
   .defined();
-
-type FormData = yup.InferType<typeof formSchema>;
 
 const genders: { name: string; value: IndividualGender }[] = [
   { name: "Male", value: IndividualGender.MALE },
@@ -72,7 +69,7 @@ const token = useStorage(LocalStorageKeys.ACCESS_TOKEN, null, undefined, {
   serializer: StorageSerializers.string,
 });
 
-const saveItem = async (values: unknown) => {
+const saveItem = async (values: FormData) => {
   const response = await fetch(
     `http://localhost:3000/v1/individuals${
       item?.value ? "/" + item.value.id : ""
@@ -109,105 +106,121 @@ const deleteItem = async () => {
   if (!response.ok) throw new Error((await response.json()).message);
 };
 
-const initialValues = ref();
-
-const resetForm = () => {
-  if (item?.value) {
+const getFormData = (itemValue?: IndividualWithParents) => {
+  if (itemValue) {
     const formData: FormData = {
-      individual: {
-        id: item.value.id,
-        firstName: item.value.firstName,
-        middleName: item.value.middleName,
-        lastName: item.value.lastName,
-        alias: item.value.alias,
-        note: item.value.note,
-        gender: item.value.gender,
-        dateOfBirth: item.value.dateOfBirth,
-        dateOfDeath: item.value.dateOfDeath,
-        hasDied: item.value.hasDied,
-      },
-      currentParents: item.value.parents,
+      id: itemValue.id,
+      firstName: itemValue.firstName,
+      middleName: itemValue.middleName,
+      lastName: itemValue.lastName,
+      alias: itemValue.alias,
+      note: itemValue.note,
+      gender: itemValue.gender,
+      dateOfBirth: itemValue.dateOfBirth,
+      dateOfDeath: itemValue.dateOfDeath,
+      hasDied: itemValue.hasDied,
+      currentParents: itemValue.parents,
       removedParents: [],
       newParents: [],
     };
-    initialValues.value = formData;
+    return formData;
   } else {
-    initialValues.value = {};
+    return undefined;
   }
 };
 
-watch(
-  () => item?.value,
-  () => {
-    resetForm();
-  },
-  { immediate: true }
-);
+const { meta, isSubmitting, useFieldModel, handleSubmit } = useForm<FormData>({
+  validationSchema: formSchema,
+  initialValues: getFormData(item?.value),
+});
+
+const errorMessages = ref<string[]>([]);
+
+const { getErrorMessages } = useErrorMessages();
+
+const onSave = async () => {
+  try {
+    errorMessages.value = [];
+    await handleSubmit(async (values) => {
+      await saveItem(values);
+
+      emit("saved");
+    })();
+  } catch (error) {
+    errorMessages.value = getErrorMessages(error);
+  }
+};
+
+const onDelete = async () => {
+  try {
+    errorMessages.value = [];
+    isSubmitting.value = true;
+
+    await deleteItem();
+
+    emit("close");
+  } catch (error) {
+    errorMessages.value = getErrorMessages(error);
+  } finally {
+    isSubmitting.value = false;
+  }
+};
 
 const onCancel = () => {
-  emit("cancelled");
+  emit("close");
 };
 
 const shouldDefaultShowMore = computed(() => {
   return item?.value?.hasDied;
 });
 
+const hasDied = useFieldModel("hasDied");
+
+const currentParents = useFieldModel("currentParents");
+
+const removedParents = useFieldModel("removedParents");
+
 const removeCurrentParent = (
-  formData: any,
-  setFieldValue: (path: string, value: any) => void,
   remove: (index: number) => void,
   index: number
 ) => {
-  setFieldValue(
-    "removedParents",
-    (formData.removedParents as unknown[]).concat(
-      (formData.currentParents as unknown[])[index]
-    )
-  );
+  removedParents.value.push(currentParents.value[index]);
   remove(index);
 };
 </script>
 
 <template>
-  <AppEditForm
-    v-if="initialValues"
-    :form-schema="formSchema"
-    :save-item="saveItem"
-    :delete-item="item ? deleteItem : undefined"
-    :initial-values="initialValues"
-    @saved="$emit('saved')"
-    @deleted="$emit('deleted')"
-    @cancelled="onCancel"
-    #="{ formData, setFieldValue }"
+  <AppForm
+    :errors="errorMessages"
+    :loading="isSubmitting"
+    :can-save="meta.dirty && meta.valid"
+    :can-delete="!!item"
+    @save="onSave"
+    @delete="onDelete"
+    @cancel="onCancel"
   >
     <div class="mb-4 space-y-3">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <AppTextField
-          label="Last Name"
-          name="individual.lastName"
-        ></AppTextField>
-        <AppTextField
-          label="Middle Name"
-          name="individual.middleName"
-        ></AppTextField>
+        <AppTextField label="Last Name" name="lastName"></AppTextField>
+        <AppTextField label="Middle Name" name="middleName"></AppTextField>
         <AppTextField
           label="First Name"
-          name="individual.firstName"
+          name="firstName"
           autofocus
         ></AppTextField>
       </div>
-      <AppTextField label="Nickname" name="individual.alias"></AppTextField>
+      <AppTextField label="Nickname" name="alias"></AppTextField>
       <AppSelect
         label="Gender"
         required
-        name="individual.gender"
+        name="gender"
         :options="genders"
         option-id="value"
         option-text="name"
       ></AppSelect>
       <AppTextField
         label="Date of birth"
-        name="individual.dateOfBirth"
+        name="dateOfBirth"
         type="date"
       ></AppTextField>
       <AppTextarea label="Notes" name="note" autoresize></AppTextarea>
@@ -245,14 +258,7 @@ const removeCurrentParent = (
                 <AppButton
                   round
                   :size="ComponentSize.SMALL"
-                  @click="
-                    removeCurrentParent(
-                      formData,
-                      setFieldValue,
-                      remove,
-                      fieldIndex
-                    )
-                  "
+                  @click="removeCurrentParent(remove, fieldIndex)"
                 >
                   <XMarkIcon class="h-5 w-5" />
                 </AppButton>
@@ -319,7 +325,7 @@ const removeCurrentParent = (
           <div class="space-y-3">
             <AppSwitch name="hasDied" label="Has died" right-label> </AppSwitch>
             <AppTextField
-              :disabled="!formData.hasDied"
+              :disabled="!hasDied"
               label="Date of death"
               name="dateOfDeath"
               type="date"
@@ -328,5 +334,5 @@ const removeCurrentParent = (
         </DisclosurePanel>
       </Disclosure>
     </div>
-  </AppEditForm>
+  </AppForm>
 </template>

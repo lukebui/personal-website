@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { StoreNames } from "@/enums";
 import { LocalStorageKeys } from "@/enums";
+import _ from "lodash";
 
 export enum IndividualGender {
   MALE = "male",
@@ -13,6 +14,7 @@ export interface Individual {
   middleName: string | null;
   lastName: string | null;
   alias: string | null;
+  fullName: string;
   note: string | null;
   gender: IndividualGender;
   hasDied: boolean;
@@ -53,7 +55,10 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
       });
 
       if (response.ok) {
-        this.individuals = await response.json();
+        this.individuals = _.sortBy(
+          (await response.json()) as Individual[],
+          (individual) => individual.fullName
+        );
       }
     },
     async findAllIndividualsWithParents() {
@@ -68,7 +73,10 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
       );
 
       if (response.ok) {
-        this.individualsWithParents = await response.json();
+        this.individualsWithParents = _.sortBy(
+          (await response.json()) as IndividualWithParents[],
+          (individual) => individual.fullName
+        );
       }
     },
     async findAllParentTypes() {

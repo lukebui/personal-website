@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import AppDefaultLayout from "../components/Layouts/AppDefaultLayout.vue";
 import { useContactsStore, type IndividualWithParents } from "@/store/contacts";
-import { computed, onBeforeMount, ref } from "vue";
-import ContactsEditIndividualForm from "../components/Contacts/EditIndividualForm.vue";
-import AppDialog from "@/components/Base/AppDialog.vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import AppCard from "@/components/Base/AppCard.vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
-import { ComponentSize } from "@/enums";
 import moment from "moment";
+import AddIndividualDialog from "@/components/Contacts/EditIndividualDialog.vue";
+import ViewIndividualDialog from "@/components/Contacts/ViewIndividualDialog.vue";
 
 const contactsStore = useContactsStore();
 
@@ -15,7 +14,7 @@ const individualsWithParents = computed(() => {
   return contactsStore.individualsWithParents;
 });
 
-const individualToEdit = ref<IndividualWithParents>();
+const individualToView = ref<IndividualWithParents>();
 
 const fetch = async () => {
   await Promise.all([
@@ -32,23 +31,22 @@ onBeforeMount(async () => {
 const formKey = ref(0);
 
 const addItem = () => {
-  individualToEdit.value = undefined;
   formKey.value++;
-  editDialog.value = true;
+  addDialog.value = true;
 };
 
-const editItem = (item: IndividualWithParents) => {
-  individualToEdit.value = item;
+const viewItem = (item: IndividualWithParents) => {
+  individualToView.value = item;
   formKey.value++;
-  editDialog.value = true;
+  viewDialog.value = true;
 };
 
-const closeDialog = () => {
-  editDialog.value = false;
-  return fetch();
-};
+const addDialog = ref(false);
+const viewDialog = ref(false);
 
-const editDialog = ref(false);
+watch([addDialog, viewDialog], () => {
+  fetch();
+});
 </script>
 
 <template>
@@ -65,7 +63,7 @@ const editDialog = ref(false);
           <button
             v-for="individual in individualsWithParents"
             :key="individual.id"
-            @click="editItem(individual)"
+            @click="viewItem(individual)"
             class="rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <AppCard class="h-full" hover>
@@ -89,28 +87,17 @@ const editDialog = ref(false);
                   Date of birth:
                   {{ moment(individual.dateOfBirth).format("DD/MM/YYYY") }}
                 </p>
-                <p v-if="individual.hasDied">Has died</p>
-                <p v-if="individual.dateOfDeath">
-                  Date of death:
-                  {{ moment(individual.dateOfDeath).format("DD/MM/YYYY") }}
-                </p>
-                <p v-if="individual.note" class="truncate">
-                  Note: {{ individual.note }}
-                </p>
               </div>
             </AppCard>
           </button>
         </div>
       </div>
     </div>
-    <AppDialog v-model="editDialog" :size="ComponentSize.X_LARGE">
-      <ContactsEditIndividualForm
-        :key="formKey"
-        :item="individualToEdit"
-        @saved="closeDialog"
-        @deleted="closeDialog"
-        @cancelled="closeDialog"
-      />
-    </AppDialog>
+    <AddIndividualDialog v-model:show="addDialog"></AddIndividualDialog>
+    <ViewIndividualDialog
+      v-model:show="viewDialog"
+      :individual="individualToView"
+      @changed="fetch"
+    ></ViewIndividualDialog>
   </AppDefaultLayout>
 </template>

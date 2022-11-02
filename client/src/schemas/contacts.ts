@@ -62,3 +62,5 @@ export const parentSchema = yup
     child: individualSchema,
   })
   .defined();
+
+export const newParentSchema = parentSchema.pick(["parent", "type"]);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppEditForm from "../Base/AppEditForm.vue";
+import AppEditForm from "../Base/AppForm.vue";
 import AppTextField from "../Base/AppTextField.vue";
 import type * as yup from "yup";
 import type { ParentType } from "@/store/contacts";
@@ -12,7 +12,7 @@ const props = defineProps({
   item: { type: Object as PropType<ParentType> },
 });
 
-const emit = defineEmits(["cancelled", "saved", "deleted"]);
+const emit = defineEmits(["cancel", "saved", "deleted"]);
 
 const { item } = toRefs(props);
 
@@ -84,7 +84,7 @@ watch(
 );
 
 const onCancel = () => {
-  emit("cancelled");
+  emit("cancel");
 };
 </script>
 

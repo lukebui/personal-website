@@ -55,7 +55,7 @@ defineProps({
         v-if="$slots.header"
         :class="{
           'rounded-t-lg': round,
-          'px-4 py-4 sm:px-6': !noPadding,
+          'mobile-fullwidth-table-spacing': !noPadding,
           'bg-gray-100 dark:bg-gray-700': grayHeader && !well,
           'bg-gray-200 dark:bg-gray-600': grayHeader && well,
           'group-hover:bg-gray-200 dark:group-hover:bg-gray-600':
@@ -67,7 +67,7 @@ defineProps({
       </div>
       <div
         :class="{
-          'px-4 py-5 sm:p-6': !noPadding,
+          'mobile-fullwidth-table-spacing': !noPadding,
         }"
       >
         <slot />
@@ -76,7 +76,7 @@ defineProps({
         v-if="$slots.footer"
         :class="{
           'rounded-b-lg': round,
-          'px-4 py-4 sm:px-6': !noPadding,
+          'mobile-fullwidth-table-spacing': !noPadding,
           'bg-gray-100 dark:bg-gray-700': grayFooter && !well,
           'bg-gray-200 dark:bg-gray-600': grayFooter && well,
           'group-hover:bg-gray-200 dark:group-hover:bg-gray-600':

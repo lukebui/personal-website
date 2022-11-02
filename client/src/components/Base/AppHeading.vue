@@ -118,7 +118,7 @@ const secondaryActions = computed(() => {
           </div>
         </template>
       </div>
-      <div class="mt-2 flex flex-shrink-0 gap-3 md:mt-0 md:ml-4">
+      <div class="mt-1 flex flex-shrink-0 gap-3 md:mt-0 md:ml-4">
         <AppButton
           v-for="(action, actionIndex) in secondaryActions"
           :key="actionIndex"
