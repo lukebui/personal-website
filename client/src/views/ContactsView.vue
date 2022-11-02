@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppDefaultLayout from "../components/Base/AppDefaultLayout.vue";
+import AppDefaultLayout from "../components/Layouts/AppDefaultLayout.vue";
 import { useContactsStore, type IndividualWithParents } from "@/store/contacts";
 import { computed, onBeforeMount, ref } from "vue";
 import ContactsEditIndividualForm from "../components/Contacts/EditIndividualForm.vue";

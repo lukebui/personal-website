@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppCard from "@/components/Base/AppCard.vue";
-import AppDefaultLayout from "@/components/Base/AppDefaultLayout.vue";
+import AppDefaultLayout from "@/components/Layouts/AppDefaultLayout.vue";
 import AppLink from "@/components/Base/AppLink.vue";
 import { RouteNames } from "@/enums";
 import { StyledNavigationBarLinkGroup } from "@/types";

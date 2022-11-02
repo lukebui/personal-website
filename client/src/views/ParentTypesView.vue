@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AppButton from "@/components/Base/AppButton.vue";
-import AppDefaultLayout from "@/components/Base/AppDefaultLayout.vue";
+import AppDefaultLayout from "@/components/Layouts/AppDefaultLayout.vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
 import AppDialog from "@/components/Base/AppDialog.vue";
 import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppEmptyLayout from "@/components/Base/AppEmptyLayout.vue";
+import AppEmptyLayout from "@/components/Layouts/AppEmptyLayout.vue";
 import { RouteNames } from "@/enums";
 </script>
 

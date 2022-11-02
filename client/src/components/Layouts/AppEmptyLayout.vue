@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheColorModeToggle from "./AppColorModeToggle.vue";
+import TheColorModeToggle from "../Base/AppColorModeToggle.vue";
 </script>
 
 <template>

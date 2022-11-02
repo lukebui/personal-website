@@ -7,9 +7,9 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-import TheColorModeToggle from "./AppColorModeToggle.vue";
-import TheProfileDropdown from "./AppProfileDropdown.vue";
-import AppVerticalNavbar from "./AppVerticalNavbar.vue";
+import TheColorModeToggle from "../Base/AppColorModeToggle.vue";
+import TheProfileDropdown from "../Base/AppProfileDropdown.vue";
+import AppVerticalNavbar from "../Base/AppVerticalNavbar.vue";
 import { useSystemStore } from "@/store/system";
 
 const systemStore = useSystemStore();
