@@ -5,7 +5,7 @@ import { RouteNames } from "@/enums";
 
 <template>
   <AppEmptyLayout>
-    <div class="mx-auto max-w-max">
+    <div class="mx-auto max-w-max px-4 sm:px-6 lg:px-8">
       <main class="sm:flex">
         <p
           class="text-4xl font-bold tracking-tight text-indigo-600 sm:text-5xl"

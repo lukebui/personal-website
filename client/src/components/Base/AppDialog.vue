@@ -52,7 +52,7 @@ const closeDialog = () => {
         leave-to="opacity-0"
       >
         <div
-          class="fixed inset-0 bg-gray-500 bg-opacity-25 backdrop-blur-2xl transition-opacity dark:bg-gray-900 dark:bg-opacity-50 dark:backdrop-brightness-75"
+          class="fixed inset-0 bg-gray-500 bg-opacity-25 backdrop-blur-lg transition-opacity dark:bg-gray-900 dark:bg-opacity-50 dark:backdrop-blur-2xl dark:backdrop-brightness-75"
         />
       </TransitionChild>
 

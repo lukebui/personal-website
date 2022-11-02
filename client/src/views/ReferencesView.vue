@@ -15,7 +15,7 @@ const items: StyledNavigationBarLinkGroup[] = [
 
 <template>
   <AppDefaultLayout>
-    <div class="default-spacing">
+    <div class="default-spacing py-4 sm:py-10">
       <AppCard>
         <div class="flex flex-wrap gap-12 sm:gap-24">
           <div v-for="(item, itemIndex) in items" :key="itemIndex">

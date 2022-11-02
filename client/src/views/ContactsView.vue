@@ -51,8 +51,8 @@ watch([addDialog, viewDialog], () => {
 
 <template>
   <AppDefaultLayout>
-    <div class="container mx-auto px-2 sm:px-6 lg:px-8">
-      <div class="space-y-4 py-10">
+    <div class="default-spacing py-4 sm:py-10">
+      <div class="space-y-4">
         <AppHeading
           title="Manage Contacts"
           :actions="[{ name: 'Add', action: addItem, primary: true }]"

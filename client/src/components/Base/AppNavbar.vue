@@ -32,7 +32,7 @@ const { isLink } = useCheckNavigationLink();
     class="bg-white shadow dark:border-b dark:border-gray-700 dark:bg-gray-800 dark:shadow-none"
     v-slot="{ open, close }"
   >
-    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+    <div class="container mx-auto px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button-->
@@ -50,7 +50,7 @@ const { isLink } = useCheckNavigationLink();
           <div class="flex flex-shrink-0 items-center">
             <!-- Place logo here -->
           </div>
-          <div class="hidden sm:ml-6 sm:block">
+          <div class="hidden sm:block">
             <div class="flex space-x-4">
               <template v-for="(item, itemIndex) in navigation">
                 <AppNavbarLink
