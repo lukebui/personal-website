@@ -4,10 +4,6 @@
 
 @layer utilities {
   .default-spacing {
-    @apply container mx-auto px-2 py-10 sm:px-6 lg:px-8;
-  }
-
-  .mobile-fullwidth-table-spacing {
-    @apply container mx-auto px-4 py-4 sm:py-10 sm:px-6 lg:px-8;
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
   }
 }
