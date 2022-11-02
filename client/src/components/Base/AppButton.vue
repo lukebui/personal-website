@@ -56,10 +56,10 @@ defineProps({
 
 <style scoped lang="scss">
 button {
-  @apply items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-800;
+  @apply items-center justify-center font-medium focus:z-10 focus:outline-none focus:ring-2 focus:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-gray-800;
 
   &.button-text {
-    @apply border-0;
+    @apply -mx-1 border-0 px-1;
   }
 
   &.button-text-0 {
