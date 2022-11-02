@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import AppButton from "@/components/AppButton.vue";
-import AppDefaultLayout from "@/components/AppDefaultLayout.vue";
-import AppHeading from "@/components/AppHeading.vue";
-import AppDialog from "@/components/AppDialog.vue";
-import AppSimpleTable from "@/components/AppSimpleTable.vue";
+import AppButton from "@/components/Base/AppButton.vue";
+import AppDefaultLayout from "@/components/Base/AppDefaultLayout.vue";
+import AppHeading from "@/components/Base/AppHeading.vue";
+import AppDialog from "@/components/Base/AppDialog.vue";
+import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
 import { ComponentColor, RouteNames } from "@/enums";
 import { computed, onBeforeMount, ref } from "vue";
 import { type ParentType, useContactsStore } from "@/store/contacts";
-import ContactsEditParentTypeForm from "@/components/ContactsEditParentTypeForm.vue";
+import ContactsEditParentTypeForm from "@/components/Contacts/EditParentTypeForm.vue";
 
 const contactsStore = useContactsStore();
 

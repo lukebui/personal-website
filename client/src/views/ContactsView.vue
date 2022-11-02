@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import AppDefaultLayout from "../components/AppDefaultLayout.vue";
+import AppDefaultLayout from "../components/Base/AppDefaultLayout.vue";
 import { useContactsStore, type IndividualWithParents } from "@/store/contacts";
 import { computed, onBeforeMount, ref } from "vue";
-import ContactsEditIndividualForm from "../components/ContactsEditIndividualForm.vue";
-import AppDialog from "@/components/AppDialog.vue";
-import AppCard from "@/components/AppCard.vue";
-import AppHeading from "@/components/AppHeading.vue";
+import ContactsEditIndividualForm from "../components/Contacts/EditIndividualForm.vue";
+import AppDialog from "@/components/Base/AppDialog.vue";
+import AppCard from "@/components/Base/AppCard.vue";
+import AppHeading from "@/components/Base/AppHeading.vue";
 import { ComponentSize } from "@/enums";
 import moment from "moment";
 

@@ -4,7 +4,7 @@ import { computed, ref, toRefs, watch, type PropType } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type * as yup from "yup";
 import _ from "lodash";
-import { useOptionIdErrors } from "../composables";
+import { useOptionIdErrors } from "../../composables";
 import AppInputGroup from "./AppInputGroup.vue";
 import {
   Listbox,

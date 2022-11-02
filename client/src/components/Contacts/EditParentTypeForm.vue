@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppEditForm from "./AppEditForm.vue";
-import AppTextField from "./AppTextField.vue";
+import AppEditForm from "../Base/AppEditForm.vue";
+import AppTextField from "../Base/AppTextField.vue";
 import * as yup from "yup";
 import type { ParentType } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";

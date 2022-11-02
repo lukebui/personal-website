@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AppEditForm from "./AppEditForm.vue";
-import AppTextField from "./AppTextField.vue";
-import AppTextarea from "./AppTextarea.vue";
+import AppEditForm from "../Base/AppEditForm.vue";
+import AppTextField from "../Base/AppTextField.vue";
+import AppTextarea from "../Base/AppTextarea.vue";
 import * as yup from "yup";
 import {
   IndividualGender,
@@ -13,11 +13,11 @@ import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys, ComponentColor, ComponentSize } from "@/enums";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import AppButton from "./AppButton.vue";
-import AppSwitch from "./AppSwitch.vue";
-import AppSelect from "./AppSelect.vue";
+import AppButton from "../Base/AppButton.vue";
+import AppSwitch from "../Base/AppSwitch.vue";
+import AppSelect from "../Base/AppSelect.vue";
 import { FieldArray } from "vee-validate";
-import AppInputGroup from "./AppInputGroup.vue";
+import AppInputGroup from "../Base/AppInputGroup.vue";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
 
 const contactsStore = useContactsStore();

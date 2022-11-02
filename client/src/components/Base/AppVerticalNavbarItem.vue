@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import type { StyledNavigationLink, StyledNavigationBarLinkGroup } from "@/types";
+import type {
+  StyledNavigationLink,
+  StyledNavigationBarLinkGroup,
+} from "@/types";
 import type { PropType } from "vue";
 import AppLink from "./AppLink.vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
@@ -7,7 +10,9 @@ import { useCheckNavigationLink } from "@/composables";
 
 defineProps({
   item: {
-    type: Object as PropType<StyledNavigationLink | StyledNavigationBarLinkGroup>,
+    type: Object as PropType<
+      StyledNavigationLink | StyledNavigationBarLinkGroup
+    >,
     required: true,
   },
   icon: Boolean,
