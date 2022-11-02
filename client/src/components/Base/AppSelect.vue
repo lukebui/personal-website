@@ -33,11 +33,6 @@ const props = defineProps({
       string | ((option: InputOption) => string)
     >,
   },
-  optionValue: {
-    type: [String, Function] as PropType<
-      string | ((option: InputOption) => InputOption)
-    >,
-  },
   optionText: {
     type: [String, Function] as PropType<
       string | ((option: InputOption) => string)
@@ -69,7 +64,6 @@ const {
   options,
   optionId,
   optionText,
-  optionValue,
   returnValue,
   rules,
   modelValue,
@@ -82,18 +76,21 @@ const localId = computed(() => {
   return id?.value ? id.value : defaultId;
 });
 
-const { errorMessage, value, setErrors } = useField<
-  InputOption | InputOption[]
->(name, rules, {
-  standalone: !name.value,
-  initialValue: !name.value
-    ? modelValue?.value
-      ? modelValue
-      : multiple.value
-      ? []
-      : undefined
-    : undefined,
-});
+const getOptionObject = (value: InputOption): InputOption => {
+  return (
+    options.value.find((option) =>
+      _.isEqual(getOptionId(value), getOptionId(option))
+    ) || value
+  );
+};
+
+const matchInitialValues = (values: InputOption | InputOption[]) => {
+  if (_.isArray(values)) {
+    return values.map((value) => getOptionObject(value));
+  } else {
+    return getOptionObject(values);
+  }
+};
 
 const getOptionId = (option: InputOption): string => {
   if (!optionId?.value) return `${option}`;
@@ -104,7 +101,6 @@ const getOptionId = (option: InputOption): string => {
     return `${optionId?.value?.(option)}`;
   }
 };
-const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
 
 const getValueText = (selectedValues: InputOption | InputOption[]): string => {
   if (_.isArray(selectedValues)) {
@@ -142,11 +138,7 @@ const getOptionValue = (option: InputOption): InputOption => {
   if (returnValue.value) {
     return option;
   } else {
-    if (typeof optionValue?.value === "string") {
-      return _.get(option, optionValue.value);
-    } else {
-      return optionValue?.value?.(option) || option;
-    }
+    return getOptionId(option);
   }
 };
 
@@ -206,6 +198,23 @@ watch([optionList, closestOptionListContainer], (values) => {
     listBounding.bottom.value > windowSize.height.value
   );
 });
+
+const { errorMessage, value, setErrors } = useField<
+  InputOption | InputOption[]
+>(name, rules, {
+  standalone: !name.value,
+  initialValue: !name.value
+    ? modelValue?.value
+      ? modelValue
+      : multiple.value
+      ? []
+      : undefined
+    : undefined,
+});
+
+value.value = matchInitialValues(value.value);
+
+const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
 </script>
 
 <template>

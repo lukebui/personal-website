@@ -297,7 +297,6 @@ const removeCurrentParent = (
         name="gender"
         :options="genders"
         option-id="value"
-        option-value="value"
         option-text="name"
       ></AppSelect>
       <AppTextField
