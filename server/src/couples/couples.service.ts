@@ -8,7 +8,6 @@ import { Couple } from './entities/couple.entity';
 const defaultRelations: FindOptionsRelations<Couple> = {
   partner1: true,
   partner2: true,
-  children: true,
 };
 @Injectable()
 export class CouplesService {

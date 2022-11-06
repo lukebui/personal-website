@@ -35,11 +35,11 @@ export class ParentTypesService {
       where: {
         id,
       },
-      relations: { parent: true },
+      relations: { parentalLinks: true },
     });
 
     if (parentType.length) {
-      if (parentType[0].parent.length)
+      if (parentType[0].parentalLinks.length)
         throw new HttpException(
           'Cannot delete. There are parent data depending on this type.',
           HttpStatus.FORBIDDEN,

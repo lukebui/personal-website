@@ -9,7 +9,7 @@ import { CaslModule } from './casl/casl.module';
 import { IndividualsModule } from './individuals/individuals.module';
 import { ParentTypesModule } from './parent-types/parent-types.module';
 import { CouplesModule } from './couples/couples.module';
-import { ParentChildRelationshipsModule } from './parent-child-relationships/parent-child-relationships.module';
+import { ParentalLinksModule } from './parental-links/parental-links.module';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { ParentChildRelationshipsModule } from './parent-child-relationships/par
     IndividualsModule,
     ParentTypesModule,
     CouplesModule,
-    ParentChildRelationshipsModule,
+    ParentalLinksModule,
   ],
   providers: [
     AppService,

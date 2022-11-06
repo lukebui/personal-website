@@ -4,7 +4,7 @@ import { ParentType } from 'src/parent-types/entities/parent-type.entity';
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
-export class ParentChildRelationship {
+export class ParentalLink {
   @PrimaryGeneratedColumn()
   id: number;
 
