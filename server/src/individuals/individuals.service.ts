@@ -37,7 +37,7 @@ export class IndividualsService {
   }
 
   async update(id: number, updateIndividualDto: UpdateIndividualDto) {
-    await this.individualRepository.update(id, updateIndividualDto);
+    return this.individualRepository.update(id, updateIndividualDto);
   }
 
   remove(id: number) {
