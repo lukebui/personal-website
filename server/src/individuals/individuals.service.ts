@@ -1,9 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { CreateIndividualDto } from './dto/create-individual.dto';
 import { UpdateIndividualDto } from './dto/update-individual.dto';
 import { Individual } from './entities/individual.entity';
+
+const defaultRelations: FindOptionsRelations<Individual> = {
+  parents: true,
+  spouses: true,
+};
 
 @Injectable()
 export class IndividualsService {
@@ -21,17 +26,14 @@ export class IndividualsService {
   }
 
   findAll() {
-    return this.individualRepository.find();
-  }
-
-  findAllWithRelations() {
-    return this.individualRepository.find({
-      relations: { parents: true, spouses: true },
-    });
+    return this.individualRepository.find({ relations: defaultRelations });
   }
 
   findOne(id: number) {
-    return this.individualRepository.findOneBy({ id });
+    return this.individualRepository.findOne({
+      where: { id },
+      relations: defaultRelations,
+    });
   }
 
   async update(id: number, updateIndividualDto: UpdateIndividualDto) {

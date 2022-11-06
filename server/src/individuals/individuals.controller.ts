@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Query,
   Logger,
 } from '@nestjs/common';
 import { IndividualsService } from './individuals.service';
@@ -28,10 +27,8 @@ export class IndividualsController {
   }
 
   @Get()
-  findAllWithParents(@Query('relations') parents: string) {
-    return parents
-      ? this.individualsService.findAllWithRelations()
-      : this.individualsService.findAll();
+  findAllWithParents() {
+    return this.individualsService.findAll();
   }
 
   @Get(':id')

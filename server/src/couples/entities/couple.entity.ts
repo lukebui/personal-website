@@ -1,15 +1,22 @@
 import { Individual } from 'src/individuals/entities/individual.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { ParentChildRelationship } from 'src/parent-child-relationships/entities/parent-child-relationship.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Couple {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Individual, { eager: true })
+  @ManyToOne(() => Individual)
   partner1: Individual;
 
-  @ManyToOne(() => Individual, { eager: true })
+  @ManyToOne(() => Individual)
   partner2: Individual;
 
   @Column()
@@ -22,5 +29,8 @@ export class Couple {
     `,
     unique: true,
   })
-  compositeId: string;
+  partnerIds: string;
+
+  @OneToMany(() => ParentChildRelationship, (parent) => parent.parentCouple)
+  children: ParentChildRelationship[];
 }

@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsRelations, Repository } from 'typeorm';
 import { CreateCoupleDto } from './dto/create-couple.dto';
 import { UpdateCoupleDto } from './dto/update-couple.dto';
 import { Couple } from './entities/couple.entity';
 
+const defaultRelations: FindOptionsRelations<Couple> = {
+  partner1: true,
+  partner2: true,
+  children: true,
+};
 @Injectable()
 export class CouplesService {
   constructor(
@@ -18,11 +23,14 @@ export class CouplesService {
   }
 
   findAll() {
-    return this.coupleRepository.find();
+    return this.coupleRepository.find({ relations: defaultRelations });
   }
 
   findOne(id: number) {
-    return this.coupleRepository.findOneBy({ id });
+    return this.coupleRepository.findOne({
+      where: { id },
+      relations: defaultRelations,
+    });
   }
 
   update(id: number, updateCoupleDto: UpdateCoupleDto) {

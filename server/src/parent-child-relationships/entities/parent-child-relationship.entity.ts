@@ -9,14 +9,12 @@ export class ParentChildRelationship {
   id: number;
 
   @ManyToOne(() => ParentType, {
-    eager: true,
     nullable: false,
   })
   @JoinColumn()
   type: ParentType;
 
   @ManyToOne(() => Couple, {
-    eager: true,
     onDelete: 'CASCADE',
     nullable: false,
     orphanedRowAction: 'delete',
@@ -25,7 +23,6 @@ export class ParentChildRelationship {
   parentCouple: Couple;
 
   @ManyToOne(() => Individual, {
-    eager: true,
     onDelete: 'CASCADE',
     nullable: false,
     orphanedRowAction: 'delete',
