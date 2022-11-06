@@ -1,9 +1,10 @@
+import { Couple } from 'src/couples/entities/couple.entity';
 import { Individual } from 'src/individuals/entities/individual.entity';
 import { ParentType } from 'src/parent-types/entities/parent-type.entity';
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
-export class Parent {
+export class ParentChildRelationship {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -14,14 +15,14 @@ export class Parent {
   @JoinColumn()
   type: ParentType;
 
-  @ManyToOne(() => Individual, {
+  @ManyToOne(() => Couple, {
     eager: true,
     onDelete: 'CASCADE',
     nullable: false,
     orphanedRowAction: 'delete',
   })
   @JoinColumn()
-  parent: Individual;
+  parentCouple: Couple;
 
   @ManyToOne(() => Individual, {
     eager: true,

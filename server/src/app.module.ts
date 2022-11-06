@@ -7,9 +7,9 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { CaslModule } from './casl/casl.module';
 import { IndividualsModule } from './individuals/individuals.module';
-import { ParentsModule } from './parents/parents.module';
 import { ParentTypesModule } from './parent-types/parent-types.module';
 import { CouplesModule } from './couples/couples.module';
+import { ParentChildRelationshipsModule } from './parent-child-relationships/parent-child-relationships.module';
 
 @Module({
   imports: [
@@ -27,9 +27,9 @@ import { CouplesModule } from './couples/couples.module';
     UsersModule,
     CaslModule,
     IndividualsModule,
-    ParentsModule,
     ParentTypesModule,
     CouplesModule,
+    ParentChildRelationshipsModule,
   ],
   providers: [
     AppService,

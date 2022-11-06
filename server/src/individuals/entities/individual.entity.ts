@@ -1,7 +1,7 @@
 import { IndividualGender } from 'src/enums/IndividualGender.enum';
-import { Parent } from 'src/parents/entities/parent.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Couple } from 'src/couples/entities/couple.entity';
+import { ParentChildRelationship } from 'src/parent-child-relationships/entities/parent-child-relationship.entity';
 
 @Entity()
 export class Individual {
@@ -26,6 +26,7 @@ export class Individual {
   @Column({
     type: 'enum',
     enum: IndividualGender,
+    nullable: true,
   })
   gender: IndividualGender;
 
@@ -47,15 +48,10 @@ export class Individual {
   })
   hasDied: boolean;
 
-  @OneToMany(() => Parent, (parent) => parent.child, {
+  @OneToMany(() => ParentChildRelationship, (parent) => parent.child, {
     cascade: true,
   })
-  parents: Parent[];
-
-  @OneToMany(() => Parent, (parent) => parent.parent, {
-    cascade: true,
-  })
-  children: Parent[];
+  parents: ParentChildRelationship[];
 
   @OneToMany(() => Couple, (couple) => couple.partner1 || couple.partner2)
   spouses: Couple[];

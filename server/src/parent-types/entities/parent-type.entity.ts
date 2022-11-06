@@ -1,4 +1,4 @@
-import { Parent } from 'src/parents/entities/parent.entity';
+import { ParentChildRelationship } from 'src/parent-child-relationships/entities/parent-child-relationship.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
@@ -9,6 +9,8 @@ export class ParentType {
   @Column()
   type: string;
 
-  @OneToMany(() => Parent, (parent) => parent.type, { onDelete: 'RESTRICT' })
-  parent: Parent[];
+  @OneToMany(() => ParentChildRelationship, (parent) => parent.type, {
+    onDelete: 'RESTRICT',
+  })
+  parent: ParentChildRelationship[];
 }

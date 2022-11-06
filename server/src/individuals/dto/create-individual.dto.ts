@@ -2,17 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IndividualGender } from 'src/enums/IndividualGender.enum';
 import { Type } from 'class-transformer';
 import { IsNotEmpty, ValidateIf } from 'class-validator';
-import { ParentType } from 'src/parent-types/entities/parent-type.entity';
-import { Individual } from '../entities/individual.entity';
-import { Parent } from 'src/parents/entities/parent.entity';
 
-export class NewParent {
-  @ApiProperty()
-  type: ParentType;
-
-  @ApiProperty()
-  parent: Individual;
-}
 export class CreateIndividualDto {
   @ValidateIf((object: CreateIndividualDto) => !object.alias)
   @IsNotEmpty({ message: 'First name or Alias cannot be empty.' })
@@ -46,7 +36,4 @@ export class CreateIndividualDto {
 
   @ApiProperty()
   hasDied: boolean | null;
-
-  @Type(() => Parent)
-  parents?: Parent[];
 }
