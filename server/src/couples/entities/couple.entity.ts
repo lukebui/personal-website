@@ -13,10 +13,10 @@ export class Couple {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Individual)
+  @ManyToOne(() => Individual, { eager: true })
   partner1: Individual;
 
-  @ManyToOne(() => Individual)
+  @ManyToOne(() => Individual, { eager: true })
   partner2: Individual;
 
   @Column()
