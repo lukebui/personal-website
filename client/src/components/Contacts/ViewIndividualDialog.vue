@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { useContactsStore, type IndividualWithParents } from "@/store/contacts";
+import {
+  useContactsStore,
+  type IndividualWithRelations,
+} from "@/store/contacts";
 import { computed, ref, toRefs, type PropType } from "vue";
 import AppDialog from "../Base/AppDialog.vue";
 import EditIndividualDialog from "./EditIndividualDialog.vue";
@@ -10,7 +13,7 @@ import AppHeading from "../Base/AppHeading.vue";
 
 const props = defineProps({
   show: Boolean,
-  individual: Object as PropType<IndividualWithParents>,
+  individual: Object as PropType<IndividualWithRelations>,
 });
 
 const emit = defineEmits(["update:show", "changed"]);
@@ -19,7 +22,7 @@ const { show, individual } = toRefs(props);
 
 const contactsStore = useContactsStore();
 
-const allIndividuals = computed(() => contactsStore.individualsWithParents);
+const allIndividuals = computed(() => contactsStore.individualsWithRelations);
 
 const localIndividual = computed(() =>
   allIndividuals.value.find((tempIndividual) =>

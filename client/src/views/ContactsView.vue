@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import AppDefaultLayout from "../components/Layouts/AppDefaultLayout.vue";
-import { useContactsStore, type IndividualWithParents } from "@/store/contacts";
+import {
+  useContactsStore,
+  type IndividualWithRelations,
+} from "@/store/contacts";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import AppCard from "@/components/Base/AppCard.vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
@@ -10,16 +13,16 @@ import ViewIndividualDialog from "@/components/Contacts/ViewIndividualDialog.vue
 
 const contactsStore = useContactsStore();
 
-const individualsWithParents = computed(() => {
-  return contactsStore.individualsWithParents;
+const individualsWithRelations = computed(() => {
+  return contactsStore.individualsWithRelations;
 });
 
-const individualToView = ref<IndividualWithParents>();
+const individualToView = ref<IndividualWithRelations>();
 
 const fetch = async () => {
   await Promise.all([
     contactsStore.findAllIndividuals(),
-    contactsStore.findAllIndividualsWithParents(),
+    contactsStore.findAllIndividualsWithRelations(),
     contactsStore.findAllParentTypes(),
   ]);
 };
@@ -35,7 +38,7 @@ const addItem = () => {
   addDialog.value = true;
 };
 
-const viewItem = (item: IndividualWithParents) => {
+const viewItem = (item: IndividualWithRelations) => {
   individualToView.value = item;
   formKey.value++;
   viewDialog.value = true;
@@ -61,7 +64,7 @@ watch([addDialog, viewDialog], () => {
           class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           <button
-            v-for="individual in individualsWithParents"
+            v-for="individual in individualsWithRelations"
             :key="individual.id"
             @click="viewItem(individual)"
             class="rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"

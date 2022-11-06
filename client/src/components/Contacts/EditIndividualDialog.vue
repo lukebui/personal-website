@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IndividualWithParents } from "@/store/contacts";
+import type { IndividualWithRelations } from "@/store/contacts";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
 import ContactsEditIndividualForm from "./EditIndividualForm.vue";
 import AppDialog from "@/components/Base/AppDialog.vue";
@@ -7,7 +7,7 @@ import { ComponentSize } from "@/enums";
 
 const props = defineProps({
   show: Boolean,
-  item: Object as PropType<IndividualWithParents>,
+  item: Object as PropType<IndividualWithRelations>,
 });
 
 const emit = defineEmits(["update:show", "saved", "deleted"]);

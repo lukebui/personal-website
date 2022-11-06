@@ -6,7 +6,7 @@ import * as yup from "yup";
 import {
   IndividualGender,
   useContactsStore,
-  type IndividualWithParents,
+  type IndividualWithRelations,
 } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys, ComponentColor, ComponentSize } from "@/enums";
@@ -18,12 +18,12 @@ import AppSelect from "../Base/AppSelect.vue";
 import { FieldArray, useForm } from "vee-validate";
 import AppInputGroup from "../Base/AppInputGroup.vue";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
-import { individualSchema, newParentSchema, parentSchema } from "@/schemas";
+import { individualSchema, newParentSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
 import AppDeleteConfirmDialog from "../Base/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
-  item: { type: Object as PropType<IndividualWithParents> },
+  item: { type: Object as PropType<IndividualWithRelations> },
 });
 
 const emit = defineEmits(["close", "saved", "deleted"]);
@@ -41,23 +41,16 @@ const parentTypes = computed(() => {
 const { item } = toRefs(props);
 
 type FormData = yup.InferType<typeof individualSchema> & {
-  currentParents: yup.InferType<typeof parentSchema>[];
-  removedParents: yup.InferType<typeof parentSchema>[];
-  newParents: yup.InferType<typeof newParentSchema>[];
+  parents: yup.InferType<typeof newParentSchema>[];
 };
 
 const formSchema: yup.SchemaOf<FormData> = individualSchema
   .shape({
-    currentParents: yup
-      .array(parentSchema)
-      .label("Parents")
-      .default(() => []),
-    newParents: yup
+    parents: yup
       .array(newParentSchema)
-      .compact((value) => !value.type && !value.parent)
+      .label("Parents")
       .default(() => [])
-      .label("Parents"),
-    removedParents: yup.array(parentSchema).default(() => []),
+      .transform((value) => (!value ? [] : value)),
   })
   .defined();
 
@@ -107,7 +100,7 @@ const deleteItem = async () => {
   if (!response.ok) throw new Error((await response.json()).message);
 };
 
-const getFormData = (itemValue?: IndividualWithParents) => {
+const getFormData = (itemValue?: IndividualWithRelations) => {
   if (itemValue) {
     const formData: FormData = {
       id: itemValue.id,
@@ -120,9 +113,7 @@ const getFormData = (itemValue?: IndividualWithParents) => {
       dateOfBirth: itemValue.dateOfBirth,
       dateOfDeath: itemValue.dateOfDeath,
       hasDied: itemValue.hasDied,
-      currentParents: itemValue.parents,
-      removedParents: [],
-      newParents: [],
+      parents: itemValue.parents,
     };
     return formData;
   } else {
@@ -168,18 +159,6 @@ const shouldDefaultShowMore = computed(() => {
 
 const hasDied = useFieldModel("hasDied");
 
-const currentParents = useFieldModel("currentParents");
-
-const removedParents = useFieldModel("removedParents");
-
-const removeCurrentParent = (
-  remove: (index: number) => void,
-  index: number
-) => {
-  removedParents.value.push(currentParents.value[index]);
-  remove(index);
-};
-
 const onDeleted = () => {
   deleteConfirmDialog.value = false;
   emit("deleted");
@@ -224,7 +203,7 @@ const onDeleted = () => {
 
       <AppInputGroup label="Parents">
         <div class="divide-y divide-gray-500 sm:divide-y-0">
-          <FieldArray name="currentParents" #="{ fields, remove }">
+          <FieldArray name="parents" #="{ fields, push, remove }">
             <div
               v-if="fields.length"
               class="divide-y divide-gray-500 sm:divide-y-0"
@@ -238,56 +217,18 @@ const onDeleted = () => {
                   class="my-1 grid flex-grow grid-cols-1 gap-2 sm:grid-cols-2"
                 >
                   <AppSelect
-                    :name="`currentParents[${fieldIndex}].type`"
+                    :name="`parents[${fieldIndex}].type`"
                     :options="parentTypes"
                     return-value
                     option-id="id"
                     option-text="type"
                   ></AppSelect>
                   <AppSelect
-                    :name="`currentParents[${fieldIndex}].parent`"
+                    :name="`parents[${fieldIndex}].parent`"
                     :options="individuals"
                     return-value
                     option-id="id"
-                    :option-text="(individual: IndividualWithParents) => {return [individual.lastName, individual.middleName, individual.firstName, individual.alias ? `(${individual.alias})`: ''].join(' ')}"
-                  ></AppSelect>
-                </div>
-                <AppButton
-                  round
-                  :size="ComponentSize.SMALL"
-                  @click="removeCurrentParent(remove, fieldIndex)"
-                >
-                  <XMarkIcon class="h-5 w-5" />
-                </AppButton>
-              </div>
-            </div>
-          </FieldArray>
-          <FieldArray name="newParents" #="{ fields, push, remove }">
-            <div
-              v-if="fields.length"
-              class="divide-y divide-gray-500 sm:divide-y-0"
-            >
-              <div
-                class="flex items-center gap-2"
-                v-for="(field, fieldIndex) in fields"
-                :key="field.key"
-              >
-                <div
-                  class="my-1 grid flex-grow grid-cols-1 gap-2 sm:grid-cols-2"
-                >
-                  <AppSelect
-                    :name="`newParents[${fieldIndex}].type`"
-                    :options="parentTypes"
-                    return-value
-                    option-id="id"
-                    option-text="type"
-                  ></AppSelect>
-                  <AppSelect
-                    :name="`newParents[${fieldIndex}].parent`"
-                    :options="individuals"
-                    return-value
-                    option-id="id"
-                    :option-text="(individual: IndividualWithParents) => {return [individual.lastName, individual.middleName, individual.firstName, individual.alias ? `(${individual.alias})`: ''].join(' ')}"
+                    :option-text="(individual: IndividualWithRelations) => {return [individual.lastName, individual.middleName, individual.firstName, individual.alias ? `(${individual.alias})`: ''].join(' ')}"
                   ></AppSelect>
                 </div>
                 <AppButton
