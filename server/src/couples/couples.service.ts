@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsRelations, Repository } from 'typeorm';
 import { CreateCoupleDto } from './dto/create-couple.dto';
@@ -16,10 +16,21 @@ export class CouplesService {
     @InjectRepository(Couple) private coupleRepository: Repository<Couple>,
   ) {}
 
-  create(createCoupleDto: CreateCoupleDto) {
-    return this.coupleRepository.save(
-      this.coupleRepository.create(createCoupleDto),
-    );
+  async create(createCoupleDto: CreateCoupleDto) {
+    const newCouple = this.coupleRepository.create(createCoupleDto);
+
+    const existCoupleWithSameIds = await this.coupleRepository.find({
+      where: { partnerIds: newCouple.partnerIds },
+    });
+
+    if (existCoupleWithSameIds.length) {
+      throw new HttpException(
+        'This couple has existed.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return this.coupleRepository.save(newCouple);
   }
 
   findAll() {
