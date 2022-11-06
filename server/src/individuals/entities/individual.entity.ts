@@ -1,8 +1,7 @@
-import { Expose } from 'class-transformer';
 import { IndividualGender } from 'src/enums/IndividualGender.enum';
 import { Parent } from 'src/parents/entities/parent.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import * as _ from 'lodash';
+import { Couple } from 'src/couples/entities/couple.entity';
 
 @Entity()
 export class Individual {
@@ -58,10 +57,11 @@ export class Individual {
   })
   children: Parent[];
 
-  @Expose()
-  public get fullName() {
-    return _.compact([this.lastName, this.middleName, this.firstName]).join(
-      ' ',
-    );
-  }
+  @OneToMany(() => Couple, (couple) => couple.partner1 || couple.partner2)
+  spouses: Couple[];
+
+  @Column({
+    asExpression: `concat_ws(' ',lastName, middleName, firstName)`,
+  })
+  fullName: string;
 }

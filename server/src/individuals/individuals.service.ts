@@ -44,7 +44,7 @@ export class IndividualsService {
 
   findAllWithRelations() {
     return this.individualRepository.find({
-      relations: { parents: true, children: true },
+      relations: { parents: true, children: true, spouses: true },
     });
   }
 
