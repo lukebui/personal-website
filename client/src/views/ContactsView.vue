@@ -13,8 +13,8 @@ import ViewIndividualDialog from "@/components/Contacts/ViewIndividualDialog.vue
 
 const contactsStore = useContactsStore();
 
-const individualsWithRelations = computed(() => {
-  return contactsStore.individualsWithRelations;
+const individuals = computed(() => {
+  return contactsStore.individuals;
 });
 
 const individualToView = ref<IndividualWithRelations>();
@@ -22,7 +22,6 @@ const individualToView = ref<IndividualWithRelations>();
 const fetch = async () => {
   await Promise.all([
     contactsStore.findAllIndividuals(),
-    contactsStore.findAllIndividualsWithRelations(),
     contactsStore.findAllParentTypes(),
   ]);
 };
@@ -64,7 +63,7 @@ watch([addDialog, viewDialog], () => {
           class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           <button
-            v-for="individual in individualsWithRelations"
+            v-for="individual in individuals"
             :key="individual.id"
             @click="viewItem(individual)"
             class="rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -85,7 +84,7 @@ watch([addDialog, viewDialog], () => {
                     ({{ individual.alias }})
                   </span>
                 </p>
-                <p>Gender: {{ individual.gender }}</p>
+                <p v-if="individual.gender">Gender: {{ individual.gender }}</p>
                 <p v-if="individual.dateOfBirth">
                   Date of birth:
                   {{ moment(individual.dateOfBirth).format("DD/MM/YYYY") }}

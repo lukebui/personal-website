@@ -22,7 +22,7 @@ const { show, individual } = toRefs(props);
 
 const contactsStore = useContactsStore();
 
-const allIndividuals = computed(() => contactsStore.individualsWithRelations);
+const allIndividuals = computed(() => contactsStore.individuals);
 
 const localIndividual = computed(() =>
   allIndividuals.value.find((tempIndividual) =>
@@ -58,7 +58,9 @@ const editDialog = ref(false);
           <p v-if="localIndividual.alias">
             Nickname: {{ localIndividual.alias }}
           </p>
-          <p>Gender: {{ localIndividual.gender }}</p>
+          <p v-if="localIndividual.gender">
+            Gender: {{ localIndividual.gender }}
+          </p>
           <p v-if="localIndividual.dateOfBirth">
             Date of birth:
             {{ moment(localIndividual.dateOfBirth).format("DD/MM/YYYY") }}

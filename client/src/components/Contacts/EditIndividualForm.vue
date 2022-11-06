@@ -2,23 +2,20 @@
 import AppForm from "../Base/AppForm.vue";
 import AppTextField from "../Base/AppTextField.vue";
 import AppTextarea from "../Base/AppTextarea.vue";
-import * as yup from "yup";
+import type * as yup from "yup";
 import {
   IndividualGender,
-  useContactsStore,
   type IndividualWithRelations,
 } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
-import { LocalStorageKeys, ComponentColor, ComponentSize } from "@/enums";
+import { LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import AppButton from "../Base/AppButton.vue";
 import AppSwitch from "../Base/AppSwitch.vue";
 import AppSelect from "../Base/AppSelect.vue";
-import { FieldArray, useForm } from "vee-validate";
-import AppInputGroup from "../Base/AppInputGroup.vue";
-import { XMarkIcon } from "@heroicons/vue/24/solid";
-import { individualSchema, newParentSchema } from "@/schemas";
+import { useForm } from "vee-validate";
+import { individualSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
 import AppDeleteConfirmDialog from "../Base/AppDeleteConfirmDialog.vue";
 
@@ -28,31 +25,11 @@ const props = defineProps({
 
 const emit = defineEmits(["close", "saved", "deleted"]);
 
-const contactsStore = useContactsStore();
-
-const individuals = computed(() => {
-  return contactsStore.individuals;
-});
-
-const parentTypes = computed(() => {
-  return contactsStore.parentTypes;
-});
-
 const { item } = toRefs(props);
 
-type FormData = yup.InferType<typeof individualSchema> & {
-  parents: yup.InferType<typeof newParentSchema>[];
-};
+const formSchema = individualSchema;
 
-const formSchema: yup.SchemaOf<FormData> = individualSchema
-  .shape({
-    parents: yup
-      .array(newParentSchema)
-      .label("Parents")
-      .default(() => [])
-      .transform((value) => (!value ? [] : value)),
-  })
-  .defined();
+type FormData = yup.InferType<typeof formSchema>;
 
 const genders: { name: string; value: IndividualGender }[] = [
   { name: "Male", value: IndividualGender.MALE },
@@ -113,7 +90,6 @@ const getFormData = (itemValue?: IndividualWithRelations) => {
       dateOfBirth: itemValue.dateOfBirth,
       dateOfDeath: itemValue.dateOfDeath,
       hasDied: itemValue.hasDied,
-      parents: itemValue.parents,
     };
     return formData;
   } else {
@@ -188,7 +164,6 @@ const onDeleted = () => {
       <AppTextField label="Nickname" name="alias"></AppTextField>
       <AppSelect
         label="Gender"
-        required
         name="gender"
         :options="genders"
         option-id="value"
@@ -200,57 +175,6 @@ const onDeleted = () => {
         type="date"
       ></AppTextField>
       <AppTextarea label="Notes" name="note" autoresize></AppTextarea>
-
-      <AppInputGroup label="Parents">
-        <div class="divide-y divide-gray-500 sm:divide-y-0">
-          <FieldArray name="parents" #="{ fields, push, remove }">
-            <div
-              v-if="fields.length"
-              class="divide-y divide-gray-500 sm:divide-y-0"
-            >
-              <div
-                class="flex items-center gap-2"
-                v-for="(field, fieldIndex) in fields"
-                :key="field.key"
-              >
-                <div
-                  class="my-1 grid flex-grow grid-cols-1 gap-2 sm:grid-cols-2"
-                >
-                  <AppSelect
-                    :name="`parents[${fieldIndex}].type`"
-                    :options="parentTypes"
-                    return-value
-                    option-id="id"
-                    option-text="type"
-                  ></AppSelect>
-                  <AppSelect
-                    :name="`parents[${fieldIndex}].parent`"
-                    :options="individuals"
-                    return-value
-                    option-id="id"
-                    :option-text="(individual: IndividualWithRelations) => {return [individual.lastName, individual.middleName, individual.firstName, individual.alias ? `(${individual.alias})`: ''].join(' ')}"
-                  ></AppSelect>
-                </div>
-                <AppButton
-                  round
-                  :size="ComponentSize.SMALL"
-                  @click="remove(fieldIndex)"
-                >
-                  <XMarkIcon class="h-5 w-5" />
-                </AppButton>
-              </div>
-            </div>
-            <AppButton
-              class="mt-1 w-full"
-              block
-              :color="ComponentColor.SECONDARY"
-              @click="push({})"
-            >
-              Add parent
-            </AppButton>
-          </FieldArray>
-        </div>
-      </AppInputGroup>
       <Disclosure :default-open="shouldDefaultShowMore" #="{ open }">
         <div class="pt-2">
           <DisclosureButton as="template">

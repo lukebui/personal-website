@@ -16,7 +16,7 @@ export interface Individual {
   alias: string | null;
   fullName: string;
   note: string | null;
-  gender: IndividualGender;
+  gender: IndividualGender | null;
   hasDied: boolean;
   dateOfBirth: Date | null;
   dateOfDeath: Date | null;
@@ -41,8 +41,7 @@ export interface IndividualWithRelations extends Individual {
 
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {
   state: () => ({
-    individuals: [] as Individual[],
-    individualsWithRelations: [] as IndividualWithRelations[],
+    individuals: [] as IndividualWithRelations[],
     parentTypes: [] as ParentType[],
     parents: [] as ParentChildRelationship[],
   }),
@@ -57,24 +56,6 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
 
       if (response.ok) {
         this.individuals = _.sortBy(
-          (await response.json()) as Individual[],
-          (individual) => individual.fullName
-        );
-      }
-    },
-    async findAllIndividualsWithRelations() {
-      const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
-      const response = await fetch(
-        "http://localhost:3000/v1/individuals?relations=1",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        this.individualsWithRelations = _.sortBy(
           (await response.json()) as IndividualWithRelations[],
           (individual) => individual.fullName
         );

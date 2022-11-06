@@ -23,7 +23,7 @@ export const individualSchema = yup.object({
   note: yup.string().nullable().label("Notes"),
   gender: yup
     .string()
-    .required()
+    .nullable()
     .oneOf(_.values(IndividualGender))
     .label("Gender"),
   dateOfBirth: yup
