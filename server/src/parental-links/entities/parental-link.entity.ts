@@ -25,6 +25,7 @@ export class ParentalLink {
     onDelete: 'CASCADE',
     nullable: false,
     orphanedRowAction: 'delete',
+    eager: true,
   })
   @JoinColumn()
   parentCouple: Couple;
@@ -33,6 +34,7 @@ export class ParentalLink {
     onDelete: 'CASCADE',
     nullable: false,
     orphanedRowAction: 'delete',
+    eager: true,
   })
   @JoinColumn()
   child: Individual;

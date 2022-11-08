@@ -14,7 +14,7 @@ import { ApiVersion } from 'src/enums/ApiVersion.enum';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Parent types')
-@Controller({ path: 'parent-types', version: ApiVersion.V_1 })
+@Controller({ path: 'parental-types', version: ApiVersion.V_1 })
 export class ParentalTypesController {
   constructor(private readonly parentTypesService: ParentalTypesService) {}
 
