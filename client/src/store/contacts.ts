@@ -22,30 +22,41 @@ export interface Individual {
   dateOfDeath: Date | null;
 }
 
-export interface ParentType {
+export interface ParentalType {
   id: number;
   type: string;
 }
 
-export interface ParentChildRelationship {
+export interface Couple {
   id: number;
-  type: ParentType;
-  parent: Individual;
-  child: Individual;
+  partner1: Individual;
+  partner2: Individual;
+  stillMarried: boolean;
 }
 
-export interface IndividualWithRelations extends Individual {
-  parents: ParentChildRelationship[];
-  children: ParentChildRelationship[];
+export interface ParentalLink {
+  id: number;
+  type: ParentalType;
+  parentCouple: Couple;
+  child: Individual;
 }
 
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {
   state: () => ({
-    individuals: [] as IndividualWithRelations[],
-    parentTypes: [] as ParentType[],
-    parents: [] as ParentChildRelationship[],
+    individuals: [] as Individual[],
+    couples: [] as Couple[],
+    parentalTypes: [] as ParentalType[],
+    parentalLinks: [] as ParentalLink[],
   }),
   actions: {
+    fetch() {
+      return Promise.all([
+        this.findAllIndividuals(),
+        this.findAllCouples(),
+        this.findAllParentTypes(),
+        this.findAllParents(),
+      ]);
+    },
     async findAllIndividuals() {
       const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
       const response = await fetch("http://localhost:3000/v1/individuals", {
@@ -55,34 +66,43 @@ export const useContactsStore = defineStore(StoreNames.CONTACTS, {
       });
 
       if (response.ok) {
-        this.individuals = _.sortBy(
-          (await response.json()) as IndividualWithRelations[],
-          (individual) => individual.fullName
-        );
+        this.individuals = await response.json();
+      }
+    },
+    async findAllCouples() {
+      const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
+      const response = await fetch("http://localhost:3000/v1/couples", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        this.couples = await response.json();
       }
     },
     async findAllParentTypes() {
       const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
-      const response = await fetch("http://localhost:3000/v1/parent-types", {
+      const response = await fetch("http://localhost:3000/v1/parental-types", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.ok) {
-        this.parentTypes = await response.json();
+        this.parentalTypes = await response.json();
       }
     },
     async findAllParents() {
       const token = localStorage.getItem(LocalStorageKeys.ACCESS_TOKEN) || "";
-      const response = await fetch("http://localhost:3000/v1/parents", {
+      const response = await fetch("http://localhost:3000/v1/parental-links", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.ok) {
-        this.parents = await response.json();
+        this.parentalLinks = await response.json();
       }
     },
   },

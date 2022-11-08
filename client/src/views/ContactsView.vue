@@ -1,29 +1,36 @@
 <script setup lang="ts">
 import AppDefaultLayout from "../components/Layouts/AppDefaultLayout.vue";
-import {
-  useContactsStore,
-  type IndividualWithRelations,
-} from "@/store/contacts";
+import { useContactsStore, type Individual } from "@/store/contacts";
 import { computed, onBeforeMount, ref, watch } from "vue";
-import AppCard from "@/components/Base/AppCard.vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
 import moment from "moment";
 import AddIndividualDialog from "@/components/Contacts/EditIndividualDialog.vue";
-import ViewIndividualDialog from "@/components/Contacts/ViewIndividualDialog.vue";
+import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
+import AppButton from "@/components/Base/AppButton.vue";
+import { ComponentColor } from "@/enums";
+import EditIndividualDialog from "@/components/Contacts/EditIndividualDialog.vue";
 
 const contactsStore = useContactsStore();
 
-const individuals = computed(() => {
-  return contactsStore.individuals;
-});
+const individuals = computed(() => contactsStore.individuals || []);
+const couples = computed(() => contactsStore.couples || []);
+const parentalLinks = computed(() => contactsStore.parentalLinks || []);
 
-const individualToView = ref<IndividualWithRelations>();
+const individualToView = ref<Individual>();
+
+const isFetching = ref(false);
 
 const fetch = async () => {
-  await Promise.all([
-    contactsStore.findAllIndividuals(),
-    contactsStore.findAllParentTypes(),
-  ]);
+  try {
+    isFetching.value = true;
+
+    await contactsStore.fetch();
+  } catch (error) {
+    alert(error);
+  } finally {
+    isFetching.value = false;
+  }
+  await contactsStore.fetch();
 };
 
 onBeforeMount(async () => {
@@ -37,69 +44,150 @@ const addItem = () => {
   addDialog.value = true;
 };
 
-const viewItem = (item: IndividualWithRelations) => {
+const editItem = (item: Individual) => {
   individualToView.value = item;
   formKey.value++;
-  viewDialog.value = true;
+  editDialog.value = true;
 };
 
 const addDialog = ref(false);
-const viewDialog = ref(false);
+const editDialog = ref(false);
 
-watch([addDialog, viewDialog], () => {
-  fetch();
+watch([addDialog, editDialog], (values) => {
+  if (!values[0] && !values[1]) {
+    fetch();
+  }
 });
 </script>
 
 <template>
   <AppDefaultLayout>
     <div class="default-spacing py-4 sm:py-10">
-      <div class="space-y-4">
-        <AppHeading
-          title="Manage Contacts"
-          :actions="[{ name: 'Add', action: addItem, primary: true }]"
-        />
-        <div
-          class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-        >
-          <button
-            v-for="individual in individuals"
-            :key="individual.id"
-            @click="viewItem(individual)"
-            class="rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            <AppCard class="h-full" hover>
-              <div class="max-w-full text-left text-base font-normal">
-                <p class="text-2xl">
-                  <span class="font-semibold">
-                    {{
-                      [
-                        individual.lastName,
-                        individual.middleName,
-                        individual.firstName,
-                      ].join(" ")
-                    }}
-                  </span>
-                  <span v-if="individual.alias" class="font-light">
-                    ({{ individual.alias }})
-                  </span>
-                </p>
-                <p v-if="individual.gender">Gender: {{ individual.gender }}</p>
-                <p v-if="individual.dateOfBirth">
-                  Date of birth:
-                  {{ moment(individual.dateOfBirth).format("DD/MM/YYYY") }}
-                </p>
-              </div>
-            </AppCard>
-          </button>
+      <div v-if="isFetching">Loading...</div>
+      <div v-else class="space-y-6">
+        <div class="space-y-2">
+          <AppHeading
+            title="Individuals"
+            :actions="[{ name: 'Add', action: addItem, primary: true }]"
+          />
+          <AppSimpleTable v-if="individuals.length">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Nickname</th>
+                <th>Gender</th>
+                <th>Birthday</th>
+                <th>Has died</th>
+                <th>Date of death</th>
+                <th class="simple-table-actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="individual in individuals" :key="individual.id">
+                <td>{{ individual.id }}</td>
+                <td>{{ individual.fullName }}</td>
+                <td>{{ individual.alias }}</td>
+                <td>{{ individual.gender }}</td>
+                <td>
+                  {{
+                    individual.dateOfBirth
+                      ? moment(individual.dateOfBirth).format("DD/MM/YYYY")
+                      : ""
+                  }}
+                </td>
+                <td>{{ individual.hasDied }}</td>
+                <td>
+                  {{
+                    individual.dateOfDeath
+                      ? moment(individual.dateOfDeath).format("DD/MM/YYYY")
+                      : ""
+                  }}
+                </td>
+                <td>
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="editItem(individual)"
+                  >
+                    Edit
+                  </AppButton>
+                </td>
+              </tr>
+            </tbody>
+          </AppSimpleTable>
+        </div>
+
+        <div class="space-y-2">
+          <AppHeading title="Couples" />
+          <AppSimpleTable v-if="couples.length">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Partner 1</th>
+                <th>Partner 2</th>
+                <th>Marriage status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="couple in couples" :key="couple.id">
+                <td>
+                  {{ couple.id }}
+                </td>
+                <td>
+                  {{ couple.partner1.fullName }}
+                </td>
+                <td>
+                  {{ couple.partner2.fullName }}
+                </td>
+                <td>
+                  {{ couple.stillMarried ? "Married" : "Divorced" }}
+                </td>
+              </tr>
+            </tbody>
+          </AppSimpleTable>
+        </div>
+
+        <div class="space-y-2">
+          <AppHeading title="Parental links" />
+          <AppSimpleTable v-if="parentalLinks.length">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Child</th>
+                <th>Parents</th>
+                <th>Parental type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="parentalLink in parentalLinks" :key="parentalLink.id">
+                <td>{{ parentalLink.id }}</td>
+                <td>
+                  {{ parentalLink.child.fullName }}
+                </td>
+                <td>
+                  {{
+                    [
+                      parentalLink.parentCouple.partner1.fullName,
+                      parentalLink.parentCouple.partner2.fullName,
+                    ].join(" - ")
+                  }}
+                </td>
+                <td>
+                  {{ parentalLink.type.type }}
+                </td>
+              </tr>
+            </tbody>
+          </AppSimpleTable>
         </div>
       </div>
     </div>
-    <AddIndividualDialog v-model:show="addDialog"></AddIndividualDialog>
-    <ViewIndividualDialog
-      v-model:show="viewDialog"
-      :individual="individualToView"
-      @changed="fetch"
-    ></ViewIndividualDialog>
   </AppDefaultLayout>
+  <AddIndividualDialog v-model:show="addDialog"></AddIndividualDialog>
+  <EditIndividualDialog
+    v-model:show="editDialog"
+    :item="individualToView"
+    @saved="fetch"
+    @deleted="fetch"
+  />
 </template>

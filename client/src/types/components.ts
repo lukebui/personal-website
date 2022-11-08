@@ -39,3 +39,8 @@ export class StyledNavigationBarLinkGroup {
 }
 
 export type InputOption = string | number | boolean | Record<string, any>;
+
+export type MenuAction = {
+  text: string;
+  action: RouteLocationRaw | (() => void);
+};

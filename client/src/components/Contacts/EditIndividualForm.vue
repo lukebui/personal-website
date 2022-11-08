@@ -3,10 +3,7 @@ import AppForm from "../Base/AppForm.vue";
 import AppTextField from "../Base/AppTextField.vue";
 import AppTextarea from "../Base/AppTextarea.vue";
 import type * as yup from "yup";
-import {
-  IndividualGender,
-  type IndividualWithRelations,
-} from "@/store/contacts";
+import { IndividualGender, type Individual } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
@@ -20,7 +17,7 @@ import { useErrorMessages } from "@/composables";
 import AppDeleteConfirmDialog from "../Base/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
-  item: { type: Object as PropType<IndividualWithRelations> },
+  item: { type: Object as PropType<Individual> },
 });
 
 const emit = defineEmits(["close", "saved", "deleted"]);
@@ -77,7 +74,7 @@ const deleteItem = async () => {
   if (!response.ok) throw new Error((await response.json()).message);
 };
 
-const getFormData = (itemValue?: IndividualWithRelations) => {
+const getFormData = (itemValue?: Individual) => {
   if (itemValue) {
     const formData: FormData = {
       id: itemValue.id,

@@ -6,13 +6,13 @@ import AppDialog from "@/components/Base/AppDialog.vue";
 import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
 import { ComponentColor, RouteNames } from "@/enums";
 import { computed, onBeforeMount, ref } from "vue";
-import { type ParentType, useContactsStore } from "@/store/contacts";
+import { type ParentalType, useContactsStore } from "@/store/contacts";
 import ContactsEditParentTypeForm from "@/components/Contacts/EditParentTypeForm.vue";
 
 const contactsStore = useContactsStore();
 
 const parentTypes = computed(() => {
-  return contactsStore.parentTypes;
+  return contactsStore.parentalTypes;
 });
 
 const fetch = async () => {
@@ -30,7 +30,7 @@ const closeDialog = () => {
 
 const editDialog = ref(false);
 
-const parentTypeToEdit = ref<ParentType>();
+const parentTypeToEdit = ref<ParentalType>();
 
 const formKey = ref(0);
 
@@ -40,7 +40,7 @@ const addItem = () => {
   editDialog.value = true;
 };
 
-const editItem = (item: ParentType) => {
+const editItem = (item: ParentalType) => {
   parentTypeToEdit.value = item;
   formKey.value++;
   editDialog.value = true;

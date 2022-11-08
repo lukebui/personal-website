@@ -2,7 +2,7 @@
 import AppEditForm from "../Base/AppForm.vue";
 import AppTextField from "../Base/AppTextField.vue";
 import type * as yup from "yup";
-import type { ParentType } from "@/store/contacts";
+import type { ParentalType } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { ref, toRefs, type PropType } from "vue";
@@ -12,7 +12,7 @@ import { useErrorMessages } from "@/composables";
 import AppDeleteConfirmDialog from "../Base/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
-  item: { type: Object as PropType<ParentType> },
+  item: { type: Object as PropType<ParentalType> },
 });
 
 const emit = defineEmits(["cancel", "saved", "deleted"]);

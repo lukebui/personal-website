@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import {
-  useContactsStore,
-  type IndividualWithRelations,
-} from "@/store/contacts";
+import { useContactsStore, type Individual } from "@/store/contacts";
 import { computed, ref, toRefs, type PropType } from "vue";
 import AppDialog from "../Base/AppDialog.vue";
 import EditIndividualDialog from "./EditIndividualDialog.vue";
 import { ComponentSize } from "@/enums";
 import moment from "moment";
-import AppSimpleTable from "../Base/AppSimpleTable.vue";
 import AppHeading from "../Base/AppHeading.vue";
 
 const props = defineProps({
   show: Boolean,
-  individual: Object as PropType<IndividualWithRelations>,
+  individual: Object as PropType<Individual>,
 });
 
 const emit = defineEmits(["update:show", "changed"]);
@@ -74,25 +70,6 @@ const editDialog = ref(false);
         <p v-if="localIndividual.note" class="truncate">
           Note: {{ localIndividual.note }}
         </p>
-
-        <AppSimpleTable v-if="localIndividual.parents.length">
-          <thead>
-            <tr>
-              <th>Parent</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="parent in localIndividual.parents" :key="parent.id">
-              <td>
-                {{ parent.parent.fullName }}
-              </td>
-              <td>
-                {{ parent.type.type }}
-              </td>
-            </tr>
-          </tbody>
-        </AppSimpleTable>
       </div>
 
       <EditIndividualDialog
