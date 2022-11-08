@@ -2,7 +2,7 @@
 import { useContactsStore, type Individual } from "@/store/contacts";
 import { computed, ref, toRefs, type PropType } from "vue";
 import AppDialog from "../Base/AppDialog.vue";
-import EditIndividualDialog from "./EditIndividualDialog.vue";
+import EditIndividualDialog from "./Individuals/EditIndividualDialog.vue";
 import { ComponentSize } from "@/enums";
 import moment from "moment";
 import AppHeading from "../Base/AppHeading.vue";

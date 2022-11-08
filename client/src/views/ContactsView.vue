@@ -4,11 +4,11 @@ import { useContactsStore, type Individual } from "@/store/contacts";
 import { computed, onBeforeMount, ref, watch } from "vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
 import moment from "moment";
-import AddIndividualDialog from "@/components/Contacts/EditIndividualDialog.vue";
+import AddIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
 import AppButton from "@/components/Base/AppButton.vue";
 import { ComponentColor } from "@/enums";
-import EditIndividualDialog from "@/components/Contacts/EditIndividualDialog.vue";
+import EditIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 
 const contactsStore = useContactsStore();
 
