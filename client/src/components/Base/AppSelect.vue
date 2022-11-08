@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useField } from "vee-validate";
-import { computed, ref, toRefs, watch, type PropType } from "vue";
+import { computed, toRefs, type PropType } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type * as yup from "yup";
 import _ from "lodash";
@@ -14,7 +14,6 @@ import {
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import type { InputOption } from "@/types";
-import { useElementBounding, useWindowSize } from "@vueuse/core";
 
 const props = defineProps({
   id: String,
@@ -171,34 +170,6 @@ const onUpdateModelValue = (event: InputOption | InputOption[]) => {
   }
 };
 
-const optionList = ref<HTMLDivElement>();
-
-const closestOptionListContainer = computed(() => {
-  if (optionList.value) {
-    const card = optionList.value.closest("[data-app-card]");
-    if (card) return card as HTMLElement;
-
-    const listOptionsContainer = optionList.value.closest(
-      "[data-option-list-container]"
-    );
-    if (listOptionsContainer) return listOptionsContainer as HTMLElement;
-  }
-
-  return undefined;
-});
-
-const bottomOptions = ref(true);
-
-watch([optionList, closestOptionListContainer], (values) => {
-  const listBounding = useElementBounding(values[0]);
-  const containerBounding = useElementBounding(values[1]);
-  const windowSize = useWindowSize();
-  bottomOptions.value = !(
-    listBounding.bottom.value > containerBounding.bottom.value ||
-    listBounding.bottom.value > windowSize.height.value
-  );
-});
-
 const { errorMessage, value, setErrors } = useField<
   InputOption | InputOption[]
 >(name, rules, {
@@ -261,11 +232,7 @@ const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="absolute z-10 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 sm:text-sm"
-            :class="{
-              'mt-1': bottomOptions,
-              'bottom-full mb-1': !bottomOptions,
-            }"
+            class="z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 sm:text-sm"
           >
             <div ref="optionList">
               <ListboxOption
