@@ -54,20 +54,18 @@ export const parentTypeSchema = yup
   })
   .defined();
 
-export const parentSchema = yup
-  .object({
-    id: yup.number().required(),
-    type: parentTypeSchema,
-    parent: individualSchema,
-    child: individualSchema,
-  })
-  .defined();
-
-export const newParentSchema = parentSchema.pick(["parent", "type"]);
-
 export const coupleSchema = yup.object({
   id: yup.number(),
   partner1: individualSchema.label("Partner 1"),
   partner2: individualSchema.label("Partner 2"),
   stillMarried: yup.boolean().label("Still married").default(true),
 });
+
+export const parentalLinkSchema = yup
+  .object({
+    id: yup.number(),
+    type: parentTypeSchema,
+    parentCouple: coupleSchema,
+    child: individualSchema,
+  })
+  .defined();

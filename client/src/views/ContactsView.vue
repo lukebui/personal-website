@@ -4,6 +4,7 @@ import {
   useContactsStore,
   type Couple,
   type Individual,
+  type ParentalLink,
 } from "@/store/contacts";
 import { computed, onBeforeMount, ref } from "vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
@@ -13,6 +14,7 @@ import AppButton from "@/components/Base/AppButton.vue";
 import { ComponentColor } from "@/enums";
 import EditIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 import EditCoupleDialog from "@/components/Contacts/Couples/EditCoupleDialog.vue";
+import EditParentalLinkDialog from "@/components/Contacts/ParentalLinks/EditParentalLinkDialog.vue";
 
 const contactsStore = useContactsStore();
 
@@ -72,6 +74,22 @@ const editCouple = (item: Couple) => {
 };
 
 const editCoupleDialog = ref(false);
+
+const parentalLinkToEdit = ref<ParentalLink>();
+
+const addParentalLink = () => {
+  parentalLinkToEdit.value = undefined;
+  formKey.value++;
+  editParentalLinkDialog.value = true;
+};
+
+const editParentalLink = (item: ParentalLink) => {
+  parentalLinkToEdit.value = item;
+  formKey.value++;
+  editParentalLinkDialog.value = true;
+};
+
+const editParentalLinkDialog = ref(false);
 </script>
 
 <template>
@@ -176,7 +194,10 @@ const editCoupleDialog = ref(false);
         </div>
 
         <div class="space-y-2">
-          <AppHeading title="Parental links" />
+          <AppHeading
+            title="Parental links"
+            :actions="[{ name: 'Add', action: addParentalLink, primary: true }]"
+          />
           <AppSimpleTable v-if="parentalLinks.length">
             <thead>
               <tr>
@@ -184,6 +205,7 @@ const editCoupleDialog = ref(false);
                 <th>Child</th>
                 <th>Parents</th>
                 <th>Parental type</th>
+                <th class="simple-table-actions"></th>
               </tr>
             </thead>
             <tbody>
@@ -203,6 +225,15 @@ const editCoupleDialog = ref(false);
                 <td>
                   {{ parentalLink.type.type }}
                 </td>
+                <td class="simple-table-actions">
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="editParentalLink(parentalLink)"
+                  >
+                    Edit
+                  </AppButton>
+                </td>
               </tr>
             </tbody>
           </AppSimpleTable>
@@ -221,5 +252,11 @@ const editCoupleDialog = ref(false);
     :item="coupleToEdit"
     @saved="fetch"
     @deleted="fetch"
-  ></EditCoupleDialog>
+  />
+  <EditParentalLinkDialog
+    v-model:show="editParentalLinkDialog"
+    :item="parentalLinkToEdit"
+    @saved="fetch"
+    @deleted="fetch"
+  />
 </template>
