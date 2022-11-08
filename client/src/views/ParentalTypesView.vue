@@ -7,7 +7,7 @@ import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
 import { ComponentColor, RouteNames } from "@/enums";
 import { computed, onBeforeMount, ref } from "vue";
 import { type ParentalType, useContactsStore } from "@/store/contacts";
-import ContactsEditParentTypeForm from "@/components/Contacts/EditParentTypeForm.vue";
+import ContactsEditParentTypeForm from "@/components/Contacts/ParentalTypes/EditParentalTypeForm.vue";
 
 const contactsStore = useContactsStore();
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AppEditForm from "../Base/AppForm.vue";
-import AppTextField from "../Base/AppTextField.vue";
+import AppEditForm from "../../Base/AppForm.vue";
+import AppTextField from "../../Base/AppTextField.vue";
 import type * as yup from "yup";
 import type { ParentalType } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
@@ -9,7 +9,7 @@ import { ref, toRefs, type PropType } from "vue";
 import { parentTypeSchema } from "@/schemas";
 import { useForm } from "vee-validate";
 import { useErrorMessages } from "@/composables";
-import AppDeleteConfirmDialog from "../Base/AppDeleteConfirmDialog.vue";
+import AppDeleteConfirmDialog from "../../Base/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<ParentalType> },

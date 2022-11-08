@@ -21,7 +21,7 @@ const router = createRouter({
         {
           path: "parent-types",
           name: RouteNames.CONTACTS_PARENT_TYPES,
-          component: () => import("@/views/ParentTypesView.vue"),
+          component: () => import("@/views/ParentalTypesView.vue"),
         },
       ],
     },
