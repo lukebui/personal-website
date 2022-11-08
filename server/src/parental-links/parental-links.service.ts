@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsRelations, Repository } from 'typeorm';
+import { FindOptionsRelations, Not, Repository } from 'typeorm';
 import { CreateParentalLinkDto } from './dto/create-parental-link.dto';
 import { UpdateParentalLinkDto } from './dto/update-parental-link.dto';
 import { ParentalLink } from './entities/parental-link.entity';
@@ -18,7 +18,25 @@ export class ParentalLinksService {
     private parentalLinkRepository: Repository<ParentalLink>,
   ) {}
 
-  create(createParentalLinkDto: CreateParentalLinkDto) {
+  async create(createParentalLinkDto: CreateParentalLinkDto) {
+    const newParentalLink = this.parentalLinkRepository.create(
+      createParentalLinkDto,
+    );
+
+    const check = await this.parentalLinkRepository.find({
+      where: {
+        child: newParentalLink.child,
+        parentCouple: newParentalLink.parentCouple,
+      },
+    });
+
+    if (check.length) {
+      throw new HttpException(
+        'The child has been linked to the parents.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     return this.parentalLinkRepository.save(
       this.parentalLinkRepository.create(createParentalLinkDto),
     );
@@ -35,7 +53,29 @@ export class ParentalLinksService {
     });
   }
 
-  update(id: number, updateParentalLinkDto: UpdateParentalLinkDto) {
+  async update(id: number, updateParentalLinkDto: UpdateParentalLinkDto) {
+    const target = await this.parentalLinkRepository.findOneBy({ id });
+
+    const updated = this.parentalLinkRepository.merge(
+      target,
+      updateParentalLinkDto,
+    );
+
+    const check = await this.parentalLinkRepository.find({
+      where: {
+        id: Not(id),
+        child: updated.child,
+        parentCouple: updated.parentCouple,
+      },
+    });
+
+    if (check.length) {
+      throw new HttpException(
+        'The child has been linked to the parents.',
+        HttpStatus.CONFLICT,
+      );
+    }
+
     return this.parentalLinkRepository.update(id, updateParentalLinkDto);
   }
 
