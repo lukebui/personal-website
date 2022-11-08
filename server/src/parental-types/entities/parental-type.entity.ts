@@ -2,7 +2,7 @@ import { ParentalLink } from 'src/parental-links/entities/parental-link.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
-export class ParentType {
+export class ParentalType {
   @PrimaryGeneratedColumn()
   id: number;
 

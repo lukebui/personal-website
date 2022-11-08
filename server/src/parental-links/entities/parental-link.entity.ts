@@ -1,6 +1,6 @@
 import { Couple } from 'src/couples/entities/couple.entity';
 import { Individual } from 'src/individuals/entities/individual.entity';
-import { ParentType } from 'src/parent-types/entities/parent-type.entity';
+import { ParentalType } from 'src/parental-types/entities/parental-type.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -15,11 +15,11 @@ export class ParentalLink {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => ParentType, {
+  @ManyToOne(() => ParentalType, {
     nullable: false,
   })
   @JoinColumn()
-  type: ParentType;
+  type: ParentalType;
 
   @ManyToOne(() => Couple, {
     onDelete: 'CASCADE',

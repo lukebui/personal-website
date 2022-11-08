@@ -7,19 +7,19 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { ParentTypesService } from './parent-types.service';
-import { CreateParentTypeDto } from './dto/create-parent-type.dto';
-import { UpdateParentTypeDto } from './dto/update-parent-type.dto';
+import { ParentalTypesService } from './parental-types.service';
+import { CreateParentalTypeDto } from './dto/create-parent-type.dto';
+import { UpdateParentalTypeDto } from './dto/update-parent-type.dto';
 import { ApiVersion } from 'src/enums/ApiVersion.enum';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Parent types')
 @Controller({ path: 'parent-types', version: ApiVersion.V_1 })
-export class ParentTypesController {
-  constructor(private readonly parentTypesService: ParentTypesService) {}
+export class ParentalTypesController {
+  constructor(private readonly parentTypesService: ParentalTypesService) {}
 
   @Post()
-  create(@Body() createParentTypeDto: CreateParentTypeDto) {
+  create(@Body() createParentTypeDto: CreateParentalTypeDto) {
     return this.parentTypesService.create(createParentTypeDto);
   }
 
@@ -36,7 +36,7 @@ export class ParentTypesController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateParentTypeDto: UpdateParentTypeDto,
+    @Body() updateParentTypeDto: UpdateParentalTypeDto,
   ) {
     return this.parentTypesService.update(+id, updateParentTypeDto);
   }
