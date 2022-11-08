@@ -15,6 +15,7 @@ import { ComponentColor } from "@/enums";
 import EditIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 import EditCoupleDialog from "@/components/Contacts/Couples/EditCoupleDialog.vue";
 import EditParentalLinkDialog from "@/components/Contacts/ParentalLinks/EditParentalLinkDialog.vue";
+import ViewIndividualDialog from "@/components/Contacts/Individuals/ViewIndividualDialog.vue";
 
 const contactsStore = useContactsStore();
 
@@ -34,7 +35,6 @@ const fetch = async () => {
   } finally {
     isFetching.value = false;
   }
-  await contactsStore.fetch();
 };
 
 onBeforeMount(async () => {
@@ -51,13 +51,14 @@ const addIndividual = () => {
   editIndividualDialog.value = true;
 };
 
-const editIndividual = (item: Individual) => {
+const viewIndividual = (item: Individual) => {
   individualToEdit.value = item;
   formKey.value++;
-  editIndividualDialog.value = true;
+  viewIndividualDialog.value = true;
 };
 
 const editIndividualDialog = ref(false);
+const viewIndividualDialog = ref(false);
 
 const coupleToEdit = ref<Couple>();
 
@@ -112,6 +113,7 @@ const editParentalLinkDialog = ref(false);
                 <th>Birthday</th>
                 <th>Has died</th>
                 <th>Date of death</th>
+                <th>Note</th>
                 <th class="simple-table-actions"></th>
               </tr>
             </thead>
@@ -144,14 +146,21 @@ const editParentalLinkDialog = ref(false);
                       : ""
                   }}
                 </td>
+                <td>
+                  <p class="max-w-xs truncate">{{ individual.note }}</p>
+                </td>
                 <td class="simple-table-actions">
-                  <AppButton
-                    text
-                    :color="ComponentColor.PRIMARY"
-                    @click="editIndividual(individual)"
+                  <div
+                    class="inline-flex flex-wrap items-center gap-2 sm:gap-4"
                   >
-                    Edit
-                  </AppButton>
+                    <AppButton
+                      text
+                      :color="ComponentColor.PRIMARY"
+                      @click="viewIndividual(individual)"
+                    >
+                      View
+                    </AppButton>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -167,8 +176,7 @@ const editParentalLinkDialog = ref(false);
             <thead>
               <tr>
                 <th>Id</th>
-                <th>Partner 1</th>
-                <th>Partner 2</th>
+                <th>Partners</th>
                 <th>Marriage status</th>
                 <th class="simple-table-actions"></th>
               </tr>
@@ -180,8 +188,7 @@ const editParentalLinkDialog = ref(false);
                 </td>
                 <td>
                   {{ couple.partner1.fullName }}
-                </td>
-                <td>
+                  -
                   {{ couple.partner2.fullName }}
                 </td>
                 <td>
@@ -249,6 +256,11 @@ const editParentalLinkDialog = ref(false);
       </div>
     </div>
   </AppDefaultLayout>
+  <ViewIndividualDialog
+    v-model:show="viewIndividualDialog"
+    :item="individualToEdit"
+    @changed="fetch"
+  />
   <EditIndividualDialog
     v-model:show="editIndividualDialog"
     :item="individualToEdit"
