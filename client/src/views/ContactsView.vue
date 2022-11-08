@@ -120,7 +120,15 @@ const editParentalLinkDialog = ref(false);
                 <td>{{ individual.id }}</td>
                 <td>{{ individual.fullName }}</td>
                 <td>{{ individual.alias }}</td>
-                <td>{{ individual.gender }}</td>
+                <td>
+                  {{
+                    individual.gender === "male"
+                      ? "Male"
+                      : individual.gender === "female"
+                      ? "Female"
+                      : ""
+                  }}
+                </td>
                 <td>
                   {{
                     individual.dateOfBirth
