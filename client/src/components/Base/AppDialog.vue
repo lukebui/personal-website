@@ -83,7 +83,7 @@ const closeDialog = () => {
                   size === ComponentSize.MEDIUM && !full,
                 'w-full rounded-lg sm:my-8 sm:max-w-lg':
                   size === ComponentSize.LARGE && !full,
-                'w-full rounded-lg sm:my-8 sm:max-w-xl':
+                'w-full rounded-lg sm:my-8 sm:max-w-5xl':
                   size === ComponentSize.X_LARGE && !full,
                 'h-screen w-screen': full,
               }"

@@ -27,7 +27,7 @@ table.simple-table {
       }
 
       th.simple-table-actions {
-        @apply relative py-3.5 pl-3 pr-4 sm:pr-6;
+        @apply relative whitespace-nowrap py-3.5 pl-3 pr-4 text-right sm:pr-6;
       }
 
       th:first-child {
