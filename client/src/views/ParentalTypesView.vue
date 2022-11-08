@@ -4,7 +4,7 @@ import AppDefaultLayout from "@/components/Layouts/AppDefaultLayout.vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
 import AppDialog from "@/components/Base/AppDialog.vue";
 import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
-import { ComponentColor, RouteNames } from "@/enums";
+import { ComponentColor, ComponentSize, RouteNames } from "@/enums";
 import { computed, onBeforeMount, ref } from "vue";
 import { type ParentalType, useContactsStore } from "@/store/contacts";
 import ContactsEditParentTypeForm from "@/components/Contacts/ParentalTypes/EditParentalTypeForm.vue";
@@ -87,7 +87,7 @@ const editItem = (item: ParentalType) => {
       <!-- <table class="simple-table">
       </table> -->
     </div>
-    <AppDialog v-model="editDialog">
+    <AppDialog v-model="editDialog" :size="ComponentSize.SMALL">
       <ContactsEditParentTypeForm
         :key="formKey"
         :item="parentTypeToEdit"
