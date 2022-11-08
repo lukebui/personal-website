@@ -24,7 +24,7 @@ export const individualSchema = yup.object({
   gender: yup
     .string()
     .nullable()
-    .oneOf(_.values(IndividualGender))
+    .oneOf([null, ..._.values(IndividualGender)])
     .label("Gender"),
   dateOfBirth: yup
     .date()
@@ -64,3 +64,10 @@ export const parentSchema = yup
   .defined();
 
 export const newParentSchema = parentSchema.pick(["parent", "type"]);
+
+export const coupleSchema = yup.object({
+  id: yup.number(),
+  partner1: individualSchema.label("Partner 1"),
+  partner2: individualSchema.label("Partner 2"),
+  stillMarried: yup.boolean().label("Still married").default(true),
+});

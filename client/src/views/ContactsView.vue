@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import AppDefaultLayout from "../components/Layouts/AppDefaultLayout.vue";
-import { useContactsStore, type Individual } from "@/store/contacts";
-import { computed, onBeforeMount, ref, watch } from "vue";
+import {
+  useContactsStore,
+  type Couple,
+  type Individual,
+} from "@/store/contacts";
+import { computed, onBeforeMount, ref } from "vue";
 import AppHeading from "@/components/Base/AppHeading.vue";
 import moment from "moment";
-import AddIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
 import AppButton from "@/components/Base/AppButton.vue";
 import { ComponentColor } from "@/enums";
 import EditIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
+import EditCoupleDialog from "@/components/Contacts/Couples/EditCoupleDialog.vue";
 
 const contactsStore = useContactsStore();
 
 const individuals = computed(() => contactsStore.individuals || []);
 const couples = computed(() => contactsStore.couples || []);
 const parentalLinks = computed(() => contactsStore.parentalLinks || []);
-
-const individualToView = ref<Individual>();
 
 const isFetching = ref(false);
 
@@ -39,25 +41,37 @@ onBeforeMount(async () => {
 
 const formKey = ref(0);
 
-const addItem = () => {
+const individualToEdit = ref<Individual>();
+
+const addIndividual = () => {
+  individualToEdit.value = undefined;
   formKey.value++;
-  addDialog.value = true;
+  editIndividualDialog.value = true;
 };
 
-const editItem = (item: Individual) => {
-  individualToView.value = item;
+const editIndividual = (item: Individual) => {
+  individualToEdit.value = item;
   formKey.value++;
-  editDialog.value = true;
+  editIndividualDialog.value = true;
 };
 
-const addDialog = ref(false);
-const editDialog = ref(false);
+const editIndividualDialog = ref(false);
 
-watch([addDialog, editDialog], (values) => {
-  if (!values[0] && !values[1]) {
-    fetch();
-  }
-});
+const coupleToEdit = ref<Couple>();
+
+const addCouple = () => {
+  coupleToEdit.value = undefined;
+  formKey.value++;
+  editCoupleDialog.value = true;
+};
+
+const editCouple = (item: Couple) => {
+  coupleToEdit.value = item;
+  formKey.value++;
+  editCoupleDialog.value = true;
+};
+
+const editCoupleDialog = ref(false);
 </script>
 
 <template>
@@ -68,7 +82,7 @@ watch([addDialog, editDialog], (values) => {
         <div class="space-y-2">
           <AppHeading
             title="Individuals"
-            :actions="[{ name: 'Add', action: addItem, primary: true }]"
+            :actions="[{ name: 'Add', action: addIndividual, primary: true }]"
           />
           <AppSimpleTable v-if="individuals.length">
             <thead>
@@ -104,11 +118,11 @@ watch([addDialog, editDialog], (values) => {
                       : ""
                   }}
                 </td>
-                <td>
+                <td class="simple-table-actions">
                   <AppButton
                     text
                     :color="ComponentColor.PRIMARY"
-                    @click="editItem(individual)"
+                    @click="editIndividual(individual)"
                   >
                     Edit
                   </AppButton>
@@ -119,7 +133,10 @@ watch([addDialog, editDialog], (values) => {
         </div>
 
         <div class="space-y-2">
-          <AppHeading title="Couples" />
+          <AppHeading
+            title="Couples"
+            :actions="[{ name: 'Add', action: addCouple, primary: true }]"
+          />
           <AppSimpleTable v-if="couples.length">
             <thead>
               <tr>
@@ -127,6 +144,7 @@ watch([addDialog, editDialog], (values) => {
                 <th>Partner 1</th>
                 <th>Partner 2</th>
                 <th>Marriage status</th>
+                <th class="simple-table-actions"></th>
               </tr>
             </thead>
             <tbody>
@@ -142,6 +160,15 @@ watch([addDialog, editDialog], (values) => {
                 </td>
                 <td>
                   {{ couple.stillMarried ? "Married" : "Divorced" }}
+                </td>
+                <td class="simple-table-actions">
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="editCouple(couple)"
+                  >
+                    Edit
+                  </AppButton>
                 </td>
               </tr>
             </tbody>
@@ -183,11 +210,16 @@ watch([addDialog, editDialog], (values) => {
       </div>
     </div>
   </AppDefaultLayout>
-  <AddIndividualDialog v-model:show="addDialog"></AddIndividualDialog>
   <EditIndividualDialog
-    v-model:show="editDialog"
-    :item="individualToView"
+    v-model:show="editIndividualDialog"
+    :item="individualToEdit"
     @saved="fetch"
     @deleted="fetch"
   />
+  <EditCoupleDialog
+    v-model:show="editCoupleDialog"
+    :item="coupleToEdit"
+    @saved="fetch"
+    @deleted="fetch"
+  ></EditCoupleDialog>
 </template>
