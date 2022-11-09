@@ -55,6 +55,8 @@ const props = defineProps({
   >,
   returnValue: Boolean,
   multiple: Boolean,
+
+  absolute: Boolean,
 });
 
 const defaultId = uuidv4();
@@ -185,6 +187,7 @@ value.value = matchInitialValues(value.value);
         >
           <ListboxOptions
             class="z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-600 sm:text-sm"
+            :class="{ absolute }"
           >
             <div ref="optionList">
               <ListboxOption
