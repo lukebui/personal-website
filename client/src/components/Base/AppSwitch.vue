@@ -15,18 +15,11 @@ import { useErrorMessages } from "@/composables";
 import AppInputGroup from "./AppInputGroup.vue";
 
 const props = defineProps({
+  // Default input props
   id: String,
-  label: [String, Boolean],
+  label: String,
   description: String,
-  passive: Boolean,
-  modelValue: Boolean,
-  rightLabel: Boolean,
-  inlineDescription: Boolean,
-  asyncSet: Function as PropType<(value: boolean) => Promise<void>>,
-  disabled: Boolean,
-  showIcon: Boolean,
-  color: { type: String as PropType<ComponentColor> },
-  required: Boolean,
+  name: { type: String, default: "" },
   rules: [String, Object, Function] as PropType<
     | yup.AnySchema
     | string
@@ -34,7 +27,16 @@ const props = defineProps({
     | ((value: unknown) => boolean | string | Promise<boolean | string>)[]
     | Record<string, unknown>
   >,
-  name: { type: String, default: "" },
+  modelValue: null,
+  required: Boolean,
+  disabled: Boolean,
+
+  passive: Boolean,
+  rightLabel: Boolean,
+  inlineDescription: Boolean,
+  asyncSet: Function as PropType<(value: boolean) => Promise<void>>,
+  showIcon: Boolean,
+  color: { type: String as PropType<ComponentColor> },
   largeLabel: Boolean,
 });
 

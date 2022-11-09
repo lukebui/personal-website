@@ -7,8 +7,11 @@ import { useField } from "vee-validate";
 import { useTextareaAutosize } from "@vueuse/core";
 
 const props = defineProps({
+  // Default input props
   id: String,
   label: String,
+  description: String,
+  name: { type: String, default: "" },
   rules: [String, Object, Function] as PropType<
     | yup.AnySchema
     | string
@@ -16,14 +19,13 @@ const props = defineProps({
     | ((value: unknown) => boolean | string | Promise<boolean | string>)[]
     | Record<string, unknown>
   >,
-  name: { type: String, default: "" },
-  description: String,
+  modelValue: null,
   required: Boolean,
+  disabled: Boolean,
+
   placeholder: String,
   validateOnBlur: Boolean,
-  modelValue: { type: String, default: "" },
   readonly: Boolean,
-  disabled: Boolean,
   autofocus: Boolean,
   autoresize: Boolean,
 });

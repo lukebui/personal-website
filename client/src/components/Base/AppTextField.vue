@@ -8,12 +8,11 @@ import type * as yup from "yup";
 import { useField } from "vee-validate";
 
 const props = defineProps({
+  // Default input props
   id: String,
   label: String,
-  type: {
-    type: String as PropType<TextFieldInputType>,
-    default: "text",
-  },
+  description: String,
+  name: { type: String, default: "" },
   rules: [String, Object, Function] as PropType<
     | yup.AnySchema
     | string
@@ -21,14 +20,17 @@ const props = defineProps({
     | ((value: unknown) => boolean | string | Promise<boolean | string>)[]
     | Record<string, unknown>
   >,
-  name: { type: String, default: "" },
-  description: String,
+  modelValue: null,
   required: Boolean,
+  disabled: Boolean,
+
+  type: {
+    type: String as PropType<TextFieldInputType>,
+    default: "text",
+  },
   placeholder: String,
   validateOnBlur: Boolean,
-  modelValue: { type: [String, Number], default: "" },
   readonly: Boolean,
-  disabled: Boolean,
   autofocus: Boolean,
 });
 

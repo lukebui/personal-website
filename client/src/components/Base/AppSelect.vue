@@ -4,7 +4,6 @@ import { computed, toRefs, type PropType } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type * as yup from "yup";
 import _ from "lodash";
-import { useOptionIdErrors } from "../../composables";
 import AppInputGroup from "./AppInputGroup.vue";
 import {
   Listbox,
@@ -13,31 +12,15 @@ import {
   ListboxOptions,
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
-import type { InputOption } from "@/types";
+import type { SelectableInputOption } from "@/types";
+import { useSelectableInput } from "@/composables/useSelectableInput";
 
 const props = defineProps({
+  // Default input props
   id: String,
   label: String,
   description: String,
   name: { type: String, default: "" },
-  options: {
-    type: Array as PropType<InputOption[]>,
-    required: true,
-    validator(value: InputOption[]) {
-      return !!value.length;
-    },
-  },
-  optionId: {
-    type: [String, Function] as PropType<
-      string | ((option: InputOption) => string)
-    >,
-  },
-  optionText: {
-    type: [String, Function] as PropType<
-      string | ((option: InputOption) => string)
-    >,
-  },
-  returnValue: Boolean,
   rules: [String, Object, Function] as PropType<
     | yup.AnySchema
     | string
@@ -46,13 +29,34 @@ const props = defineProps({
     | Record<string, unknown>
   >,
   modelValue: null,
-  disabled: Boolean,
-  optionDisabled: Function as PropType<
-    (option: unknown, index: number) => boolean
-  >,
-  multiple: Boolean,
   required: Boolean,
+  disabled: Boolean,
+
+  // Selectable input props
+  options: {
+    type: Array as PropType<SelectableInputOption[]>,
+    required: true,
+    validator(value: SelectableInputOption[]) {
+      return !!value.length;
+    },
+  },
+  optionId: {
+    type: [String, Function] as PropType<
+      string | ((option: SelectableInputOption) => string)
+    >,
+  },
+  optionText: {
+    type: [String, Function] as PropType<
+      string | ((option: SelectableInputOption) => string)
+    >,
+  },
+  optionDisabled: Function as PropType<
+    (option: SelectableInputOption) => boolean
+  >,
+  returnValue: Boolean,
+  multiple: Boolean,
 });
+
 const defaultId = uuidv4();
 
 const {
@@ -75,33 +79,39 @@ const localId = computed(() => {
   return id?.value ? id.value : defaultId;
 });
 
-const getOptionObject = (value: InputOption): InputOption => {
-  return (
-    options.value.find((option) =>
-      _.isEqual(getOptionId(value), getOptionId(option))
-    ) || value
-  );
-};
+const { errorMessage, value, setErrors } = useField<
+  SelectableInputOption | SelectableInputOption[]
+>(name, rules, {
+  standalone: !name.value,
+  initialValue: !name.value
+    ? modelValue?.value
+      ? modelValue
+      : multiple.value
+      ? []
+      : undefined
+    : undefined,
+});
 
-const matchInitialValues = (values: InputOption | InputOption[]) => {
-  if (_.isArray(values)) {
-    return values.map((value) => getOptionObject(value));
-  } else {
-    return getOptionObject(values);
-  }
-};
+const {
+  matchInitialValues,
+  getOptionText,
+  getOptionValue,
+  localOptionDisabled,
+  sortValuesOnModelUpdate,
+  hasOptionIdError,
+} = useSelectableInput(
+  value,
+  options,
+  setErrors,
+  optionId,
+  optionText,
+  optionDisabled,
+  returnValue
+);
 
-const getOptionId = (option: InputOption): string => {
-  if (!optionId?.value) return `${option}`;
-
-  if (typeof optionId?.value === "string") {
-    return `${_.get(option, optionId?.value)}`;
-  } else {
-    return `${optionId?.value?.(option)}`;
-  }
-};
-
-const getValueText = (selectedValues: InputOption | InputOption[]): string => {
+const getValueText = (
+  selectedValues: SelectableInputOption | SelectableInputOption[]
+): string => {
   if (_.isArray(selectedValues)) {
     const selectedOptionTexts = _.compact(
       selectedValues.map((tempValue) => {
@@ -123,69 +133,11 @@ const getValueText = (selectedValues: InputOption | InputOption[]): string => {
   }
 };
 
-const getOptionText = (option: InputOption): string => {
-  if (!optionText?.value) return `${option}`;
-
-  if (typeof optionText.value === "string") {
-    return _.get(option, optionText.value);
-  } else {
-    return optionText.value(option);
-  }
-};
-
-const getOptionValue = (option: InputOption): InputOption => {
-  if (returnValue.value) {
-    return option;
-  } else {
-    return getOptionId(option);
-  }
-};
-
-const localOptionDisabled = (option: unknown, index: number): boolean => {
-  if (!optionDisabled?.value) return false;
-
-  return optionDisabled.value(option, index);
-};
-
 const localDisabled = computed(() => {
   return hasOptionIdError.value || disabled.value;
 });
 
-const onUpdateModelValue = (event: InputOption | InputOption[]) => {
-  if (_.isArray(event)) {
-    // Sort the selected values according to their positions in the original option array
-    value.value = event.sort((a, b) => {
-      const aIndex = options.value.findIndex((option) =>
-        _.isEqual(getOptionValue(option), a)
-      );
-
-      const bIndex = options.value.findIndex((option) =>
-        _.isEqual(getOptionValue(option), b)
-      );
-
-      return aIndex < bIndex ? -1 : aIndex > bIndex ? 1 : 0;
-    });
-  } else {
-    value.value = event;
-  }
-};
-
-const { errorMessage, value, setErrors } = useField<
-  InputOption | InputOption[]
->(name, rules, {
-  standalone: !name.value,
-  initialValue: !name.value
-    ? modelValue?.value
-      ? modelValue
-      : multiple.value
-      ? []
-      : undefined
-    : undefined,
-});
-
 value.value = matchInitialValues(value.value);
-
-const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
 </script>
 
 <template>
@@ -200,7 +152,7 @@ const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
     <Listbox
       as="div"
       :model-value="value"
-      @update:model-value="onUpdateModelValue"
+      @update:model-value="sortValuesOnModelUpdate"
       :multiple="multiple"
       :disabled="localDisabled"
     >
@@ -241,7 +193,7 @@ const { hasOptionIdError } = useOptionIdErrors(options, getOptionId, setErrors);
                 :key="optionIndex"
                 :value="getOptionValue(option)"
                 v-slot="{ active, selected }"
-                :disabled="localOptionDisabled(option, optionIndex)"
+                :disabled="localOptionDisabled(option)"
               >
                 <li
                   :class="[

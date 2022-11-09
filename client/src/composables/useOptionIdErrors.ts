@@ -1,10 +1,10 @@
 import { computed, watch, type Ref } from "vue";
 import _ from "lodash";
-import type { InputOption } from "@/types";
+import type { SelectableInputOption } from "@/types";
 
 export function useOptionIdErrors(
-  options: Ref<InputOption[]>,
-  getOptionId: (option: InputOption) => string,
+  options: Ref<SelectableInputOption[]>,
+  getOptionId: (option: SelectableInputOption) => string,
   setErrors: (message: string | string[]) => void
 ) {
   const hasNonPrimitiveOptions = computed(() => {
