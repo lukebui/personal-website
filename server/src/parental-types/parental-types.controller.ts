@@ -13,7 +13,7 @@ import { UpdateParentalTypeDto } from './dto/update-parent-type.dto';
 import { ApiVersion } from 'src/enums/ApiVersion.enum';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Parent types')
+@ApiTags('Parental types')
 @Controller({ path: 'parental-types', version: ApiVersion.V_1 })
 export class ParentalTypesController {
   constructor(private readonly parentTypesService: ParentalTypesService) {}
