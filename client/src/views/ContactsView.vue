@@ -106,7 +106,6 @@ const editParentalLinkDialog = ref(false);
           <AppSimpleTable v-if="individuals.length">
             <thead>
               <tr>
-                <th>Id</th>
                 <th>Name</th>
                 <th>Nickname</th>
                 <th>Gender</th>
@@ -119,7 +118,6 @@ const editParentalLinkDialog = ref(false);
             </thead>
             <tbody>
               <tr v-for="individual in individuals" :key="individual.id">
-                <td>{{ individual.id }}</td>
                 <td>{{ individual.fullName }}</td>
                 <td>{{ individual.alias }}</td>
                 <td>
@@ -175,7 +173,6 @@ const editParentalLinkDialog = ref(false);
           <AppSimpleTable v-if="couples.length">
             <thead>
               <tr>
-                <th>Id</th>
                 <th>Partners</th>
                 <th>Marriage status</th>
                 <th class="simple-table-actions"></th>
@@ -183,9 +180,6 @@ const editParentalLinkDialog = ref(false);
             </thead>
             <tbody>
               <tr v-for="couple in couples" :key="couple.id">
-                <td>
-                  {{ couple.id }}
-                </td>
                 <td>
                   {{ couple.partner1.fullName }}
                   -
@@ -216,19 +210,14 @@ const editParentalLinkDialog = ref(false);
           <AppSimpleTable v-if="parentalLinks.length">
             <thead>
               <tr>
-                <th>Id</th>
-                <th>Child</th>
                 <th>Parents</th>
+                <th>Child</th>
                 <th>Parental type</th>
                 <th class="simple-table-actions"></th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="parentalLink in parentalLinks" :key="parentalLink.id">
-                <td>{{ parentalLink.id }}</td>
-                <td>
-                  {{ parentalLink.child.fullName }}
-                </td>
                 <td>
                   {{
                     [
@@ -236,6 +225,9 @@ const editParentalLinkDialog = ref(false);
                       parentalLink.parentCouple.partner2.fullName,
                     ].join(" - ")
                   }}
+                </td>
+                <td>
+                  {{ parentalLink.child.fullName }}
                 </td>
                 <td>
                   {{ parentalLink.type.type }}

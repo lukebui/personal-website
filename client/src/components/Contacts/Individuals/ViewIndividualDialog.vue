@@ -151,7 +151,7 @@ const editDialog = ref(false);
     <template v-if="isFetching"> Loading... </template>
 
     <template v-else>
-      <div v-if="individual" class="space-y-4">
+      <div v-if="individual" class="mt-4 space-y-4 sm:mt-0">
         <div>
           <p>Nickname: {{ individual.alias }}</p>
           <p>Gender: {{ individual.gender }}</p>
