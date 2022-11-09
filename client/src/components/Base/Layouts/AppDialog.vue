@@ -19,6 +19,7 @@ const props = defineProps({
   full: Boolean,
   loading: Boolean,
   disabled: Boolean,
+  top: Boolean,
 });
 
 const emit = defineEmits(["update:model-value"]);
@@ -58,19 +59,29 @@ const closeDialog = () => {
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
         <div
-          class="flex min-h-full w-full items-start justify-center text-center"
+          class="flex min-h-full w-full justify-center text-center"
           :class="{
             'p-4 sm:p-0': !full,
+            'items-start': top,
+            'items-end sm:items-center': !top,
           }"
         >
           <TransitionChild
             as="template"
             enter="ease-out duration-300"
-            enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            :enter-from="
+              top
+                ? 'opacity-0 -translate-y-1/4 sm:scale-95'
+                : 'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+            "
             enter-to="opacity-100 translate-y-0 sm:scale-100"
             leave="ease-in duration-200"
             leave-from="opacity-100 translate-y-0 sm:scale-100"
-            leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            :leave-to="
+              top
+                ? 'opacity-0 -translate-y-1/4 sm:scale-95'
+                : 'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+            "
           >
             <DialogPanel
               class="relative transform overflow-hidden text-left shadow-xl transition-all"

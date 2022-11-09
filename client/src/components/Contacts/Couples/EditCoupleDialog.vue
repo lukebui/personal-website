@@ -41,7 +41,7 @@ const onDelete = () => {
 </script>
 
 <template>
-  <AppDialog v-model="dialog" :size="ComponentSize.SMALL">
+  <AppDialog v-model="dialog" :size="ComponentSize.SMALL" top>
     <EditCoupleForm
       :item="item"
       @close="dialog = false"
