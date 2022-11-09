@@ -12,6 +12,7 @@ import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
 import AppSelect from "../../Base/AppSelect.vue";
+import AppAutocomplete from "../../Base/AppAutocomplete.vue";
 import { useForm } from "vee-validate";
 import { parentalLinkSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
@@ -129,8 +130,11 @@ const onDeleted = () => {
 
 const getIndividualName = (individual: Individual) => individual.fullName;
 
-const getCoupleName = (couple: Couple) =>
-  [couple.partner1.fullName, couple.partner2.fullName].join(" - ");
+const getCoupleName = (couple: Couple) => {
+  return couple.partner1.fullName && couple.partner2.fullName
+    ? [couple.partner1.fullName, couple.partner2.fullName].join(" - ")
+    : "";
+};
 
 const getParentalTypeText = (type: ParentalType) => type.type;
 </script>
@@ -146,22 +150,24 @@ const getParentalTypeText = (type: ParentalType) => type.type;
     @cancel="onCancel"
   >
     <div class="mb-4 space-y-3">
-      <AppSelect
+      <AppAutocomplete
         name="child"
         :options="individuals"
         return-value
         option-id="id"
         :option-text="getIndividualName"
         label="Child"
-      ></AppSelect>
-      <AppSelect
+        required
+      ></AppAutocomplete>
+      <AppAutocomplete
         name="parentCouple"
         :options="couples"
         return-value
         option-id="id"
         :option-text="getCoupleName"
         label="Parents"
-      ></AppSelect>
+        required
+      ></AppAutocomplete>
       <AppSelect
         name="type"
         :options="parentalTypes"
@@ -169,6 +175,7 @@ const getParentalTypeText = (type: ParentalType) => type.type;
         option-id="id"
         :option-text="getParentalTypeText"
         label="Type"
+        required
       ></AppSelect>
     </div>
     <AppDeleteConfirmDialog

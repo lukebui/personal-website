@@ -184,7 +184,7 @@ value.value = matchInitialValues(value.value);
           leave-to-class="opacity-0"
         >
           <ListboxOptions
-            class="z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 sm:text-sm"
+            class="z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-600 sm:text-sm"
           >
             <div ref="optionList">
               <ListboxOption

@@ -4,13 +4,13 @@ import type * as yup from "yup";
 import { useContactsStore, type Couple } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
-import { computed, ref, toRefs, watch, type PropType } from "vue";
-import AppSelect from "../../Base/AppSelect.vue";
+import { computed, ref, toRefs, type PropType } from "vue";
 import { useForm } from "vee-validate";
 import { coupleSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
 import AppDeleteConfirmDialog from "../../Base/AppDeleteConfirmDialog.vue";
 import AppSwitch from "@/components/Base/AppSwitch.vue";
+import AppAutocomplete from "@/components/Base/AppAutocomplete.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<Couple> },
@@ -81,7 +81,7 @@ const getFormData = (itemValue?: Couple) => {
   }
 };
 
-const { meta, isSubmitting, handleSubmit, errors } = useForm<FormData>({
+const { meta, isSubmitting, handleSubmit } = useForm<FormData>({
   validationSchema: formSchema,
   initialValues: getFormData(item?.value),
 });
@@ -117,14 +117,6 @@ const onDeleted = () => {
   deleteConfirmDialog.value = false;
   emit("deleted");
 };
-
-watch(
-  errors,
-  (newErrors) => {
-    console.log(newErrors);
-  },
-  { immediate: true }
-);
 </script>
 
 <template>
@@ -138,22 +130,22 @@ watch(
     @cancel="onCancel"
   >
     <div class="mb-4 space-y-3">
-      <AppSelect
+      <AppAutocomplete
         label="Partner 1"
         name="partner1"
         :options="individuals"
         option-id="id"
         option-text="fullName"
         return-value
-      ></AppSelect>
-      <AppSelect
+      />
+      <AppAutocomplete
         label="Partner 2"
         name="partner2"
         :options="individuals"
         option-id="id"
         option-text="fullName"
         return-value
-      ></AppSelect>
+      ></AppAutocomplete>
       <AppSwitch name="stillMarried" label="Still married" right-label>
       </AppSwitch>
     </div>

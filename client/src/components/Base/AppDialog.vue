@@ -58,7 +58,7 @@ const closeDialog = () => {
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
         <div
-          class="flex min-h-full w-full items-end justify-center text-center sm:items-center"
+          class="flex min-h-full w-full items-start justify-center text-center"
           :class="{
             'p-4 sm:p-0': !full,
           }"
