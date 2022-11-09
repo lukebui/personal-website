@@ -154,11 +154,7 @@ const onDeleted = () => {
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <AppTextField label="Last Name" name="lastName"></AppTextField>
         <AppTextField label="Middle Name" name="middleName"></AppTextField>
-        <AppTextField
-          label="First Name"
-          name="firstName"
-          autofocus
-        ></AppTextField>
+        <AppTextField label="First Name" name="firstName"></AppTextField>
       </div>
       <AppTextField label="Nickname" name="alias"></AppTextField>
       <AppSelect

@@ -122,7 +122,7 @@ const onDeleted = () => {
     @cancel="onCancel"
   >
     <div class="mb-4 space-y-3">
-      <AppTextField label="Parent type" name="type" autofocus></AppTextField>
+      <AppTextField label="Parent type" name="type"></AppTextField>
     </div>
     <AppDeleteConfirmDialog
       :delete-action="deleteItem"
