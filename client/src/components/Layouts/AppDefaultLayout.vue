@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useSystemStore } from "@/store/system";
 import { computed } from "vue";
-import TheAppNavbar from "../Base/AppNavbar.vue";
+import TheAppNavbar from "../Base/Navigations/AppNavbar.vue";
 
 const systemStore = useSystemStore();
 

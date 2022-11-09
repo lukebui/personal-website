@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import AppForm from "../../Base/AppForm.vue";
-import AppTextField from "../../Base/AppTextField.vue";
-import AppTextarea from "../../Base/AppTextarea.vue";
+import AppForm from "../../Base/Forms/AppForm.vue";
+import AppTextField from "../../Base/Forms/AppTextField.vue";
+import AppTextarea from "../../Base/Forms/AppTextarea.vue";
 import type * as yup from "yup";
 import { IndividualGender, type Individual } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import AppButton from "../../Base/AppButton.vue";
-import AppSwitch from "../../Base/AppSwitch.vue";
-import AppSelect from "../../Base/AppSelect.vue";
+import AppButton from "../../Base/Elements/AppButton.vue";
+import AppSwitch from "../../Base/Forms/AppSwitch.vue";
+import AppSelect from "../../Base/Forms/AppSelect.vue";
 import { useForm } from "vee-validate";
 import { individualSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
-import AppDeleteConfirmDialog from "../../Base/AppDeleteConfirmDialog.vue";
+import AppDeleteConfirmDialog from "../../Base/Forms/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<Individual> },

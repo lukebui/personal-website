@@ -2,7 +2,7 @@
 import type { Individual } from "@/store/contacts";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
 import ContactsEditIndividualForm from "./EditIndividualForm.vue";
-import AppDialog from "@/components/Base/AppDialog.vue";
+import AppDialog from "@/components/Base/Layouts/AppDialog.vue";
 import { ComponentSize } from "@/enums";
 
 const props = defineProps({

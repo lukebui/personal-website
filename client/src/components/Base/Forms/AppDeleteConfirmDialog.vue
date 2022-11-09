@@ -2,11 +2,11 @@
 import { computed, ref, toRefs, type PropType } from "vue";
 import { DialogTitle } from "@headlessui/vue";
 import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
-import AppDialog from "./AppDialog.vue";
-import AppButton from "./AppButton.vue";
+import AppDialog from "../Layouts/AppDialog.vue";
+import AppButton from "../Elements/AppButton.vue";
 import { ComponentColor } from "@/enums";
 import { useErrorMessages } from "@/composables";
-import AppAlert from "./AppAlert.vue";
+import AppAlert from "../Display/AppAlert.vue";
 
 const props = defineProps({
   show: Boolean,

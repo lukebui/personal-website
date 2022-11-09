@@ -10,8 +10,8 @@ import {
 
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { computed, toRefs, type Component, type PropType } from "vue";
-import AppButton from "./AppButton.vue";
-import AppLink from "./AppLink.vue";
+import AppButton from "../Elements/AppButton.vue";
+import AppLink from "../Elements/AppLink.vue";
 
 const props = defineProps({
   breadcrumbs: {

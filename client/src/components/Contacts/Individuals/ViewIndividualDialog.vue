@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useContactsStore, type Individual } from "@/store/contacts";
 import { computed, ref, toRefs, type PropType } from "vue";
-import AppDialog from "../../Base/AppDialog.vue";
+import AppDialog from "../../Base/Layouts/AppDialog.vue";
 import EditIndividualDialog from "./EditIndividualDialog.vue";
 import { ComponentColor, ComponentSize } from "@/enums";
 import moment from "moment";
-import AppHeading from "../../Base/AppHeading.vue";
-import AppCard from "@/components/Base/AppCard.vue";
-import AppSimpleTable from "@/components/Base/AppSimpleTable.vue";
-import AppButton from "@/components/Base/AppButton.vue";
+import AppHeading from "../../Base/Display/AppHeading.vue";
+import AppCard from "@/components/Base/Layouts/AppCard.vue";
+import AppSimpleTable from "@/components/Base/Display/AppSimpleTable.vue";
+import AppButton from "@/components/Base/Elements/AppButton.vue";
 
 const props = defineProps({
   show: Boolean,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppForm from "../../Base/AppForm.vue";
+import AppForm from "../../Base/Forms/AppForm.vue";
 import type * as yup from "yup";
 import {
   useContactsStore,
@@ -11,12 +11,12 @@ import {
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
-import AppSelect from "../../Base/AppSelect.vue";
-import AppAutocomplete from "../../Base/AppAutocomplete.vue";
+import AppSelect from "../../Base/Forms/AppSelect.vue";
+import AppAutocomplete from "../../Base/Forms/AppAutocomplete.vue";
 import { useForm } from "vee-validate";
 import { parentalLinkSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
-import AppDeleteConfirmDialog from "../../Base/AppDeleteConfirmDialog.vue";
+import AppDeleteConfirmDialog from "../../Base/Forms/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<ParentalLink> },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ButtonType, ComponentColor, ComponentSize } from "../../enums";
+import { ButtonType, ComponentColor, ComponentSize } from "../../../enums";
 import type { PropType } from "vue";
 
 defineProps({

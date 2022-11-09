@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-import AppButton from "./AppButton.vue";
+import AppButton from "../Elements/AppButton.vue";
 import { ComponentColor } from "@/enums";
-import AppAlert from "./AppAlert.vue";
+import AppAlert from "../Display/AppAlert.vue";
 
 defineProps({
   canSave: Boolean,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppProgress from "./AppProgress.vue";
+import AppProgress from "../Elements/AppProgress.vue";
 import { ComponentSize } from "@/enums";
 
 defineProps({

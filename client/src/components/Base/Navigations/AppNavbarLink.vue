@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { StyledNavigationLink } from "@/types";
 import type { PropType } from "vue";
-import AppLink from "./AppLink.vue";
+import AppLink from "../Elements/AppLink.vue";
 
 defineProps({
   item: {

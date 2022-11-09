@@ -4,7 +4,7 @@ import type {
   StyledNavigationBarLinkGroup,
 } from "@/types";
 import type { PropType } from "vue";
-import AppLink from "./AppLink.vue";
+import AppLink from "../Elements/AppLink.vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import { useCheckNavigationLink } from "@/composables";
 

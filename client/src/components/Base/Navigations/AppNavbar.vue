@@ -5,7 +5,7 @@ import type {
   StyledNavigationLink,
   StyledNavigationBarLinkGroup,
 } from "@/types";
-import TheColorModeToggle from "./AppColorModeToggle.vue";
+import TheColorModeToggle from "../Elements/AppColorModeToggle.vue";
 import TheProfileDropdown from "./AppProfileDropdown.vue";
 import type { PropType } from "vue";
 import { useCheckNavigationLink } from "@/composables";

@@ -2,7 +2,7 @@
 import { ComponentSize, RouteNames } from "@/enums";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { UserCircleIcon } from "@heroicons/vue/24/solid";
-import AppButton from "./AppButton.vue";
+import AppButton from "../Elements/AppButton.vue";
 import { useUserStore } from "@/store/users";
 import { useRouter } from "vue-router";
 import type { PropType } from "vue";

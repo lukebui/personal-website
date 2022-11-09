@@ -9,7 +9,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import type * as yup from "yup";
 import { useField } from "vee-validate";
-import AppSpinner from "./AppSpinner.vue";
+import AppSpinner from "../Elements/AppSpinner.vue";
 import { ComponentSize, type ComponentColor } from "@/enums";
 import { useErrorMessages } from "@/composables";
 import AppInputGroup from "./AppInputGroup.vue";
