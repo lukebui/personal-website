@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useSystemStore } from "@/store/system";
 import { computed } from "vue";
-import TheAppNavbar from "../Base/Navigations/AppNavbar.vue";
+import { AppNavbar } from "@/components/Base";
 
 const systemStore = useSystemStore();
 
@@ -13,7 +13,7 @@ const navigation = computed(() => {
 <template>
   <div class="h-full w-full">
     <header>
-      <TheAppNavbar :navigation="navigation" icon badge></TheAppNavbar>
+      <AppNavbar :navigation="navigation" icon badge></AppNavbar>
     </header>
     <main>
       <slot></slot>

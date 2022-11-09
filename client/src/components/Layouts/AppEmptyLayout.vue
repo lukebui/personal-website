@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheColorModeToggle from "../Base/Elements/AppColorModeToggle.vue";
+import { AppColorModeToggle } from "@/components/Base";
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import TheColorModeToggle from "../Base/Elements/AppColorModeToggle.vue";
         class="mx-auto flex h-16 max-w-7xl items-center justify-between px-2 sm:px-6 lg:px-8"
       >
         <div>&nbsp;</div>
-        <TheColorModeToggle />
+        <AppColorModeToggle />
       </nav>
     </header>
     <main class="w-full">

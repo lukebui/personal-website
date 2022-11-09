@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Couple } from "@/store/contacts";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
-import AppDialog from "@/components/Base/Layouts/AppDialog.vue";
+import { AppDialog } from "@/components/Base";
 import { ComponentSize } from "@/enums";
 import EditCoupleForm from "./EditCoupleForm.vue";
 

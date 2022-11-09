@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppForm from "../../Base/Forms/AppForm.vue";
 import type * as yup from "yup";
 import { useContactsStore, type Couple } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
@@ -8,9 +7,12 @@ import { computed, ref, toRefs, type PropType } from "vue";
 import { useForm } from "vee-validate";
 import { coupleSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
-import AppDeleteConfirmDialog from "../../Base/Forms/AppDeleteConfirmDialog.vue";
-import AppSwitch from "@/components/Base/Forms/AppSwitch.vue";
-import AppAutocomplete from "@/components/Base/Forms/AppAutocomplete.vue";
+import {
+  AppForm,
+  AppDeleteConfirmDialog,
+  AppSwitch,
+  AppAutocomplete,
+} from "@/components/Base";
 
 const props = defineProps({
   item: { type: Object as PropType<Couple> },

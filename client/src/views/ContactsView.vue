@@ -7,10 +7,8 @@ import {
   type ParentalLink,
 } from "@/store/contacts";
 import { computed, onBeforeMount, ref } from "vue";
-import AppHeading from "@/components/Base/Display/AppHeading.vue";
 import moment from "moment";
-import AppSimpleTable from "@/components/Base/Display/AppSimpleTable.vue";
-import AppButton from "@/components/Base/Elements/AppButton.vue";
+import { AppHeading, AppSimpleTable, AppButton } from "@/components/Base";
 import { ComponentColor } from "@/enums";
 import EditIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 import EditCoupleDialog from "@/components/Contacts/Couples/EditCoupleDialog.vue";

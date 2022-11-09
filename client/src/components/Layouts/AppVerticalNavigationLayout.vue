@@ -7,9 +7,11 @@ import {
   TransitionRoot,
 } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
-import TheColorModeToggle from "../Base/Elements/AppColorModeToggle.vue";
-import TheProfileDropdown from "../Base/Navigations/AppProfileDropdown.vue";
-import AppVerticalNavbar from "../Base/Navigations/AppVerticalNavbar.vue";
+import {
+  AppColorModeToggle,
+  AppProfileDropdown,
+  AppVerticalNavbar,
+} from "@/components/Base";
 import { useSystemStore } from "@/store/system";
 
 const systemStore = useSystemStore();
@@ -85,8 +87,8 @@ const sidebarOpen = ref(false);
                 </div>
               </div>
               <div class="flex flex-shrink-0 gap-2 p-4">
-                <TheProfileDropdown position="topRight"></TheProfileDropdown>
-                <TheColorModeToggle />
+                <AppProfileDropdown position="topRight"></AppProfileDropdown>
+                <AppColorModeToggle />
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -112,8 +114,8 @@ const sidebarOpen = ref(false);
           </div>
         </div>
         <div class="flex flex-shrink-0 gap-2 p-2">
-          <TheProfileDropdown position="topRight"></TheProfileDropdown>
-          <TheColorModeToggle />
+          <AppProfileDropdown position="topRight"></AppProfileDropdown>
+          <AppColorModeToggle />
         </div>
       </div>
     </div>

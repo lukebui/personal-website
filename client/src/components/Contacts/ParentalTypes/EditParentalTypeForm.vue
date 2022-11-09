@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import AppEditForm from "../../Base/Forms/AppForm.vue";
-import AppTextField from "../../Base/Forms/AppTextField.vue";
+import {
+  AppForm,
+  AppTextField,
+  AppDeleteConfirmDialog,
+} from "@/components/Base";
 import type * as yup from "yup";
 import type { ParentalType } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
@@ -9,7 +12,6 @@ import { ref, toRefs, type PropType } from "vue";
 import { parentTypeSchema } from "@/schemas";
 import { useForm } from "vee-validate";
 import { useErrorMessages } from "@/composables";
-import AppDeleteConfirmDialog from "../../Base/Forms/AppDeleteConfirmDialog.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<ParentalType> },
@@ -111,7 +113,7 @@ const onDeleted = () => {
 </script>
 
 <template>
-  <AppEditForm
+  <AppForm
     :can-save="meta.dirty && meta.valid"
     :can-delete="!!item"
     :loading="isSubmitting"
@@ -130,5 +132,5 @@ const onDeleted = () => {
       Are you sure you want to delete
       <strong> {{ item?.type }} </strong>? This action cannot be undone.
     </AppDeleteConfirmDialog>
-  </AppEditForm>
+  </AppForm>
 </template>

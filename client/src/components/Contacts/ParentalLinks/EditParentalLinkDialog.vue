@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { AppDialog } from "@/components/Base";
 import type { ParentalLink } from "@/store/contacts";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
-import AppDialog from "@/components/Base/Layouts/AppDialog.vue";
 import { ComponentSize } from "@/enums";
 import EditParentalLinkForm from "./EditParentalLinkForm.vue";
 

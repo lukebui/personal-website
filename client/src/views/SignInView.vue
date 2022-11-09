@@ -4,8 +4,7 @@ import * as yup from "yup";
 import { useUserStore } from "@/store/users";
 import { useRoute, useRouter } from "vue-router";
 import { ButtonType, ComponentColor, RouteNames } from "@/enums";
-import AppTextField from "../components/Base/Forms/AppTextField.vue";
-import AppButton from "../components/Base/Elements/AppButton.vue";
+import { AppTextField, AppButton } from "@/components/Base";
 import TheEmptyLayout from "../components/Layouts/AppEmptyLayout.vue";
 
 const { validateUser } = useUserStore();

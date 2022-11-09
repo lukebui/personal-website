@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import AppButton from "@/components/Base/Elements/AppButton.vue";
+import {
+  AppButton,
+  AppHeading,
+  AppDialog,
+  AppSimpleTable,
+} from "@/components/Base";
 import AppDefaultLayout from "@/components/Layouts/AppDefaultLayout.vue";
-import AppHeading from "@/components/Base/Display/AppHeading.vue";
-import AppDialog from "@/components/Base/Layouts/AppDialog.vue";
-import AppSimpleTable from "@/components/Base/Display/AppSimpleTable.vue";
 import { ComponentColor, ComponentSize, RouteNames } from "@/enums";
 import { computed, onBeforeMount, ref } from "vue";
 import { type ParentalType, useContactsStore } from "@/store/contacts";
