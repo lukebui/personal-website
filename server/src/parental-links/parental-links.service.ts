@@ -9,6 +9,7 @@ const defaultRelations: FindOptionsRelations<ParentalLink> = {
   type: true,
   parentCouple: true,
   child: true,
+  olderSibling: true,
 };
 
 @Injectable()

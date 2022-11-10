@@ -6,7 +6,12 @@ import {
   AppSimpleTable,
   AppButton,
 } from "@/components/Base";
-import { useContactsStore, type Individual } from "@/store/contacts";
+import {
+  useContactsStore,
+  type Individual,
+  type ParentalLink,
+  type ParentalType,
+} from "@/store/contacts";
 import { computed, ref, toRefs, type PropType } from "vue";
 import EditIndividualDialog from "./EditIndividualDialog.vue";
 import { ComponentColor, ComponentSize } from "@/enums";
@@ -37,23 +42,23 @@ const fetch = async () => {
   }
 };
 
-const individual = computed(() =>
+const selectedIndividual = computed(() =>
   contactsStore.individuals.find((tempIndividual) =>
     item?.value ? tempIndividual.id === item.value.id : false
   )
 );
 
-const partners = computed(() =>
+const individualPartners = computed(() =>
   contactsStore.couples
     .filter(
       (couple) =>
-        couple.partner1.id === individual.value?.id ||
-        couple.partner2.id === individual.value?.id
+        couple.partner1.id === selectedIndividual.value?.id ||
+        couple.partner2.id === selectedIndividual.value?.id
     )
     .map((couple) => {
       return {
         partner:
-          couple.partner1.id === individual.value?.id
+          couple.partner1.id === selectedIndividual.value?.id
             ? couple.partner2
             : couple.partner1,
         stillMarried: couple.stillMarried,
@@ -62,18 +67,19 @@ const partners = computed(() =>
     })
 );
 
-const children = computed(() =>
+const individualChildren = computed(() =>
   contactsStore.parentalLinks
     .filter(
       (parentalLink) =>
-        parentalLink.parentCouple.partner1.id === individual.value?.id ||
-        parentalLink.parentCouple.partner2.id === individual.value?.id
+        parentalLink.parentCouple.partner1.id ===
+          selectedIndividual.value?.id ||
+        parentalLink.parentCouple.partner2.id === selectedIndividual.value?.id
     )
     .map((parentalLink) => {
       return {
         child: parentalLink.child,
         spouse:
-          parentalLink.parentCouple.partner1.id === individual.value?.id
+          parentalLink.parentCouple.partner1.id === selectedIndividual.value?.id
             ? parentalLink.parentCouple.partner2
             : parentalLink.parentCouple.partner1,
         parentalType: parentalLink.type,
@@ -82,9 +88,11 @@ const children = computed(() =>
     })
 );
 
-const parents = computed(() =>
+const individualParents = computed(() =>
   contactsStore.parentalLinks
-    .filter((parentalLink) => parentalLink.child.id === individual.value?.id)
+    .filter(
+      (parentalLink) => parentalLink.child.id === selectedIndividual.value?.id
+    )
     .map((parentalLink) => {
       return {
         parents: [
@@ -97,27 +105,79 @@ const parents = computed(() =>
     })
 );
 
-const siblings = computed(() =>
-  contactsStore.parentalLinks
-    .filter(
-      (siblingParentalLink) =>
-        parents.value
-          .map((parent) => parent.parentalLink.parentCouple.id)
-          .includes(siblingParentalLink.parentCouple.id) &&
-        siblingParentalLink.child.id !== individual.value?.id
+const individualSiblings = computed(() => {
+  type Sibling = {
+    individual: Individual;
+    olderSibling: Individual | null;
+    parents: Individual[];
+    parentalType: ParentalType;
+    __parentalLink: ParentalLink;
+  };
+
+  let foundChildren = contactsStore.parentalLinks
+    .filter((siblingParentalLink) =>
+      individualParents.value
+        .map((parent) => parent.parentalLink.parentCouple.id)
+        .includes(siblingParentalLink.parentCouple.id)
     )
     .map((siblingParentalLink) => {
       return {
-        sibling: siblingParentalLink.child,
+        individual: siblingParentalLink.child,
+        olderSibling: siblingParentalLink.olderSibling?.child || null,
         parents: [
           siblingParentalLink.parentCouple.partner1,
           siblingParentalLink.parentCouple.partner2,
         ],
         parentalType: siblingParentalLink.type,
-        parentalLink: siblingParentalLink,
-      };
+        __parentalLink: siblingParentalLink,
+      } as Sibling;
+    });
+
+  const getYoungerSiblings = (olderSibling: Sibling): Sibling[] => {
+    const youngerSibling = foundChildren.find((sibling) => {
+      return olderSibling?.individual.id === sibling.olderSibling?.id;
+    });
+
+    if (youngerSibling) {
+      return [youngerSibling].concat(getYoungerSiblings(youngerSibling));
+    } else {
+      return [];
+    }
+  };
+
+  const siblingChain = (() => {
+    const oldestSibling = foundChildren.find(
+      (child) => child.__parentalLink.olderSibling === null
+    );
+
+    return oldestSibling
+      ? [oldestSibling].concat(getYoungerSiblings(oldestSibling))
+      : [];
+  })();
+
+  const individualSiblingIndex = siblingChain.findIndex(
+    (child) => child.individual.id === selectedIndividual.value?.id
+  );
+
+  return foundChildren
+    .filter((child) => child.individual.id !== selectedIndividual.value?.id)
+    .sort((a, b) => {
+      const aIndex = siblingChain.findIndex(
+        (child) => child.individual.id === a.individual.id
+      );
+      const bIndex = siblingChain.findIndex(
+        (child) => child.individual.id === b.individual.id
+      );
+
+      return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0;
     })
-);
+    .map((child) => {
+      const childIndex = siblingChain.findIndex(
+        (targetChild) => child.individual.id === targetChild.individual.id
+      );
+      return { ...child, older: childIndex < individualSiblingIndex };
+    });
+});
 
 const dialog = computed({
   get() {
@@ -135,9 +195,9 @@ const editDialog = ref(false);
   <AppDialog v-model="dialog" :size="ComponentSize.LARGE">
     <a href="#" class="sr-only"></a>
     <AppHeading
-      :title="individual?.fullName"
+      :title="selectedIndividual?.fullName"
       :actions="
-        individual
+        selectedIndividual
           ? [
               {
                 name: 'Edit',
@@ -153,25 +213,25 @@ const editDialog = ref(false);
     <template v-if="isFetching"> Loading... </template>
 
     <template v-else>
-      <div v-if="individual" class="mt-4 space-y-4 sm:mt-0">
+      <div v-if="selectedIndividual" class="mt-4 space-y-4 sm:mt-0">
         <div>
-          <p>Nickname: {{ individual.alias }}</p>
-          <p>Gender: {{ individual.gender }}</p>
+          <p>Nickname: {{ selectedIndividual.alias }}</p>
+          <p>Gender: {{ selectedIndividual.gender }}</p>
           <p>
             Date of birth:
-            <span v-if="individual.dateOfBirth">
-              {{ moment(individual.dateOfBirth).format("DD/MM/YYYY") }}
+            <span v-if="selectedIndividual.dateOfBirth">
+              {{ moment(selectedIndividual.dateOfBirth).format("DD/MM/YYYY") }}
             </span>
           </p>
-          <p v-if="individual.dateOfDeath">
+          <p v-if="selectedIndividual.dateOfDeath">
             Date of death:
-            {{ moment(individual.dateOfDeath).format("DD/MM/YYYY") }}
+            {{ moment(selectedIndividual.dateOfDeath).format("DD/MM/YYYY") }}
           </p>
-          <p v-else-if="individual.hasDied">Has died</p>
+          <p v-else-if="selectedIndividual.hasDied">Has died</p>
           <p>Note:</p>
-          <AppCard well v-if="individual.note">
+          <AppCard well v-if="selectedIndividual.note">
             <p class="whitespace-pre-wrap">
-              {{ individual.note }}
+              {{ selectedIndividual.note }}
             </p>
           </AppCard>
         </div>
@@ -191,7 +251,7 @@ const editDialog = ref(false);
             </thead>
             <tbody>
               <tr
-                v-for="parentCouple in parents"
+                v-for="parentCouple in individualParents"
                 :key="parentCouple.parentalLink.id"
               >
                 <td>
@@ -226,13 +286,21 @@ const editDialog = ref(false);
                 <th>Sibling</th>
                 <th>Parents</th>
                 <th>Parental type</th>
-                <th class="simple-table-actions"></th>
+                <th>Older / Younger</th>
+                <th class="simple-table-actions">
+                  <AppButton text :color="ComponentColor.PRIMARY">
+                    Add sibling
+                  </AppButton>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="sibling in siblings" :key="sibling.parentalLink.id">
+              <tr
+                v-for="sibling in individualSiblings"
+                :key="sibling.__parentalLink.id"
+              >
                 <td>
-                  {{ sibling.sibling.fullName }}
+                  {{ sibling.individual.fullName }}
                 </td>
                 <td>
                   {{
@@ -241,6 +309,9 @@ const editDialog = ref(false);
                 </td>
                 <td>
                   {{ sibling.parentalType.type }}
+                </td>
+                <td>
+                  {{ sibling.older ? "Older" : "Younger" }}
                 </td>
                 <td class="simple-table-actions">
                   <div class="inline-flex flex-wrap gap-2 sm:gap-4">
@@ -268,7 +339,10 @@ const editDialog = ref(false);
               </tr>
             </thead>
             <tbody>
-              <tr v-for="partner in partners" :key="partner.couple.id">
+              <tr
+                v-for="partner in individualPartners"
+                :key="partner.couple.id"
+              >
                 <td>
                   {{ partner.partner.fullName }}
                 </td>
@@ -299,11 +373,18 @@ const editDialog = ref(false);
                 <th>Child</th>
                 <th>Spouse</th>
                 <th>Parental type</th>
-                <th class="simple-table-actions"></th>
+                <th class="simple-table-actions">
+                  <AppButton text :color="ComponentColor.PRIMARY">
+                    Add child
+                  </AppButton>
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="child in children" :key="child.parentalLink.id">
+              <tr
+                v-for="child in individualChildren"
+                :key="child.parentalLink.id"
+              >
                 <td>
                   {{ child.child.fullName }}
                 </td>

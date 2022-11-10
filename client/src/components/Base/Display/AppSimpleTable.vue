@@ -37,9 +37,11 @@ table.simple-table {
   }
 
   tbody {
-    @apply divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800;
+    @apply divide-y divide-gray-200 dark:divide-gray-700;
 
     tr {
+      @apply bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700;
+
       td {
         @apply whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300;
       }

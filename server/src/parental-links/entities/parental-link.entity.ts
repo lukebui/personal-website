@@ -7,10 +7,11 @@ import {
   ManyToOne,
   JoinColumn,
   Unique,
+  OneToOne,
 } from 'typeorm';
 
 @Entity()
-@Unique(['parentCouple', 'child'])
+@Unique(['parentCouple', 'child', 'olderSibling'])
 export class ParentalLink {
   @PrimaryGeneratedColumn()
   id: number;
@@ -38,4 +39,8 @@ export class ParentalLink {
   })
   @JoinColumn()
   child: Individual;
+
+  @OneToOne(() => ParentalLink, { nullable: true })
+  @JoinColumn()
+  olderSibling: ParentalLink;
 }

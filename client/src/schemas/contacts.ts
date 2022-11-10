@@ -67,5 +67,6 @@ export const parentalLinkSchema = yup
     type: parentTypeSchema,
     parentCouple: coupleSchema,
     child: individualSchema,
+    olderSibling: yup.mixed().nullable().defined().default(null),
   })
   .defined();

@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { StoreNames } from "@/enums";
 import { LocalStorageKeys } from "@/enums";
-import _ from "lodash";
 
 export enum IndividualGender {
   MALE = "male",
@@ -39,6 +38,7 @@ export interface ParentalLink {
   type: ParentalType;
   parentCouple: Couple;
   child: Individual;
+  olderSibling: ParentalLink | null;
 }
 
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {

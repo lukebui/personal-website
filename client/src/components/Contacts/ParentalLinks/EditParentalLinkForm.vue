@@ -33,6 +33,7 @@ const contactsStore = useContactsStore();
 const individuals = computed(() => contactsStore.individuals);
 const couples = computed(() => contactsStore.couples);
 const parentalTypes = computed(() => contactsStore.parentalTypes);
+const parentalLinks = computed(() => contactsStore.parentalLinks);
 
 const formSchema = parentalLinkSchema;
 
@@ -86,6 +87,7 @@ const getFormData = (itemValue?: ParentalLink) => {
       type: itemValue.type,
       parentCouple: itemValue.parentCouple,
       child: itemValue.child,
+      olderSibling: itemValue.olderSibling,
     };
     return formData;
   } else {
@@ -93,7 +95,7 @@ const getFormData = (itemValue?: ParentalLink) => {
   }
 };
 
-const { meta, isSubmitting, handleSubmit } = useForm<FormData>({
+const { meta, isSubmitting, handleSubmit, useFieldModel } = useForm<FormData>({
   validationSchema: formSchema,
   initialValues: getFormData(item?.value) as any,
 });
@@ -139,6 +141,20 @@ const getCoupleName = (couple: Couple) => {
 };
 
 const getParentalTypeText = (type: ParentalType) => type.type;
+
+const getSiblingText = (parentalLink: ParentalLink) =>
+  `${parentalLink.child.fullName} (${parentalLink.parentCouple.partner1.fullName} & ${parentalLink.parentCouple.partner2.fullName})`;
+
+const selectedParents = useFieldModel("parentCouple");
+const selectedChild = useFieldModel("child");
+
+const availableSiblings = computed(() => {
+  return parentalLinks.value.filter(
+    (parentalLink) =>
+      parentalLink.child.id !== selectedChild.value?.id &&
+      parentalLink.parentCouple.id === selectedParents.value?.id
+  );
+});
 </script>
 
 <template>
@@ -179,6 +195,15 @@ const getParentalTypeText = (type: ParentalType) => type.type;
         label="Type"
         required
       ></AppSelect>
+      <AppAutocomplete
+        name="olderSibling"
+        :options="availableSiblings"
+        return-value
+        option-id="id"
+        :option-text="getSiblingText"
+        label="Immediate older sibling"
+        nullable
+      ></AppAutocomplete>
     </div>
     <AppDeleteConfirmDialog
       v-model:show="deleteConfirmDialog"

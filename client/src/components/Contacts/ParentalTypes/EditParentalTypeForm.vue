@@ -31,7 +31,7 @@ const token = useStorage(LocalStorageKeys.ACCESS_TOKEN, null, undefined, {
 
 const saveItem = async (values: unknown) => {
   const response = await fetch(
-    `http://localhost:3000/v1/parent-types${
+    `http://localhost:3000/v1/parental-types${
       item?.value ? "/" + item.value.id : ""
     }`,
     {
@@ -53,7 +53,7 @@ const deleteItem = async () => {
   if (!item?.value) return;
 
   const response = await fetch(
-    `http://localhost:3000/v1/parent-types/${item.value.id}`,
+    `http://localhost:3000/v1/parental-types/${item.value.id}`,
     {
       method: "DELETE",
       headers: {
