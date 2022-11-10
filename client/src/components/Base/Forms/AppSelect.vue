@@ -36,9 +36,6 @@ const props = defineProps({
   options: {
     type: Array as PropType<SelectableInputOption[]>,
     required: true,
-    validator(value: SelectableInputOption[]) {
-      return !!value.length;
-    },
   },
   optionId: {
     type: [String, Function] as PropType<
