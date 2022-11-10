@@ -2,4 +2,4 @@
 
 ## Todo
 
-[ ] [Backend] Add "Immediate older sibling" property to ParentalLink
+- [ ] [Backend] Add "Immediate older sibling" property to ParentalLink
