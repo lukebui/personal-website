@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Individual } from "@/store/contacts";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
-import ContactsEditIndividualForm from "./EditIndividualForm.vue";
+import EditIndividualForm from "./EditIndividualForm.vue";
 import { AppDialog } from "@/components/Base";
 import { ComponentSize } from "@/enums";
 
@@ -10,7 +10,11 @@ const props = defineProps({
   item: Object as PropType<Individual>,
 });
 
-const emit = defineEmits(["update:show", "saved", "deleted"]);
+const emit = defineEmits<{
+  (event: "update:show", value: boolean): void;
+  (event: "saved", value: Individual): void;
+  (event: "deleted"): void;
+}>();
 
 const { show } = toRefs(props);
 
@@ -29,8 +33,8 @@ watch(show, () => {
   formKey.value++;
 });
 
-const onSaved = () => {
-  emit("saved");
+const onSaved = (individual: Individual) => {
+  emit("saved", individual);
   dialog.value = false;
 };
 
@@ -41,8 +45,8 @@ const onDelete = () => {
 </script>
 
 <template>
-  <AppDialog v-model="dialog" :size="ComponentSize.MEDIUM" top>
-    <ContactsEditIndividualForm
+  <AppDialog v-model="dialog" :size="ComponentSize.MEDIUM">
+    <EditIndividualForm
       :item="item"
       @close="dialog = false"
       @saved="onSaved"

@@ -22,7 +22,11 @@ const props = defineProps({
   item: { type: Object as PropType<Individual> },
 });
 
-const emit = defineEmits(["close", "saved", "deleted"]);
+const emit = defineEmits<{
+  (event: "close"): void;
+  (event: "saved", value: Individual): void;
+  (event: "deleted"): void;
+}>();
 
 const { item } = toRefs(props);
 
@@ -56,6 +60,9 @@ const saveItem = async (values: FormData) => {
 
   if (!response.ok) {
     throw new Error((await response.json()).message);
+  } else {
+    const individual = (await response.json()) as Individual;
+    return individual;
   }
 };
 
@@ -111,9 +118,9 @@ const onSave = async () => {
   try {
     errorMessages.value = [];
     await handleSubmit(async (values) => {
-      await saveItem(values);
+      const individual = await saveItem(values);
 
-      emit("saved");
+      emit("saved", individual);
     })();
   } catch (error) {
     errorMessages.value = getErrorMessages(error);

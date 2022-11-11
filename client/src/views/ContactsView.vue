@@ -10,7 +10,7 @@ import { computed, onBeforeMount, ref } from "vue";
 import moment from "moment";
 import { AppHeading, AppSimpleTable, AppButton } from "@/components/Base";
 import { ComponentColor } from "@/enums";
-import EditIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
+import AddIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 import EditCoupleDialog from "@/components/Contacts/Couples/EditCoupleDialog.vue";
 import EditParentalLinkDialog from "@/components/Contacts/ParentalLinks/EditParentalLinkDialog.vue";
 import ViewIndividualDialog from "@/components/Contacts/Individuals/ViewIndividualDialog.vue";
@@ -89,6 +89,18 @@ const editParentalLink = (item: ParentalLink) => {
 };
 
 const editParentalLinkDialog = ref(false);
+
+const onAdded = async (individual: Individual) => {
+  await fetch();
+  const selectedIndividual = individuals.value.find(
+    (tempIndividual) => tempIndividual.id === individual.id
+  );
+
+  if (selectedIndividual) {
+    individualToEdit.value = selectedIndividual;
+    viewIndividualDialog.value = true;
+  }
+};
 </script>
 
 <template>
@@ -251,10 +263,10 @@ const editParentalLinkDialog = ref(false);
     :item="individualToEdit"
     @changed="fetch"
   />
-  <EditIndividualDialog
+  <AddIndividualDialog
     v-model:show="editIndividualDialog"
     :item="individualToEdit"
-    @saved="fetch"
+    @saved="onAdded"
     @deleted="fetch"
   />
   <EditCoupleDialog
