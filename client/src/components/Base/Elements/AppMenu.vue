@@ -33,7 +33,7 @@ const isFunction = (action: MenuAction) => {
       leave-to-class="transform opacity-0 scale-95"
     >
       <MenuItems
-        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900"
+        class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-700"
       >
         <div class="py-1">
           <MenuItem
@@ -45,7 +45,7 @@ const isFunction = (action: MenuAction) => {
               v-if="isFunction(action)"
               :class="[
                 active
-                  ? 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white'
+                  ? 'bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white'
                   : 'text-gray-700 dark:text-gray-300',
                 'block w-full px-4 py-2 text-left text-sm',
               ]"

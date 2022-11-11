@@ -12,7 +12,7 @@ import {
   type ParentalLink,
   type ParentalType,
 } from "@/store/contacts";
-import { computed, ref, toRefs, type PropType } from "vue";
+import { computed, ref, toRefs, watch, type PropType } from "vue";
 import EditIndividualDialog from "./EditIndividualDialog.vue";
 import { ComponentColor, ComponentSize } from "@/enums";
 import moment from "moment";
@@ -189,6 +189,22 @@ const dialog = computed({
 });
 
 const editDialog = ref(false);
+
+watch(dialog, (newDialog) => {
+  if (!newDialog) {
+    editDialog.value = false;
+  }
+});
+
+const onSaved = () => {
+  emit("changed");
+  return fetch();
+};
+
+const onDeleted = () => {
+  emit("changed");
+  dialog.value = false;
+};
 </script>
 
 <template>
@@ -411,8 +427,8 @@ const editDialog = ref(false);
     <EditIndividualDialog
       v-model:show="editDialog"
       :item="item"
-      @saved="fetch"
-      @deleted="dialog = false"
+      @saved="onSaved"
+      @deleted="onDeleted"
     ></EditIndividualDialog>
   </AppDialog>
 </template>

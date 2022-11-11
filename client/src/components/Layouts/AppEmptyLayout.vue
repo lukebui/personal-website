@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import { AppColorModeToggle } from "@/components/Base";
+import { onBeforeMount, onUnmounted } from "vue";
+
+onBeforeMount(() => {
+  document.documentElement.classList.add("h-full");
+  document.body.classList.add("h-full");
+});
+
+onUnmounted(() => {
+  document.documentElement.classList.remove("h-full");
+  document.body.classList.remove("h-full");
+});
 </script>
 
 <template>

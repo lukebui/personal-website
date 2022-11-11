@@ -41,7 +41,7 @@ const closeDialog = () => {
 </script>
 
 <template>
-  <TransitionRoot as="template" :show="open">
+  <TransitionRoot as="template" :show="open" unmount>
     <Dialog as="div" class="relative z-10" @close="open = false">
       <TransitionChild
         as="template"
@@ -61,7 +61,7 @@ const closeDialog = () => {
         <div
           class="flex min-h-full w-full justify-center text-center"
           :class="{
-            'p-4 sm:p-0': !full,
+            'p-4': !full,
             'items-start': top,
             'items-end sm:items-center': !top,
           }"
@@ -99,7 +99,6 @@ const closeDialog = () => {
                 'h-screen w-screen': full,
               }"
             >
-              <!-- <div class="h-full w-full"> -->
               <AppCard
                 :loading="loading"
                 :disabled="disabled"
@@ -108,7 +107,6 @@ const closeDialog = () => {
               >
                 <slot :close="closeDialog"></slot>
               </AppCard>
-              <!-- </div> -->
             </DialogPanel>
           </TransitionChild>
         </div>

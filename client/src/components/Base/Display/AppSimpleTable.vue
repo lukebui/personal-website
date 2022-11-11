@@ -3,7 +3,7 @@
     <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
         <div
-          class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg"
+          class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 dark:ring-gray-700 sm:rounded-lg"
         >
           <table class="simple-table">
             <slot />
@@ -16,7 +16,7 @@
 
 <style lang="scss">
 table.simple-table {
-  @apply min-w-full divide-y divide-black/10 overflow-hidden shadow ring-1 ring-black ring-opacity-5 dark:divide-gray-600 dark:ring-gray-600 sm:rounded-lg;
+  @apply min-w-full divide-y divide-black/10 dark:divide-gray-600;
 
   thead {
     @apply bg-gray-50 dark:bg-gray-700;
@@ -40,7 +40,7 @@ table.simple-table {
     @apply divide-y divide-gray-200 dark:divide-gray-700;
 
     tr {
-      @apply bg-white hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700;
+      @apply bg-white focus-within:bg-gray-100 hover:bg-gray-100 dark:bg-gray-800 dark:focus-within:bg-gray-900 dark:hover:bg-gray-900;
 
       td {
         @apply whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-300;
