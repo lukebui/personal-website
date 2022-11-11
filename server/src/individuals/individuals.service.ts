@@ -35,6 +35,6 @@ export class IndividualsService {
   }
 
   remove(id: number) {
-    return this.individualRepository.delete(id);
+    return this.individualRepository.softDelete(id);
   }
 }

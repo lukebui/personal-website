@@ -45,7 +45,7 @@ export class ParentalTypesService {
           HttpStatus.FORBIDDEN,
         );
 
-      return this.parentalTypeRepository.delete(id);
+      return this.parentalTypeRepository.softDelete(id);
     } else {
       throw new HttpException(
         'Cannot find the requested data',

@@ -81,6 +81,6 @@ export class ParentalLinksService {
   }
 
   remove(id: number) {
-    return this.parentalLinkRepository.delete(id);
+    return this.parentalLinkRepository.softDelete(id);
   }
 }

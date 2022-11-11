@@ -1,5 +1,12 @@
 import { IndividualGender } from 'src/enums/IndividualGender.enum';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Individual {
@@ -50,4 +57,13 @@ export class Individual {
     asExpression: `concat_ws(' ',lastName, middleName, firstName)`,
   })
   fullName: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

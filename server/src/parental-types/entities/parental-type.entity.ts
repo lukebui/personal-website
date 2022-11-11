@@ -1,5 +1,13 @@
 import { ParentalLink } from 'src/parental-links/entities/parental-link.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class ParentalType {
@@ -13,4 +21,13 @@ export class ParentalType {
     onDelete: 'RESTRICT',
   })
   parentalLinks: ParentalLink[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

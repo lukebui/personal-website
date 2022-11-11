@@ -8,6 +8,9 @@ import {
   JoinColumn,
   Unique,
   OneToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -43,4 +46,13 @@ export class ParentalLink {
   @OneToOne(() => ParentalLink, { nullable: true })
   @JoinColumn()
   olderSibling: ParentalLink;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 }

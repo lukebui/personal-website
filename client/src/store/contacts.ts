@@ -19,11 +19,17 @@ export interface Individual {
   hasDied: boolean;
   dateOfBirth: Date | null;
   dateOfDeath: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
 }
 
 export interface ParentalType {
   id: number;
   type: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
 }
 
 export interface Couple {
@@ -31,6 +37,9 @@ export interface Couple {
   partner1: Individual;
   partner2: Individual;
   stillMarried: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
 }
 
 export interface ParentalLink {
@@ -39,6 +48,9 @@ export interface ParentalLink {
   parentCouple: Couple;
   child: Individual;
   olderSibling: ParentalLink | null;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
 }
 
 export const useContactsStore = defineStore(StoreNames.CONTACTS, {

@@ -66,6 +66,6 @@ export class CouplesService {
   }
 
   remove(id: number) {
-    return this.coupleRepository.delete(id);
+    return this.coupleRepository.softDelete(id);
   }
 }
