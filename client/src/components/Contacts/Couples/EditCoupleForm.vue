@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import type * as yup from "yup";
-import { useContactsStore, type Couple } from "@/store/contacts";
+import {
+  useContactsStore,
+  type Couple,
+  type Individual,
+} from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
 import { LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
@@ -16,11 +20,12 @@ import {
 
 const props = defineProps({
   item: { type: Object as PropType<Couple> },
+  fromIndividual: Object as PropType<Individual>,
 });
 
 const emit = defineEmits(["close", "saved", "deleted"]);
 
-const { item } = toRefs(props);
+const { item, fromIndividual } = toRefs(props);
 
 const contactsStore = useContactsStore();
 
@@ -79,7 +84,11 @@ const getFormData = (itemValue?: Couple) => {
     };
     return formData;
   } else {
-    return formSchema.getDefault();
+    const formData = formSchema.getDefault();
+    if (fromIndividual?.value) {
+      formData.partner1 = fromIndividual.value;
+    }
+    return formData;
   }
 };
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Couple } from "@/store/contacts";
+import type { Couple, Individual } from "@/store/contacts";
 import { computed, ref, toRefs, watch, type PropType } from "vue";
 import { AppDialog } from "@/components/Base";
 import { ComponentSize } from "@/enums";
@@ -8,6 +8,7 @@ import EditCoupleForm from "./EditCoupleForm.vue";
 const props = defineProps({
   show: Boolean,
   item: Object as PropType<Couple>,
+  fromIndividual: Object as PropType<Individual>,
 });
 
 const emit = defineEmits(["update:show", "saved", "deleted"]);
@@ -44,6 +45,7 @@ const onDelete = () => {
   <AppDialog v-model="dialog" :size="ComponentSize.SMALL">
     <EditCoupleForm
       :item="item"
+      :from-individual="fromIndividual"
       @close="dialog = false"
       @saved="onSaved"
       @deleted="onDelete"

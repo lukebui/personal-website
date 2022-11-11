@@ -16,6 +16,9 @@ import { computed, ref, toRefs, watch, type PropType } from "vue";
 import EditIndividualDialog from "./EditIndividualDialog.vue";
 import { ComponentColor, ComponentSize } from "@/enums";
 import moment from "moment";
+import EditCoupleDialog from "../Couples/EditCoupleDialog.vue";
+import SelectCoupleAddTypeDialog from "../Couples/SelectCoupleAddTypeDialog.vue";
+import AddCoupleFromNewIndividualDialog from "../Couples/AddCoupleFromNewIndividualDialog.vue";
 
 const props = defineProps({
   show: Boolean,
@@ -205,6 +208,20 @@ const onDeleted = () => {
   emit("changed");
   dialog.value = false;
 };
+
+const selectCoupleAddTypeDialog = ref(false);
+
+const editCoupleDialog = ref(false);
+const addCoupleFromNewIndividualDialog = ref(false);
+
+const onToCreateNewSpouse = () => {
+  selectCoupleAddTypeDialog.value = false;
+  addCoupleFromNewIndividualDialog.value = true;
+};
+const onToLinkExistingSpouse = () => {
+  selectCoupleAddTypeDialog.value = false;
+  editCoupleDialog.value = true;
+};
 </script>
 
 <template>
@@ -348,7 +365,11 @@ const onDeleted = () => {
                 <th>Spouse</th>
                 <th>Status</th>
                 <th class="simple-table-actions">
-                  <AppButton text :color="ComponentColor.PRIMARY">
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="selectCoupleAddTypeDialog = true"
+                  >
                     Add spouse
                   </AppButton>
                 </th>
@@ -421,14 +442,27 @@ const onDeleted = () => {
             </tbody>
           </AppSimpleTable>
         </div>
+        <EditIndividualDialog
+          v-model:show="editDialog"
+          :item="selectedIndividual"
+          @saved="onSaved"
+          @deleted="onDeleted"
+        />
+        <EditCoupleDialog
+          v-model:show="editCoupleDialog"
+          :from-individual="selectedIndividual"
+        />
+        <AddCoupleFromNewIndividualDialog
+          v-model:show="addCoupleFromNewIndividualDialog"
+          :from-individual="selectedIndividual"
+          @added="fetch"
+        />
+        <SelectCoupleAddTypeDialog
+          v-model:show="selectCoupleAddTypeDialog"
+          @create="onToCreateNewSpouse"
+          @link="onToLinkExistingSpouse"
+        />
       </div>
     </template>
-
-    <EditIndividualDialog
-      v-model:show="editDialog"
-      :item="item"
-      @saved="onSaved"
-      @deleted="onDeleted"
-    ></EditIndividualDialog>
   </AppDialog>
 </template>

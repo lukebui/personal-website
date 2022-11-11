@@ -1,25 +1,16 @@
 <script setup lang="ts">
 import AppDefaultLayout from "../components/Layouts/AppDefaultLayout.vue";
-import {
-  useContactsStore,
-  type Couple,
-  type Individual,
-  type ParentalLink,
-} from "@/store/contacts";
-import { computed, onBeforeMount, ref } from "vue";
+import { useContactsStore, type Individual } from "@/store/contacts";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import moment from "moment";
 import { AppHeading, AppSimpleTable, AppButton } from "@/components/Base";
 import { ComponentColor } from "@/enums";
 import AddIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
-import EditCoupleDialog from "@/components/Contacts/Couples/EditCoupleDialog.vue";
-import EditParentalLinkDialog from "@/components/Contacts/ParentalLinks/EditParentalLinkDialog.vue";
 import ViewIndividualDialog from "@/components/Contacts/Individuals/ViewIndividualDialog.vue";
 
 const contactsStore = useContactsStore();
 
 const individuals = computed(() => contactsStore.individuals || []);
-const couples = computed(() => contactsStore.couples || []);
-const parentalLinks = computed(() => contactsStore.parentalLinks || []);
 
 const isFetching = ref(false);
 
@@ -39,56 +30,29 @@ onBeforeMount(async () => {
   await fetch();
 });
 
-const formKey = ref(0);
-
 const individualToEdit = ref<Individual>();
 
 const addIndividual = () => {
-  individualToEdit.value = undefined;
-  formKey.value++;
-  editIndividualDialog.value = true;
+  if (viewIndividualDialog.value) {
+    viewIndividualDialog.value = false;
+
+    setTimeout(() => {
+      individualToEdit.value = undefined;
+      editIndividualDialog.value = true;
+    }, 350);
+  } else {
+    individualToEdit.value = undefined;
+    editIndividualDialog.value = true;
+  }
 };
 
 const viewIndividual = (item: Individual) => {
   individualToEdit.value = item;
-  formKey.value++;
   viewIndividualDialog.value = true;
 };
 
 const editIndividualDialog = ref(false);
 const viewIndividualDialog = ref(false);
-
-const coupleToEdit = ref<Couple>();
-
-const addCouple = () => {
-  coupleToEdit.value = undefined;
-  formKey.value++;
-  editCoupleDialog.value = true;
-};
-
-const editCouple = (item: Couple) => {
-  coupleToEdit.value = item;
-  formKey.value++;
-  editCoupleDialog.value = true;
-};
-
-const editCoupleDialog = ref(false);
-
-const parentalLinkToEdit = ref<ParentalLink>();
-
-const addParentalLink = () => {
-  parentalLinkToEdit.value = undefined;
-  formKey.value++;
-  editParentalLinkDialog.value = true;
-};
-
-const editParentalLink = (item: ParentalLink) => {
-  parentalLinkToEdit.value = item;
-  formKey.value++;
-  editParentalLinkDialog.value = true;
-};
-
-const editParentalLinkDialog = ref(false);
 
 const onAdded = async (individual: Individual) => {
   await fetch();
@@ -101,6 +65,20 @@ const onAdded = async (individual: Individual) => {
     viewIndividualDialog.value = true;
   }
 };
+
+const onF2Keyup = (event: KeyboardEvent) => {
+  if (event.key === "F2") {
+    addIndividual();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keyup", onF2Keyup);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keyup", onF2Keyup);
+});
 </script>
 
 <template>
@@ -111,7 +89,13 @@ const onAdded = async (individual: Individual) => {
         <div class="space-y-2">
           <AppHeading
             title="Individuals"
-            :actions="[{ name: 'Add', action: addIndividual, primary: true }]"
+            :actions="[
+              {
+                name: 'Add',
+                action: addIndividual,
+                primary: true,
+              },
+            ]"
           />
           <AppSimpleTable v-if="individuals.length">
             <thead>
@@ -174,87 +158,6 @@ const onAdded = async (individual: Individual) => {
             </tbody>
           </AppSimpleTable>
         </div>
-
-        <div class="space-y-2">
-          <AppHeading
-            title="Couples"
-            :actions="[{ name: 'Add', action: addCouple, primary: true }]"
-          />
-          <AppSimpleTable v-if="couples.length">
-            <thead>
-              <tr>
-                <th>Partners</th>
-                <th>Marriage status</th>
-                <th class="simple-table-actions"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="couple in couples" :key="couple.id">
-                <td>
-                  {{ couple.partner1.fullName }}
-                  -
-                  {{ couple.partner2.fullName }}
-                </td>
-                <td>
-                  {{ couple.stillMarried ? "Married" : "Divorced" }}
-                </td>
-                <td class="simple-table-actions">
-                  <AppButton
-                    text
-                    :color="ComponentColor.PRIMARY"
-                    @click="editCouple(couple)"
-                  >
-                    Edit
-                  </AppButton>
-                </td>
-              </tr>
-            </tbody>
-          </AppSimpleTable>
-        </div>
-
-        <div class="space-y-2">
-          <AppHeading
-            title="Parental links"
-            :actions="[{ name: 'Add', action: addParentalLink, primary: true }]"
-          />
-          <AppSimpleTable v-if="parentalLinks.length">
-            <thead>
-              <tr>
-                <th>Parents</th>
-                <th>Child</th>
-                <th>Parental type</th>
-                <th class="simple-table-actions"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="parentalLink in parentalLinks" :key="parentalLink.id">
-                <td>
-                  {{
-                    [
-                      parentalLink.parentCouple.partner1.fullName,
-                      parentalLink.parentCouple.partner2.fullName,
-                    ].join(" - ")
-                  }}
-                </td>
-                <td>
-                  {{ parentalLink.child.fullName }}
-                </td>
-                <td>
-                  {{ parentalLink.type.type }}
-                </td>
-                <td class="simple-table-actions">
-                  <AppButton
-                    text
-                    :color="ComponentColor.PRIMARY"
-                    @click="editParentalLink(parentalLink)"
-                  >
-                    Edit
-                  </AppButton>
-                </td>
-              </tr>
-            </tbody>
-          </AppSimpleTable>
-        </div>
       </div>
     </div>
   </AppDefaultLayout>
@@ -267,18 +170,6 @@ const onAdded = async (individual: Individual) => {
     v-model:show="editIndividualDialog"
     :item="individualToEdit"
     @saved="onAdded"
-    @deleted="fetch"
-  />
-  <EditCoupleDialog
-    v-model:show="editCoupleDialog"
-    :item="coupleToEdit"
-    @saved="fetch"
-    @deleted="fetch"
-  />
-  <EditParentalLinkDialog
-    v-model:show="editParentalLinkDialog"
-    :item="parentalLinkToEdit"
-    @saved="fetch"
     @deleted="fetch"
   />
 </template>
