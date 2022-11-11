@@ -169,15 +169,6 @@ const availableSiblings = computed(() => {
   >
     <div class="mb-4 space-y-3">
       <AppAutocomplete
-        name="child"
-        :options="individuals"
-        return-value
-        option-id="id"
-        :option-text="getIndividualName"
-        label="Child"
-        required
-      ></AppAutocomplete>
-      <AppAutocomplete
         name="parentCouple"
         :options="couples"
         return-value
@@ -195,6 +186,15 @@ const availableSiblings = computed(() => {
         label="Type"
         required
       ></AppSelect>
+      <AppAutocomplete
+        name="child"
+        :options="individuals"
+        return-value
+        option-id="id"
+        :option-text="getIndividualName"
+        label="Child"
+        required
+      ></AppAutocomplete>
       <AppAutocomplete
         name="olderSibling"
         :options="availableSiblings"

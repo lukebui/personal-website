@@ -53,7 +53,7 @@ const props = defineProps({
   returnValue: Boolean,
   multiple: Boolean,
 
-  absolute: Boolean,
+  absolute: { type: Boolean, default: true },
 });
 
 const defaultId = uuidv4();

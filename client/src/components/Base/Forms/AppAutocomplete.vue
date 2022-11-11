@@ -53,7 +53,7 @@ const props = defineProps({
   returnValue: Boolean,
   multiple: Boolean,
 
-  absolute: Boolean,
+  absolute: { type: Boolean, default: true },
   nullable: Boolean,
 });
 
@@ -141,7 +141,7 @@ const filteredOptions = computed(() =>
       @update:model-value="sortValuesOnModelUpdate"
       :nullable="nullable"
     >
-      <div class="relative mt-1">
+      <div class="relative">
         <ComboboxInput
           class="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:bg-gray-800 sm:text-sm"
           @change="query = $event.target.value"
@@ -152,42 +152,42 @@ const filteredOptions = computed(() =>
         >
           <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
         </ComboboxButton>
-      </div>
-      <ComboboxOptions
-        v-if="filteredOptions.length > 0"
-        class="z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-600 sm:text-sm"
-        :class="{ absolute }"
-      >
-        <ComboboxOption
-          v-for="(option, optionIndex) in filteredOptions"
-          :key="optionIndex"
-          :value="getOptionValue(option)"
-          as="template"
-          v-slot="{ active, selected }"
-          :disabled="localOptionDisabled(option)"
+        <ComboboxOptions
+          v-if="filteredOptions.length > 0"
+          class="z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-600 sm:text-sm"
+          :class="{ absolute }"
         >
-          <li
-            :class="[
-              'relative cursor-default select-none py-2 pl-3 pr-9 dark:text-white',
-              active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-            ]"
+          <ComboboxOption
+            v-for="(option, optionIndex) in filteredOptions"
+            :key="optionIndex"
+            :value="getOptionValue(option)"
+            as="template"
+            v-slot="{ active, selected }"
+            :disabled="localOptionDisabled(option)"
           >
-            <span :class="['block truncate', selected && 'font-semibold']">
-              {{ getOptionText(option) }}
-            </span>
-
-            <span
-              v-if="selected"
+            <li
               :class="[
-                'absolute inset-y-0 right-0 flex items-center pr-4',
-                active ? 'text-white' : 'text-indigo-600',
+                'relative cursor-default select-none py-2 pl-3 pr-9 dark:text-white',
+                active ? 'bg-indigo-600 text-white' : 'text-gray-900',
               ]"
             >
-              <CheckIcon class="h-5 w-5" aria-hidden="true" />
-            </span>
-          </li>
-        </ComboboxOption>
-      </ComboboxOptions>
+              <span :class="['block truncate', selected && 'font-semibold']">
+                {{ getOptionText(option) }}
+              </span>
+
+              <span
+                v-if="selected"
+                :class="[
+                  'absolute inset-y-0 right-0 flex items-center pr-4',
+                  active ? 'text-white' : 'text-indigo-600',
+                ]"
+              >
+                <CheckIcon class="h-5 w-5" aria-hidden="true" />
+              </span>
+            </li>
+          </ComboboxOption>
+        </ComboboxOptions>
+      </div>
     </Combobox>
   </AppInputGroup>
 </template>

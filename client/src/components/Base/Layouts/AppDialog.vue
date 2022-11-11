@@ -84,31 +84,31 @@ const closeDialog = () => {
             "
           >
             <DialogPanel
-              class="relative transform overflow-hidden text-left shadow-xl transition-all"
+              class="relative transform text-left shadow-xl transition-all"
               :class="{
-                'w-full rounded-lg sm:my-8 sm:max-w-xs':
+                'w-full sm:my-8 sm:max-w-xs':
                   size === ComponentSize.X_SMALL && !full,
-                'w-full rounded-lg sm:my-8 sm:max-w-sm':
+                'w-full sm:my-8 sm:max-w-sm':
                   size === ComponentSize.SMALL && !full,
-                'w-full rounded-lg sm:my-8 sm:max-w-xl':
+                'w-full sm:my-8 sm:max-w-xl':
                   size === ComponentSize.MEDIUM && !full,
-                'w-full rounded-lg sm:my-8 sm:max-w-4xl':
+                'w-full sm:my-8 sm:max-w-4xl':
                   size === ComponentSize.LARGE && !full,
-                'w-full rounded-lg sm:my-8 sm:max-w-6xl':
+                'w-full sm:my-8 sm:max-w-6xl':
                   size === ComponentSize.X_LARGE && !full,
                 'h-screen w-screen': full,
               }"
             >
-              <div class="h-full w-full overflow-auto">
-                <AppCard
-                  :loading="loading"
-                  :disabled="disabled"
-                  :full="full"
-                  :round="full ? false : undefined"
-                >
-                  <slot :close="closeDialog"></slot>
-                </AppCard>
-              </div>
+              <!-- <div class="h-full w-full"> -->
+              <AppCard
+                :loading="loading"
+                :disabled="disabled"
+                :full="full"
+                :round="full ? false : undefined"
+              >
+                <slot :close="closeDialog"></slot>
+              </AppCard>
+              <!-- </div> -->
             </DialogPanel>
           </TransitionChild>
         </div>
