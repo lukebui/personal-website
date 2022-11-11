@@ -19,6 +19,7 @@ import moment from "moment";
 import EditCoupleDialog from "../Couples/EditCoupleDialog.vue";
 import SelectCoupleAddTypeDialog from "../Couples/SelectCoupleAddTypeDialog.vue";
 import AddCoupleFromNewIndividualDialog from "../Couples/AddCoupleFromNewIndividualDialog.vue";
+import _ from "lodash";
 
 const props = defineProps({
   show: Boolean,
@@ -191,11 +192,27 @@ const dialog = computed({
   },
 });
 
-const editDialog = ref(false);
+enum SubDialogs {
+  EDIT_DIALOG = "editDialog",
+  SELECT_COUPLE_ADD_TYPE_DIALOG = "selectCoupleAndTypeDialog",
+  EDIT_COUPLE_DIALOG = "editCoupleDialog",
+  ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG = "addCoupleFromNewIndividualDialog",
+}
+
+type SubDialogStatus = Record<SubDialogs, boolean>;
+
+const subDialogStatus = ref<SubDialogStatus>({
+  [SubDialogs.EDIT_DIALOG]: false,
+  [SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]: false,
+  [SubDialogs.EDIT_COUPLE_DIALOG]: false,
+  [SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG]: false,
+});
 
 watch(dialog, (newDialog) => {
   if (!newDialog) {
-    editDialog.value = false;
+    for (const subDialog of _.values(SubDialogs)) {
+      subDialogStatus.value[subDialog] = false;
+    }
   }
 });
 
@@ -209,18 +226,14 @@ const onDeleted = () => {
   dialog.value = false;
 };
 
-const selectCoupleAddTypeDialog = ref(false);
-
-const editCoupleDialog = ref(false);
-const addCoupleFromNewIndividualDialog = ref(false);
-
 const onToCreateNewSpouse = () => {
-  selectCoupleAddTypeDialog.value = false;
-  addCoupleFromNewIndividualDialog.value = true;
+  subDialogStatus.value[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG] = false;
+  subDialogStatus.value[SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG] =
+    true;
 };
 const onToLinkExistingSpouse = () => {
-  selectCoupleAddTypeDialog.value = false;
-  editCoupleDialog.value = true;
+  subDialogStatus.value[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG] = false;
+  subDialogStatus.value[SubDialogs.EDIT_COUPLE_DIALOG] = true;
 };
 </script>
 
@@ -234,7 +247,7 @@ const onToLinkExistingSpouse = () => {
           ? [
               {
                 name: 'Edit',
-                action: () => (editDialog = true),
+                action: () => (subDialogStatus[SubDialogs.EDIT_DIALOG] = true),
                 primary: true,
               },
             ]
@@ -368,7 +381,11 @@ const onToLinkExistingSpouse = () => {
                   <AppButton
                     text
                     :color="ComponentColor.PRIMARY"
-                    @click="selectCoupleAddTypeDialog = true"
+                    @click="
+                      subDialogStatus[
+                        SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG
+                      ] = true
+                    "
                   >
                     Add spouse
                   </AppButton>
@@ -443,22 +460,26 @@ const onToLinkExistingSpouse = () => {
           </AppSimpleTable>
         </div>
         <EditIndividualDialog
-          v-model:show="editDialog"
+          v-model:show="subDialogStatus[SubDialogs.EDIT_DIALOG]"
           :item="selectedIndividual"
           @saved="onSaved"
           @deleted="onDeleted"
         />
         <EditCoupleDialog
-          v-model:show="editCoupleDialog"
+          v-model:show="subDialogStatus[SubDialogs.EDIT_COUPLE_DIALOG]"
           :from-individual="selectedIndividual"
         />
         <AddCoupleFromNewIndividualDialog
-          v-model:show="addCoupleFromNewIndividualDialog"
+          v-model:show="
+            subDialogStatus[SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG]
+          "
           :from-individual="selectedIndividual"
           @added="fetch"
         />
         <SelectCoupleAddTypeDialog
-          v-model:show="selectCoupleAddTypeDialog"
+          v-model:show="
+            subDialogStatus[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]
+          "
           @create="onToCreateNewSpouse"
           @link="onToLinkExistingSpouse"
         />
