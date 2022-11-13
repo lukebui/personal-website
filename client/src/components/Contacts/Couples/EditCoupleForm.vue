@@ -148,6 +148,7 @@ const onDeleted = () => {
         option-id="id"
         option-text="fullName"
         return-value
+        :disabled="!!fromIndividual"
       />
       <AppAutocomplete
         label="Partner 2"
