@@ -48,3 +48,8 @@ export type MenuAction = {
   text: string;
   action: RouteLocationRaw | (() => void);
 };
+
+export interface StepItem {
+  name: string;
+  isCompleted: boolean;
+}

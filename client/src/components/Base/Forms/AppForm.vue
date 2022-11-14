@@ -15,7 +15,7 @@ defineEmits(["cancel", "save", "delete"]);
 </script>
 
 <template>
-  <form @submit.prevent @keyup.ctrl.enter.exact="$emit('save')">
+  <form @submit.prevent @keyup.ctrl.enter.exact.capture="$emit('save')">
     <fieldset class="min-w-0" :disabled="loading">
       <div>
         <slot></slot>
