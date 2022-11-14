@@ -22,11 +22,17 @@ import { useErrorMessages } from "@/composables";
 
 const props = defineProps({
   item: { type: Object as PropType<ParentalLink> },
+  fromChild: Object as PropType<Individual>,
+  fromCouple: Object as PropType<Couple>,
 });
 
-const emit = defineEmits(["close", "saved", "deleted"]);
+const emit = defineEmits<{
+  (event: "close"): void;
+  (event: "saved", value: ParentalLink): void;
+  (event: "deleted"): void;
+}>();
 
-const { item } = toRefs(props);
+const { item, fromChild, fromCouple } = toRefs(props);
 
 const contactsStore = useContactsStore();
 
@@ -60,6 +66,8 @@ const saveItem = async (values: FormData) => {
 
   if (!response.ok) {
     throw new Error((await response.json()).message);
+  } else {
+    return (await response.json()) as ParentalLink;
   }
 };
 
@@ -91,7 +99,17 @@ const getFormData = (itemValue?: ParentalLink) => {
     };
     return formData;
   } else {
-    return formSchema.getDefault();
+    const formData = formSchema.getDefault();
+
+    if (fromChild?.value) {
+      formData.child = fromChild.value;
+    }
+
+    if (fromCouple?.value) {
+      formData.parentCouple = fromCouple.value;
+    }
+
+    return formData;
   }
 };
 
@@ -110,9 +128,9 @@ const onSave = async () => {
   try {
     errorMessages.value = [];
     await handleSubmit(async (values) => {
-      await saveItem(values);
+      const parentalLink = await saveItem(values);
 
-      emit("saved");
+      emit("saved", parentalLink);
     })();
   } catch (error) {
     errorMessages.value = getErrorMessages(error);
@@ -176,6 +194,17 @@ const availableSiblings = computed(() => {
         :option-text="getCoupleName"
         label="Parents"
         required
+        :disabled="!!fromCouple"
+      ></AppAutocomplete>
+      <AppAutocomplete
+        name="child"
+        :options="individuals"
+        return-value
+        option-id="id"
+        :option-text="getIndividualName"
+        label="Child"
+        required
+        :disabled="!!fromChild"
       ></AppAutocomplete>
       <AppSelect
         name="type"
@@ -186,15 +215,6 @@ const availableSiblings = computed(() => {
         label="Type"
         required
       ></AppSelect>
-      <AppAutocomplete
-        name="child"
-        :options="individuals"
-        return-value
-        option-id="id"
-        :option-text="getIndividualName"
-        label="Child"
-        required
-      ></AppAutocomplete>
       <AppAutocomplete
         name="olderSibling"
         :options="availableSiblings"

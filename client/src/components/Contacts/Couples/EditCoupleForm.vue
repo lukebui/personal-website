@@ -20,12 +20,16 @@ import {
 
 const props = defineProps({
   item: { type: Object as PropType<Couple> },
-  fromIndividual: Object as PropType<Individual>,
+  fromIndividuals: Array as PropType<Individual[]>,
 });
 
-const emit = defineEmits(["close", "saved", "deleted"]);
+const emit = defineEmits<{
+  (event: "close"): void;
+  (event: "saved", value: Couple): void;
+  (event: "deleted"): void;
+}>();
 
-const { item, fromIndividual } = toRefs(props);
+const { item, fromIndividuals } = toRefs(props);
 
 const contactsStore = useContactsStore();
 
@@ -54,6 +58,8 @@ const saveItem = async (values: FormData) => {
 
   if (!response.ok) {
     throw new Error((await response.json()).message);
+  } else {
+    return (await response.json()) as Couple;
   }
 };
 
@@ -85,8 +91,13 @@ const getFormData = (itemValue?: Couple) => {
     return formData;
   } else {
     const formData = formSchema.getDefault();
-    if (fromIndividual?.value) {
-      formData.partner1 = fromIndividual.value;
+    if (fromIndividuals?.value) {
+      if (fromIndividuals.value.length >= 1) {
+        formData.partner1 = fromIndividuals.value[0];
+      }
+      if (fromIndividuals.value.length >= 2) {
+        formData.partner2 = fromIndividuals.value[1];
+      }
     }
     return formData;
   }
@@ -107,9 +118,9 @@ const onSave = async () => {
   try {
     errorMessages.value = [];
     await handleSubmit(async (values) => {
-      await saveItem(values);
+      const couple = await saveItem(values);
 
-      emit("saved");
+      emit("saved", couple);
     })();
   } catch (error) {
     errorMessages.value = getErrorMessages(error);
@@ -134,7 +145,10 @@ const onDeleted = () => {
   <AppForm
     :errors="errorMessages"
     :loading="isSubmitting"
-    :can-save="meta.dirty && meta.valid"
+    :can-save="
+      (meta.dirty || (fromIndividuals && fromIndividuals?.length >= 2)) &&
+      meta.valid
+    "
     :can-delete="!!item"
     @save="onSave"
     @delete="onDelete"
@@ -148,7 +162,7 @@ const onDeleted = () => {
         option-id="id"
         option-text="fullName"
         return-value
-        :disabled="!!fromIndividual"
+        :disabled="fromIndividuals && fromIndividuals?.length >= 1"
       />
       <AppAutocomplete
         label="Partner 2"
@@ -157,6 +171,7 @@ const onDeleted = () => {
         option-id="id"
         option-text="fullName"
         return-value
+        :disabled="fromIndividuals && fromIndividuals?.length >= 2"
       ></AppAutocomplete>
       <AppSwitch name="stillMarried" label="Still married" right-label>
       </AppSwitch>

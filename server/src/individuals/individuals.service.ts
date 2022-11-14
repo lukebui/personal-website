@@ -14,10 +14,12 @@ export class IndividualsService {
     private individualRepository: Repository<Individual>,
   ) {}
 
-  create(createIndividualDto: CreateIndividualDto) {
-    return this.individualRepository.save(
+  async create(createIndividualDto: CreateIndividualDto) {
+    const newIndividual = await this.individualRepository.save(
       this.individualRepository.create(createIndividualDto),
     );
+
+    return this.individualRepository.findOneBy({ id: newIndividual.id });
   }
 
   findAll() {

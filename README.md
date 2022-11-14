@@ -8,3 +8,4 @@
 - [ ] [Frontend] Create convenient way to reorder siblings
 - [ ] [Frontend] Create tree view for contacts
 - [ ] [Backend & Frontend] Configure production environments
+- [ ] [Backend] Change ParentalTypes from table to enum

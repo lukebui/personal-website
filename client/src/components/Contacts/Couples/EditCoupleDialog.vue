@@ -8,10 +8,14 @@ import EditCoupleForm from "./EditCoupleForm.vue";
 const props = defineProps({
   show: Boolean,
   item: Object as PropType<Couple>,
-  fromIndividual: Object as PropType<Individual>,
+  fromIndividuals: Array as PropType<Individual[]>,
 });
 
-const emit = defineEmits(["update:show", "saved", "deleted"]);
+const emit = defineEmits<{
+  (event: "update:show", value: boolean): void;
+  (event: "saved", value: Couple): void;
+  (event: "deleted"): void;
+}>();
 
 const { show } = toRefs(props);
 
@@ -30,8 +34,8 @@ watch(show, () => {
   formKey.value++;
 });
 
-const onSaved = () => {
-  emit("saved");
+const onSaved = (couple: Couple) => {
+  emit("saved", couple);
   dialog.value = false;
 };
 
@@ -45,7 +49,7 @@ const onDelete = () => {
   <AppDialog v-model="dialog" :size="ComponentSize.SMALL">
     <EditCoupleForm
       :item="item"
-      :from-individual="fromIndividual"
+      :from-individuals="fromIndividuals"
       @close="dialog = false"
       @saved="onSaved"
       @deleted="onDelete"

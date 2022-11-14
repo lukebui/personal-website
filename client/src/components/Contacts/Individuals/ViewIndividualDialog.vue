@@ -20,6 +20,9 @@ import EditCoupleDialog from "../Couples/EditCoupleDialog.vue";
 import SelectCoupleAddTypeDialog from "../Couples/SelectCoupleAddTypeDialog.vue";
 import AddCoupleFromNewIndividualDialog from "../Couples/AddCoupleFromNewIndividualDialog.vue";
 import _ from "lodash";
+import SelectParentalLinkAddTypeDialog from "../ParentalLinks/SelectParentalLinkAddTypeDialog.vue";
+import EditParentalLinkDialog from "../ParentalLinks/EditParentalLinkDialog.vue";
+import AddParentalLinkFromNewIndividualsDialog from "../ParentalLinks/AddParentalLinkFromNewIndividualsDialog.vue";
 
 const props = defineProps({
   show: Boolean,
@@ -193,19 +196,25 @@ const dialog = computed({
 });
 
 enum SubDialogs {
-  EDIT_DIALOG = "editDialog",
-  SELECT_COUPLE_ADD_TYPE_DIALOG = "selectCoupleAndTypeDialog",
+  EDIT_INDIVIDUAL_DIALOG = "editIndividualDialog",
   EDIT_COUPLE_DIALOG = "editCoupleDialog",
+  EDIT_PARENTAL_LINK = "editParentalLink",
+  SELECT_COUPLE_ADD_TYPE_DIALOG = "selectCoupleAndTypeDialog",
+  SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG = "selectParentalLinkAddTypeDialog",
   ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG = "addCoupleFromNewIndividualDialog",
+  ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG = "addParentalLinkFromNewIndividualsDialog",
 }
 
 type SubDialogStatus = Record<SubDialogs, boolean>;
 
 const subDialogStatus = ref<SubDialogStatus>({
-  [SubDialogs.EDIT_DIALOG]: false,
-  [SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]: false,
+  [SubDialogs.EDIT_INDIVIDUAL_DIALOG]: false,
   [SubDialogs.EDIT_COUPLE_DIALOG]: false,
+  [SubDialogs.EDIT_PARENTAL_LINK]: false,
+  [SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]: false,
+  [SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG]: false,
   [SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG]: false,
+  [SubDialogs.ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG]: false,
 });
 
 watch(dialog, (newDialog) => {
@@ -228,12 +237,33 @@ const onDeleted = () => {
 
 const onToCreateNewSpouse = () => {
   subDialogStatus.value[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG] = false;
-  subDialogStatus.value[SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG] =
-    true;
+  setTimeout(() => {
+    subDialogStatus.value[SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG] =
+      true;
+  }, 300);
 };
 const onToLinkExistingSpouse = () => {
   subDialogStatus.value[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG] = false;
-  subDialogStatus.value[SubDialogs.EDIT_COUPLE_DIALOG] = true;
+  setTimeout(() => {
+    subDialogStatus.value[SubDialogs.EDIT_COUPLE_DIALOG] = true;
+  }, 300);
+};
+
+const onToCreateNewParents = () => {
+  subDialogStatus.value[SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG] =
+    false;
+  setTimeout(() => {
+    subDialogStatus.value[
+      SubDialogs.ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG
+    ] = true;
+  }, 300);
+};
+const onToLinkExistingParents = () => {
+  subDialogStatus.value[SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG] =
+    false;
+  setTimeout(() => {
+    subDialogStatus.value[SubDialogs.EDIT_PARENTAL_LINK] = true;
+  }, 300);
 };
 </script>
 
@@ -247,7 +277,8 @@ const onToLinkExistingSpouse = () => {
           ? [
               {
                 name: 'Edit',
-                action: () => (subDialogStatus[SubDialogs.EDIT_DIALOG] = true),
+                action: () =>
+                  (subDialogStatus[SubDialogs.EDIT_INDIVIDUAL_DIALOG] = true),
                 primary: true,
               },
             ]
@@ -289,7 +320,15 @@ const onToLinkExistingSpouse = () => {
                 <th>Parents</th>
                 <th>Type</th>
                 <th class="simple-table-actions">
-                  <AppButton text :color="ComponentColor.PRIMARY">
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="
+                      subDialogStatus[
+                        SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG
+                      ] = true
+                    "
+                  >
                     Add Parents
                   </AppButton>
                 </th>
@@ -460,14 +499,34 @@ const onToLinkExistingSpouse = () => {
           </AppSimpleTable>
         </div>
         <EditIndividualDialog
-          v-model:show="subDialogStatus[SubDialogs.EDIT_DIALOG]"
+          v-model:show="subDialogStatus[SubDialogs.EDIT_INDIVIDUAL_DIALOG]"
           :item="selectedIndividual"
           @saved="onSaved"
           @deleted="onDeleted"
         />
         <EditCoupleDialog
           v-model:show="subDialogStatus[SubDialogs.EDIT_COUPLE_DIALOG]"
-          :from-individual="selectedIndividual"
+          :from-individuals="[selectedIndividual]"
+          @saved="fetch"
+        />
+        <EditParentalLinkDialog
+          v-model:show="subDialogStatus[SubDialogs.EDIT_PARENTAL_LINK]"
+          :from-child="selectedIndividual"
+          @saved="fetch"
+        />
+        <SelectCoupleAddTypeDialog
+          v-model:show="
+            subDialogStatus[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]
+          "
+          @create="onToCreateNewSpouse"
+          @link="onToLinkExistingSpouse"
+        />
+        <SelectParentalLinkAddTypeDialog
+          v-model:show="
+            subDialogStatus[SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG]
+          "
+          @create="onToCreateNewParents"
+          @link="onToLinkExistingParents"
         />
         <AddCoupleFromNewIndividualDialog
           v-model:show="
@@ -476,12 +535,14 @@ const onToLinkExistingSpouse = () => {
           :from-individual="selectedIndividual"
           @added="fetch"
         />
-        <SelectCoupleAddTypeDialog
+        <AddParentalLinkFromNewIndividualsDialog
           v-model:show="
-            subDialogStatus[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]
+            subDialogStatus[
+              SubDialogs.ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG
+            ]
           "
-          @create="onToCreateNewSpouse"
-          @link="onToLinkExistingSpouse"
+          :child="selectedIndividual"
+          @added="fetch"
         />
       </div>
     </template>
