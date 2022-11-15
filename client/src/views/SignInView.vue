@@ -6,17 +6,10 @@ import { useRoute, useRouter } from "vue-router";
 import { AppLayouts, ButtonType, ComponentColor, RouteNames } from "@/enums";
 import { AppTextField, AppButton } from "@/components/Base";
 import { useSystemStore } from "@/store/system";
-import { onMounted, onUnmounted } from "vue";
 
 const { setLayout } = useSystemStore();
 
-onMounted(() => {
-  setLayout(AppLayouts.EMPTY);
-});
-
-onUnmounted(() => {
-  setLayout(AppLayouts.DEFAULT);
-});
+setLayout(AppLayouts.EMPTY);
 
 const { validateUser } = useUserStore();
 

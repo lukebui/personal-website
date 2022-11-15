@@ -1,17 +1,10 @@
 <script setup lang="ts">
 import { AppLayouts, RouteNames } from "@/enums";
 import { useSystemStore } from "@/store/system";
-import { onMounted, onUnmounted } from "vue";
 
-const systemStore = useSystemStore();
+const { setLayout } = useSystemStore();
 
-onMounted(() => {
-  systemStore.setLayout(AppLayouts.EMPTY);
-});
-
-onUnmounted(() => {
-  systemStore.setLayout(AppLayouts.DEFAULT);
-});
+setLayout(AppLayouts.EMPTY);
 </script>
 
 <template>

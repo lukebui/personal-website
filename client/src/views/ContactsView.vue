@@ -3,11 +3,16 @@ import { useContactsStore, type Individual } from "@/store/contacts";
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import moment from "moment";
 import { AppHeading, AppSimpleTable, AppButton } from "@/components/Base";
-import { ComponentColor } from "@/enums";
+import { AppLayouts, ComponentColor } from "@/enums";
 import AddIndividualDialog from "@/components/Contacts/Individuals/EditIndividualDialog.vue";
 import ViewIndividualDialog from "@/components/Contacts/Individuals/ViewIndividualDialog.vue";
+import { useSystemStore } from "@/store/system";
 
 const contactsStore = useContactsStore();
+
+const { setLayout } = useSystemStore();
+
+setLayout(AppLayouts.DEFAULT);
 
 const individuals = computed(() => contactsStore.individuals || []);
 

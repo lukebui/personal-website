@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { AppCard, AppLink } from "@/components/Base";
-import { RouteNames } from "@/enums";
+import { AppLayouts, RouteNames } from "@/enums";
+import { useSystemStore } from "@/store/system";
 import { StyledNavigationBarLinkGroup } from "@/types";
+
+const { setLayout } = useSystemStore();
+
+setLayout(AppLayouts.DEFAULT);
 
 const items: StyledNavigationBarLinkGroup[] = [
   new StyledNavigationBarLinkGroup("Contacts", [

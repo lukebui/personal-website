@@ -5,12 +5,17 @@ import {
   AppDialog,
   AppSimpleTable,
 } from "@/components/Base";
-import { ComponentColor, ComponentSize, RouteNames } from "@/enums";
+import { AppLayouts, ComponentColor, ComponentSize, RouteNames } from "@/enums";
 import { computed, onBeforeMount, ref } from "vue";
 import { type ParentalType, useContactsStore } from "@/store/contacts";
 import ContactsEditParentTypeForm from "@/components/Contacts/ParentalTypes/EditParentalTypeForm.vue";
+import { useSystemStore } from "@/store/system";
 
 const contactsStore = useContactsStore();
+
+const { setLayout } = useSystemStore();
+
+setLayout(AppLayouts.DEFAULT);
 
 const parentTypes = computed(() => {
   return contactsStore.parentalTypes;
