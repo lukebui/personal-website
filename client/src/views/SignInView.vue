@@ -3,9 +3,20 @@ import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { useUserStore } from "@/store/users";
 import { useRoute, useRouter } from "vue-router";
-import { ButtonType, ComponentColor, RouteNames } from "@/enums";
+import { AppLayouts, ButtonType, ComponentColor, RouteNames } from "@/enums";
 import { AppTextField, AppButton } from "@/components/Base";
-import TheEmptyLayout from "../components/Layouts/AppEmptyLayout.vue";
+import { useSystemStore } from "@/store/system";
+import { onMounted, onUnmounted } from "vue";
+
+const { setLayout } = useSystemStore();
+
+onMounted(() => {
+  setLayout(AppLayouts.EMPTY);
+});
+
+onUnmounted(() => {
+  setLayout(AppLayouts.DEFAULT);
+});
 
 const { validateUser } = useUserStore();
 
@@ -41,32 +52,25 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <TheEmptyLayout>
-    <div
-      class="mx-auto flex min-h-[screen-16] max-w-7xl items-center py-10 px-2 sm:px-6 lg:px-8"
-    >
-      <form class="mx-auto w-full max-w-sm" @submit="onSubmit">
-        <fieldset class="min-w-0" :disabled="isSubmitting">
-          <div class="space-y-2">
-            <AppTextField
-              label="Email"
-              name="email"
-              autofocus
-              validate-on-blur
-            />
-            <AppTextField label="Password" name="password" type="password" />
-          </div>
-          <div class="mt-4">
-            <AppButton
-              :type="ButtonType.SUBMIT"
-              :color="ComponentColor.PRIMARY"
-              :disabled="!meta.dirty || !meta.valid"
-            >
-              Submit
-            </AppButton>
-          </div>
-        </fieldset>
-      </form>
-    </div>
-  </TheEmptyLayout>
+  <div
+    class="mx-auto flex min-h-[screen-16] max-w-7xl items-center py-10 px-2 sm:px-6 lg:px-8"
+  >
+    <form class="mx-auto w-full max-w-sm" @submit="onSubmit">
+      <fieldset class="min-w-0" :disabled="isSubmitting">
+        <div class="space-y-2">
+          <AppTextField label="Email" name="email" autofocus validate-on-blur />
+          <AppTextField label="Password" name="password" type="password" />
+        </div>
+        <div class="mt-4">
+          <AppButton
+            :type="ButtonType.SUBMIT"
+            :color="ComponentColor.PRIMARY"
+            :disabled="!meta.dirty || !meta.valid"
+          >
+            Submit
+          </AppButton>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </template>

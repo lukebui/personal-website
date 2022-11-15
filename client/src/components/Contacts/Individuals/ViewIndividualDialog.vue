@@ -269,7 +269,6 @@ const onToLinkExistingParents = () => {
 
 <template>
   <AppDialog v-model="dialog" :size="ComponentSize.LARGE">
-    <a href="#" class="sr-only"></a>
     <AppHeading
       :title="selectedIndividual?.fullName"
       :actions="

@@ -45,3 +45,9 @@ export enum AppThemes {
   LIGHT = "light",
   DARK = "dark",
 }
+
+export enum AppLayouts {
+  DEFAULT,
+  EMPTY,
+  VERTICAL_NAV,
+}

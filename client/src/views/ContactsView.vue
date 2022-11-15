@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppDefaultLayout from "../components/Layouts/AppDefaultLayout.vue";
 import { useContactsStore, type Individual } from "@/store/contacts";
 import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import moment from "moment";
@@ -82,85 +81,81 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <AppDefaultLayout>
-    <div class="default-spacing py-4 sm:py-10">
-      <div v-if="isFetching">Loading...</div>
-      <div v-else class="space-y-6">
-        <div class="space-y-2">
-          <AppHeading
-            title="Individuals"
-            :actions="[
-              {
-                name: 'Add',
-                action: addIndividual,
-                primary: true,
-              },
-            ]"
-          />
-          <AppSimpleTable v-if="individuals.length">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Nickname</th>
-                <th>Gender</th>
-                <th>Birthday</th>
-                <th>Has died</th>
-                <th>Date of death</th>
-                <th>Note</th>
-                <th class="simple-table-actions"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="individual in individuals" :key="individual.id">
-                <td>{{ individual.fullName }}</td>
-                <td>{{ individual.alias }}</td>
-                <td>
-                  {{
-                    individual.gender === "male"
-                      ? "Male"
-                      : individual.gender === "female"
-                      ? "Female"
-                      : ""
-                  }}
-                </td>
-                <td>
-                  {{
-                    individual.dateOfBirth
-                      ? moment(individual.dateOfBirth).format("DD/MM/YYYY")
-                      : ""
-                  }}
-                </td>
-                <td>{{ individual.hasDied }}</td>
-                <td>
-                  {{
-                    individual.dateOfDeath
-                      ? moment(individual.dateOfDeath).format("DD/MM/YYYY")
-                      : ""
-                  }}
-                </td>
-                <td>
-                  <p class="max-w-xs truncate">{{ individual.note }}</p>
-                </td>
-                <td class="simple-table-actions">
-                  <div
-                    class="inline-flex flex-wrap items-center gap-2 sm:gap-4"
+  <div class="default-spacing py-4 sm:py-10">
+    <div v-if="isFetching">Loading...</div>
+    <div v-else class="space-y-6">
+      <div class="space-y-2">
+        <AppHeading
+          title="Individuals"
+          :actions="[
+            {
+              name: 'Add',
+              action: addIndividual,
+              primary: true,
+            },
+          ]"
+        />
+        <AppSimpleTable v-if="individuals.length">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Nickname</th>
+              <th>Gender</th>
+              <th>Birthday</th>
+              <th>Has died</th>
+              <th>Date of death</th>
+              <th>Note</th>
+              <th class="simple-table-actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="individual in individuals" :key="individual.id">
+              <td>{{ individual.fullName }}</td>
+              <td>{{ individual.alias }}</td>
+              <td>
+                {{
+                  individual.gender === "male"
+                    ? "Male"
+                    : individual.gender === "female"
+                    ? "Female"
+                    : ""
+                }}
+              </td>
+              <td>
+                {{
+                  individual.dateOfBirth
+                    ? moment(individual.dateOfBirth).format("DD/MM/YYYY")
+                    : ""
+                }}
+              </td>
+              <td>{{ individual.hasDied }}</td>
+              <td>
+                {{
+                  individual.dateOfDeath
+                    ? moment(individual.dateOfDeath).format("DD/MM/YYYY")
+                    : ""
+                }}
+              </td>
+              <td>
+                <p class="max-w-xs truncate">{{ individual.note }}</p>
+              </td>
+              <td class="simple-table-actions">
+                <div class="inline-flex flex-wrap items-center gap-2 sm:gap-4">
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="viewIndividual(individual)"
                   >
-                    <AppButton
-                      text
-                      :color="ComponentColor.PRIMARY"
-                      @click="viewIndividual(individual)"
-                    >
-                      View
-                    </AppButton>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </AppSimpleTable>
-        </div>
+                    View
+                  </AppButton>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </AppSimpleTable>
       </div>
     </div>
-  </AppDefaultLayout>
+  </div>
   <ViewIndividualDialog
     v-model:show="viewIndividualDialog"
     :item="individualToEdit"

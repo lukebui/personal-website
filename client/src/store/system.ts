@@ -3,17 +3,21 @@ import type {
   StyledNavigationLink,
   StyledNavigationBarLinkGroup,
 } from "@/types";
-import { StoreNames } from "@/enums";
+import { AppLayouts, StoreNames } from "@/enums";
 
 export const useSystemStore = defineStore(StoreNames.SYSTEM, {
   state: () => ({
     navLinks: [] as (StyledNavigationLink | StyledNavigationBarLinkGroup)[],
+    layout: AppLayouts.EMPTY,
   }),
   actions: {
     setNavLinks(
       links: (StyledNavigationLink | StyledNavigationBarLinkGroup)[]
     ) {
       this.navLinks = links;
+    },
+    setLayout(layout: AppLayouts) {
+      this.layout = layout;
     },
   },
 });

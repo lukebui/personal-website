@@ -5,7 +5,6 @@ import {
   AppDialog,
   AppSimpleTable,
 } from "@/components/Base";
-import AppDefaultLayout from "@/components/Layouts/AppDefaultLayout.vue";
 import { ComponentColor, ComponentSize, RouteNames } from "@/enums";
 import { computed, onBeforeMount, ref } from "vue";
 import { type ParentalType, useContactsStore } from "@/store/contacts";
@@ -50,53 +49,49 @@ const editItem = (item: ParentalType) => {
 </script>
 
 <template>
-  <AppDefaultLayout>
-    <div class="default-spacing space-y-4 py-4 sm:py-10">
-      <AppHeading
-        :breadcrumbs="[
-          { name: 'Contacts', to: { name: RouteNames.CONTACTS } },
-          {
-            name: 'Parent types',
-            to: { name: RouteNames.CONTACTS_PARENT_TYPES },
-          },
-        ]"
-        title="Manage parent types"
-        :actions="[{ name: 'Add', action: addItem, primary: true }]"
-      ></AppHeading>
-      <AppSimpleTable>
-        <thead>
-          <tr>
-            <th>Types</th>
-            <th class="simple-table-actions"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="parentType in parentTypes" :key="parentType.id">
-            <td>{{ parentType.type }}</td>
-            <td class="simple-table-actions">
-              <AppButton
-                :padding="false"
-                text
-                :color="ComponentColor.PRIMARY"
-                @click="editItem(parentType)"
-              >
-                Edit
-              </AppButton>
-            </td>
-          </tr>
-        </tbody>
-      </AppSimpleTable>
-      <!-- <table class="simple-table">
-      </table> -->
-    </div>
-    <AppDialog v-model="editDialog" :size="ComponentSize.SMALL">
-      <ContactsEditParentTypeForm
-        :key="formKey"
-        :item="parentTypeToEdit"
-        @saved="closeDialog"
-        @deleted="closeDialog"
-        @cancel="closeDialog"
-      />
-    </AppDialog>
-  </AppDefaultLayout>
+  <div class="default-spacing space-y-4 py-4 sm:py-10">
+    <AppHeading
+      :breadcrumbs="[
+        { name: 'Contacts', to: { name: RouteNames.CONTACTS } },
+        {
+          name: 'Parent types',
+          to: { name: RouteNames.CONTACTS_PARENT_TYPES },
+        },
+      ]"
+      title="Manage parent types"
+      :actions="[{ name: 'Add', action: addItem, primary: true }]"
+    ></AppHeading>
+    <AppSimpleTable>
+      <thead>
+        <tr>
+          <th>Types</th>
+          <th class="simple-table-actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="parentType in parentTypes" :key="parentType.id">
+          <td>{{ parentType.type }}</td>
+          <td class="simple-table-actions">
+            <AppButton
+              :padding="false"
+              text
+              :color="ComponentColor.PRIMARY"
+              @click="editItem(parentType)"
+            >
+              Edit
+            </AppButton>
+          </td>
+        </tr>
+      </tbody>
+    </AppSimpleTable>
+  </div>
+  <AppDialog v-model="editDialog" :size="ComponentSize.SMALL">
+    <ContactsEditParentTypeForm
+      :key="formKey"
+      :item="parentTypeToEdit"
+      @saved="closeDialog"
+      @deleted="closeDialog"
+      @cancel="closeDialog"
+    />
+  </AppDialog>
 </template>
