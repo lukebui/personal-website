@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { StepItem } from "@/types";
 import type { PropType } from "vue";
 
 defineProps({
   steps: {
-    type: Array as PropType<StepItem[]>,
+    type: Array as PropType<string[]>,
   },
   currentStep: Number,
   canNavigate: Boolean,
@@ -22,7 +21,7 @@ defineEmits<{
         <button
           class="group flex w-full flex-col border-l-4 py-2 pl-4 sm:border-l-0 sm:border-t-4 sm:pl-0 sm:pt-4 sm:pb-0"
           :class="
-            step.isCompleted
+            currentStep && stepIndex < currentStep
               ? [
                   'border-indigo-600  hover:border-indigo-800 disabled:hover:border-indigo-600',
                 ]
@@ -38,7 +37,7 @@ defineEmits<{
           <span
             class="text-sm font-medium"
             :class="
-              step.isCompleted
+              currentStep && stepIndex < currentStep
                 ? [
                     'text-indigo-600 group-hover:text-indigo-800 group-disabled:group-hover:text-indigo-600',
                   ]
@@ -51,34 +50,9 @@ defineEmits<{
             >Step {{ stepIndex + 1 }}</span
           >
           <span class="text-sm font-medium text-gray-900 dark:text-white">{{
-            step.name
+            step
           }}</span>
         </button>
-
-        <!-- <button
-          v-else-if="stepIndex === currentStep"
-          class="flex w-full flex-col border-l-4 border-indigo-600 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0"
-          aria-current="step"
-          @click="$emit('step', stepIndex)"
-          :disabled="!canNavigate"
-        >
-          <span class="text-sm font-medium text-indigo-600"
-            >Step {{ stepIndex + 1 }}</span
-          >
-          <span class="text-sm font-medium">{{ step.name }}</span>
-        </button>
-        <button
-          v-else
-          class="group flex w-full flex-col border-l-4 py-2 pl-4 md:border-l-0 md:border-t-4 md:pl-0 md:pt-4 md:pb-0"
-          @click="$emit('step', stepIndex)"
-          :disabled="!canNavigate"
-        >
-          <span
-            class="text-sm font-medium text-gray-500 group-hover:text-gray-700 group-disabled:group-hover:text-gray-500"
-            >Step {{ stepIndex + 1 }}</span
-          >
-          <span class="text-sm font-medium">{{ step.name }}</span>
-        </button> -->
       </li>
     </ol>
   </nav>

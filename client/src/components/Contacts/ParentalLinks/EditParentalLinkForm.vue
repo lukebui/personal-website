@@ -4,6 +4,7 @@ import {
   AppSelect,
   AppAutocomplete,
   AppDeleteConfirmDialog,
+  AppButton,
 } from "@/components/Base";
 import type * as yup from "yup";
 import {
@@ -14,11 +15,14 @@ import {
   type ParentalType,
 } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
-import { LocalStorageKeys } from "@/enums";
+import { LocalStorageKeys, ComponentColor } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
 import { useForm } from "vee-validate";
 import { parentalLinkSchema } from "@/schemas";
 import { useErrorMessages } from "@/composables";
+import EditCoupleDialog from "../Couples/EditCoupleDialog.vue";
+import { PlusIcon } from "@heroicons/vue/24/solid";
+import EditIndividualDialog from "../Individuals/EditIndividualDialog.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<ParentalLink> },
@@ -40,6 +44,20 @@ const individuals = computed(() => contactsStore.individuals);
 const couples = computed(() => contactsStore.couples);
 const parentalTypes = computed(() => contactsStore.parentalTypes);
 const parentalLinks = computed(() => contactsStore.parentalLinks);
+
+const isFetching = ref(false);
+
+const fetchData = async () => {
+  try {
+    isFetching.value = true;
+
+    await contactsStore.fetch();
+  } catch (error) {
+    alert(error);
+  } finally {
+    isFetching.value = false;
+  }
+};
 
 const formSchema = parentalLinkSchema;
 
@@ -173,6 +191,41 @@ const availableSiblings = computed(() => {
       parentalLink.parentCouple.id === selectedParents.value?.id
   );
 });
+
+const editIndividualDialog = ref(false);
+const editCoupleDialog = ref(false);
+
+const onAddNewCouple = () => {
+  editCoupleDialog.value = true;
+};
+
+const onAddNewChild = () => {
+  editIndividualDialog.value = true;
+};
+
+const onCreatedNewCouple = async (couple: Couple) => {
+  await fetchData();
+
+  const matchedCouple = couples.value.find(
+    (tempCouple) => tempCouple.id === couple.id
+  );
+
+  if (matchedCouple) {
+    selectedParents.value = matchedCouple;
+  }
+};
+
+const onCreatedNewChild = async (individual: Individual) => {
+  await fetchData();
+
+  const matchedIndividual = individuals.value.find(
+    (tempIndividual) => tempIndividual.id === individual.id
+  );
+
+  if (matchedIndividual) {
+    selectedChild.value = matchedIndividual;
+  }
+};
 </script>
 
 <template>
@@ -186,26 +239,52 @@ const availableSiblings = computed(() => {
     @cancel="onCancel"
   >
     <div class="mb-4 space-y-3">
-      <AppAutocomplete
-        name="parentCouple"
-        :options="couples"
-        return-value
-        option-id="id"
-        :option-text="getCoupleName"
-        label="Parents"
-        required
-        :disabled="!!fromCouple"
-      ></AppAutocomplete>
-      <AppAutocomplete
-        name="child"
-        :options="individuals"
-        return-value
-        option-id="id"
-        :option-text="getIndividualName"
-        label="Child"
-        required
-        :disabled="!!fromChild"
-      ></AppAutocomplete>
+      <div class="flex items-end gap-2">
+        <div class="flex-grow">
+          <AppAutocomplete
+            name="parentCouple"
+            :options="couples"
+            return-value
+            option-id="id"
+            :option-text="getCoupleName"
+            label="Parents"
+            required
+            :disabled="!!fromCouple"
+          ></AppAutocomplete>
+        </div>
+        <AppButton
+          :color="ComponentColor.SECONDARY"
+          round
+          :disabled="!!fromCouple"
+          @click="onAddNewCouple"
+        >
+          <PlusIcon class="h-5 w-5" />
+        </AppButton>
+      </div>
+
+      <div class="flex items-end gap-2">
+        <div class="flex-grow">
+          <AppAutocomplete
+            name="child"
+            :options="individuals"
+            return-value
+            option-id="id"
+            :option-text="getIndividualName"
+            label="Child"
+            required
+            :disabled="!!fromChild"
+          ></AppAutocomplete>
+        </div>
+        <AppButton
+          :color="ComponentColor.SECONDARY"
+          round
+          :disabled="!!fromChild"
+          @click="onAddNewChild"
+        >
+          <PlusIcon class="h-5 w-5" />
+        </AppButton>
+      </div>
+
       <AppSelect
         name="type"
         :options="parentalTypes"
@@ -237,5 +316,13 @@ const availableSiblings = computed(() => {
         {{ item?.child.fullName }}</strong
       >? This action cannot be undone.
     </AppDeleteConfirmDialog>
+    <EditIndividualDialog
+      v-model:show="editIndividualDialog"
+      @saved="onCreatedNewChild"
+    />
+    <EditCoupleDialog
+      v-model:show="editCoupleDialog"
+      @saved="onCreatedNewCouple"
+    />
   </AppForm>
 </template>

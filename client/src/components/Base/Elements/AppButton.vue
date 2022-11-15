@@ -104,7 +104,7 @@ button {
         @apply border-gray-500 bg-transparent text-gray-500 shadow-sm hover:bg-gray-100 focus:ring-gray-500 focus:ring-offset-2 disabled:hover:bg-white dark:border-gray-300 dark:text-gray-300 dark:hover:bg-gray-500 dark:hover:text-white dark:disabled:text-gray-300 dark:disabled:hover:bg-transparent;
       }
       &.button-outline-0 {
-        @apply border-transparent bg-gray-200 shadow-sm hover:bg-gray-300 focus:ring-gray-500 focus:ring-offset-2 disabled:hover:bg-gray-500 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 dark:disabled:hover:bg-gray-600;
+        @apply border-transparent bg-gray-200 shadow-sm hover:bg-gray-300 focus:ring-gray-300 focus:ring-offset-2 disabled:hover:bg-gray-500 dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 dark:disabled:hover:bg-gray-600;
       }
     }
   }

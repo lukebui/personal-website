@@ -5,8 +5,10 @@ import {
   AppCard,
   AppSimpleTable,
   AppButton,
+  AppMenu,
 } from "@/components/Base";
 import {
+  type Couple,
   useContactsStore,
   type Individual,
   type ParentalLink,
@@ -17,12 +19,8 @@ import EditIndividualDialog from "./EditIndividualDialog.vue";
 import { ComponentColor, ComponentSize } from "@/enums";
 import moment from "moment";
 import EditCoupleDialog from "../Couples/EditCoupleDialog.vue";
-import SelectCoupleAddTypeDialog from "../Couples/SelectCoupleAddTypeDialog.vue";
-import AddCoupleFromNewIndividualDialog from "../Couples/AddCoupleFromNewIndividualDialog.vue";
 import _ from "lodash";
-import SelectParentalLinkAddTypeDialog from "../ParentalLinks/SelectParentalLinkAddTypeDialog.vue";
 import EditParentalLinkDialog from "../ParentalLinks/EditParentalLinkDialog.vue";
-import AddParentalLinkFromNewIndividualsDialog from "../ParentalLinks/AddParentalLinkFromNewIndividualsDialog.vue";
 
 const props = defineProps({
   show: Boolean,
@@ -35,9 +33,13 @@ const { show, item } = toRefs(props);
 
 const contactsStore = useContactsStore();
 
+const individuals = computed(() => {
+  return contactsStore.individuals;
+});
+
 const isFetching = ref(false);
 
-const fetch = async () => {
+const fetchData = async () => {
   try {
     isFetching.value = true;
 
@@ -49,10 +51,27 @@ const fetch = async () => {
   }
 };
 
-const selectedIndividual = computed(() =>
-  contactsStore.individuals.find((tempIndividual) =>
-    item?.value ? tempIndividual.id === item.value.id : false
-  )
+const selectedIndividual = ref<Individual>();
+
+watch(
+  () => item?.value,
+  async (newItem) => {
+    if (newItem) {
+      await fetchData();
+
+      const matchedIndividual = individuals.value.find(
+        (tempIndividual) => tempIndividual.id === item?.value?.id
+      );
+
+      if (matchedIndividual) {
+        selectedIndividual.value = matchedIndividual;
+      } else {
+        emit("update:show", false);
+      }
+    } else {
+      emit("update:show", false);
+    }
+  }
 );
 
 const individualPartners = computed(() =>
@@ -96,20 +115,9 @@ const individualChildren = computed(() =>
 );
 
 const individualParents = computed(() =>
-  contactsStore.parentalLinks
-    .filter(
-      (parentalLink) => parentalLink.child.id === selectedIndividual.value?.id
-    )
-    .map((parentalLink) => {
-      return {
-        parents: [
-          parentalLink.parentCouple.partner1,
-          parentalLink.parentCouple.partner2,
-        ],
-        parentalType: parentalLink.type,
-        parentalLink,
-      };
-    })
+  contactsStore.parentalLinks.filter(
+    (parentalLink) => parentalLink.child.id === selectedIndividual.value?.id
+  )
 );
 
 const individualSiblings = computed(() => {
@@ -124,7 +132,7 @@ const individualSiblings = computed(() => {
   let foundChildren = contactsStore.parentalLinks
     .filter((siblingParentalLink) =>
       individualParents.value
-        .map((parent) => parent.parentalLink.parentCouple.id)
+        .map((parent) => parent.parentCouple.id)
         .includes(siblingParentalLink.parentCouple.id)
     )
     .map((siblingParentalLink) => {
@@ -199,10 +207,6 @@ enum SubDialogs {
   EDIT_INDIVIDUAL_DIALOG = "editIndividualDialog",
   EDIT_COUPLE_DIALOG = "editCoupleDialog",
   EDIT_PARENTAL_LINK = "editParentalLink",
-  SELECT_COUPLE_ADD_TYPE_DIALOG = "selectCoupleAndTypeDialog",
-  SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG = "selectParentalLinkAddTypeDialog",
-  ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG = "addCoupleFromNewIndividualDialog",
-  ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG = "addParentalLinkFromNewIndividualsDialog",
 }
 
 type SubDialogStatus = Record<SubDialogs, boolean>;
@@ -211,10 +215,6 @@ const subDialogStatus = ref<SubDialogStatus>({
   [SubDialogs.EDIT_INDIVIDUAL_DIALOG]: false,
   [SubDialogs.EDIT_COUPLE_DIALOG]: false,
   [SubDialogs.EDIT_PARENTAL_LINK]: false,
-  [SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]: false,
-  [SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG]: false,
-  [SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG]: false,
-  [SubDialogs.ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG]: false,
 });
 
 watch(dialog, (newDialog) => {
@@ -227,7 +227,7 @@ watch(dialog, (newDialog) => {
 
 const onSaved = () => {
   emit("changed");
-  return fetch();
+  return fetchData();
 };
 
 const onDeleted = () => {
@@ -235,35 +235,51 @@ const onDeleted = () => {
   dialog.value = false;
 };
 
-const onToCreateNewSpouse = () => {
-  subDialogStatus.value[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG] = false;
-  setTimeout(() => {
-    subDialogStatus.value[SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG] =
-      true;
-  }, 300);
-};
-const onToLinkExistingSpouse = () => {
-  subDialogStatus.value[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG] = false;
-  setTimeout(() => {
-    subDialogStatus.value[SubDialogs.EDIT_COUPLE_DIALOG] = true;
-  }, 300);
+const parentalLinkToEdit = ref<ParentalLink>();
+const coupleToEdit = ref<Couple>();
+const childToAddNewParentalLink = ref<Individual>();
+const parentsToAddNewParentalLink = ref<Couple>();
+
+const onToAddParents = () => {
+  parentalLinkToEdit.value = undefined;
+  parentsToAddNewParentalLink.value = undefined;
+  childToAddNewParentalLink.value = selectedIndividual.value;
+  subDialogStatus.value[SubDialogs.EDIT_PARENTAL_LINK] = true;
 };
 
-const onToCreateNewParents = () => {
-  subDialogStatus.value[SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG] =
-    false;
-  setTimeout(() => {
-    subDialogStatus.value[
-      SubDialogs.ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG
-    ] = true;
-  }, 300);
+const onToAddSpouse = () => {
+  coupleToEdit.value = undefined;
+  subDialogStatus.value[SubDialogs.EDIT_COUPLE_DIALOG] = true;
 };
-const onToLinkExistingParents = () => {
-  subDialogStatus.value[SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG] =
-    false;
-  setTimeout(() => {
-    subDialogStatus.value[SubDialogs.EDIT_PARENTAL_LINK] = true;
-  }, 300);
+
+const onToAddSibling = (parents: Couple) => {
+  parentalLinkToEdit.value = undefined;
+  parentsToAddNewParentalLink.value = parents;
+  childToAddNewParentalLink.value = undefined;
+  subDialogStatus.value[SubDialogs.EDIT_PARENTAL_LINK] = true;
+};
+
+const onToAddChild = (parents: Couple) => {
+  parentalLinkToEdit.value = undefined;
+  parentsToAddNewParentalLink.value = parents;
+  childToAddNewParentalLink.value = undefined;
+  subDialogStatus.value[SubDialogs.EDIT_PARENTAL_LINK] = true;
+};
+
+const onViewIndividual = (individual: Individual) => {
+  selectedIndividual.value = individual;
+};
+
+const onEditParents = (parentalLink: ParentalLink) => {
+  parentalLinkToEdit.value = parentalLink;
+  parentsToAddNewParentalLink.value = undefined;
+  childToAddNewParentalLink.value = selectedIndividual.value;
+  subDialogStatus.value[SubDialogs.EDIT_PARENTAL_LINK] = true;
+};
+
+const onEditCouple = (couple: Couple) => {
+  coupleToEdit.value = couple;
+  subDialogStatus.value[SubDialogs.EDIT_COUPLE_DIALOG] = true;
 };
 </script>
 
@@ -271,20 +287,35 @@ const onToLinkExistingParents = () => {
   <AppDialog v-model="dialog" :size="ComponentSize.LARGE">
     <AppHeading
       :title="selectedIndividual?.fullName"
-      :actions="
-        selectedIndividual
-          ? [
-              {
-                name: 'Edit',
-                action: () =>
-                  (subDialogStatus[SubDialogs.EDIT_INDIVIDUAL_DIALOG] = true),
-                primary: true,
-              },
-            ]
-          : undefined
-      "
       :close-action="() => (dialog = false)"
-    />
+    >
+      <template #actions>
+        <div class="flex gap-3">
+          <AppMenu
+            :actions="[
+              {
+                text: 'Add parents',
+                action: onToAddParents,
+              },
+              {
+                text: 'Add spouse',
+                action: onToAddSpouse,
+              },
+            ]"
+          >
+            <template #button>
+              <AppButton :color="ComponentColor.SECONDARY"> Options </AppButton>
+            </template>
+          </AppMenu>
+          <AppButton
+            :color="ComponentColor.PRIMARY"
+            @click="subDialogStatus[SubDialogs.EDIT_INDIVIDUAL_DIALOG] = true"
+          >
+            Edit
+          </AppButton>
+        </div>
+      </template>
+    </AppHeading>
 
     <template v-if="isFetching"> Loading... </template>
 
@@ -318,42 +349,52 @@ const onToLinkExistingParents = () => {
               <tr>
                 <th>Parents</th>
                 <th>Type</th>
-                <th class="simple-table-actions">
-                  <AppButton
-                    text
-                    :color="ComponentColor.PRIMARY"
-                    @click="
-                      subDialogStatus[
-                        SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG
-                      ] = true
-                    "
-                  >
-                    Add Parents
-                  </AppButton>
-                </th>
+                <th class="simple-table-actions"></th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="parentCouple in individualParents"
-                :key="parentCouple.parentalLink.id"
+                v-for="parentalLink in individualParents"
+                :key="parentalLink.id"
               >
                 <td>
-                  {{
-                    parentCouple.parents
-                      .map((parent) => parent.fullName)
-                      .join(", ")
-                  }}
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="
+                      onViewIndividual(parentalLink.parentCouple.partner1)
+                    "
+                  >
+                    {{ parentalLink.parentCouple.partner1.fullName }}
+                  </AppButton>
+                  <span>, </span>
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="
+                      onViewIndividual(parentalLink.parentCouple.partner2)
+                    "
+                  >
+                    {{ parentalLink.parentCouple.partner2.fullName }}
+                  </AppButton>
                 </td>
                 <td>
-                  {{ parentCouple.parentalType.type }}
+                  {{ parentalLink.type.type }}
                 </td>
                 <td class="simple-table-actions">
                   <div class="inline-flex flex-wrap gap-2 sm:gap-4">
-                    <AppButton text :color="ComponentColor.PRIMARY">
+                    <AppButton
+                      text
+                      :color="ComponentColor.PRIMARY"
+                      @click="onToAddSibling(parentalLink.parentCouple)"
+                    >
                       Add sibling
                     </AppButton>
-                    <AppButton text :color="ComponentColor.PRIMARY">
+                    <AppButton
+                      text
+                      :color="ComponentColor.PRIMARY"
+                      @click="onEditParents(parentalLink)"
+                    >
                       Edit
                     </AppButton>
                   </div>
@@ -371,11 +412,7 @@ const onToLinkExistingParents = () => {
                 <th>Parents</th>
                 <th>Parental type</th>
                 <th>Older / Younger</th>
-                <th class="simple-table-actions">
-                  <AppButton text :color="ComponentColor.PRIMARY">
-                    Add sibling
-                  </AppButton>
-                </th>
+                <th class="simple-table-actions"></th>
               </tr>
             </thead>
             <tbody>
@@ -384,7 +421,13 @@ const onToLinkExistingParents = () => {
                 :key="sibling.__parentalLink.id"
               >
                 <td>
-                  {{ sibling.individual.fullName }}
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="onViewIndividual(sibling.individual)"
+                  >
+                    {{ sibling.individual.fullName }}
+                  </AppButton>
                 </td>
                 <td>
                   {{
@@ -399,8 +442,12 @@ const onToLinkExistingParents = () => {
                 </td>
                 <td class="simple-table-actions">
                   <div class="inline-flex flex-wrap gap-2 sm:gap-4">
-                    <AppButton text :color="ComponentColor.PRIMARY">
-                      Edit
+                    <AppButton
+                      text
+                      :color="ComponentColor.PRIMARY"
+                      @click="onViewIndividual(sibling.individual)"
+                    >
+                      View
                     </AppButton>
                   </div>
                 </td>
@@ -415,19 +462,7 @@ const onToLinkExistingParents = () => {
               <tr>
                 <th>Spouse</th>
                 <th>Status</th>
-                <th class="simple-table-actions">
-                  <AppButton
-                    text
-                    :color="ComponentColor.PRIMARY"
-                    @click="
-                      subDialogStatus[
-                        SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG
-                      ] = true
-                    "
-                  >
-                    Add spouse
-                  </AppButton>
-                </th>
+                <th class="simple-table-actions"></th>
               </tr>
             </thead>
             <tbody>
@@ -436,7 +471,13 @@ const onToLinkExistingParents = () => {
                 :key="partner.couple.id"
               >
                 <td>
-                  {{ partner.partner.fullName }}
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="onViewIndividual(partner.partner)"
+                  >
+                    {{ partner.partner.fullName }}
+                  </AppButton>
                 </td>
                 <td>
                   {{ partner.stillMarried ? "Married" : "Divorced" }}
@@ -445,10 +486,18 @@ const onToLinkExistingParents = () => {
                   <div
                     class="inline-flex flex-wrap justify-between gap-2 sm:gap-4"
                   >
-                    <AppButton text :color="ComponentColor.PRIMARY">
+                    <AppButton
+                      text
+                      :color="ComponentColor.PRIMARY"
+                      @click="onToAddChild(partner.couple)"
+                    >
                       Add child
                     </AppButton>
-                    <AppButton text :color="ComponentColor.PRIMARY">
+                    <AppButton
+                      text
+                      :color="ComponentColor.PRIMARY"
+                      @click="onEditCouple(partner.couple)"
+                    >
                       Edit
                     </AppButton>
                   </div>
@@ -465,11 +514,7 @@ const onToLinkExistingParents = () => {
                 <th>Child</th>
                 <th>Spouse</th>
                 <th>Parental type</th>
-                <th class="simple-table-actions">
-                  <AppButton text :color="ComponentColor.PRIMARY">
-                    Add child
-                  </AppButton>
-                </th>
+                <th class="simple-table-actions"></th>
               </tr>
             </thead>
             <tbody>
@@ -478,7 +523,13 @@ const onToLinkExistingParents = () => {
                 :key="child.parentalLink.id"
               >
                 <td>
-                  {{ child.child.fullName }}
+                  <AppButton
+                    text
+                    :color="ComponentColor.PRIMARY"
+                    @click="onViewIndividual(child.child)"
+                  >
+                    {{ child.child.fullName }}
+                  </AppButton>
                 </td>
                 <td>
                   {{ child.spouse.fullName }}
@@ -488,8 +539,12 @@ const onToLinkExistingParents = () => {
                 </td>
                 <td class="simple-table-actions">
                   <div class="inline-flex flex-wrap gap-2">
-                    <AppButton text :color="ComponentColor.PRIMARY">
-                      Edit
+                    <AppButton
+                      text
+                      :color="ComponentColor.PRIMARY"
+                      @click="onViewIndividual(child.child)"
+                    >
+                      View
                     </AppButton>
                   </div>
                 </td>
@@ -505,43 +560,18 @@ const onToLinkExistingParents = () => {
         />
         <EditCoupleDialog
           v-model:show="subDialogStatus[SubDialogs.EDIT_COUPLE_DIALOG]"
+          :item="coupleToEdit"
           :from-individuals="[selectedIndividual]"
-          @saved="fetch"
+          @saved="fetchData"
+          @deleted="fetchData"
         />
         <EditParentalLinkDialog
           v-model:show="subDialogStatus[SubDialogs.EDIT_PARENTAL_LINK]"
-          :from-child="selectedIndividual"
-          @saved="fetch"
-        />
-        <SelectCoupleAddTypeDialog
-          v-model:show="
-            subDialogStatus[SubDialogs.SELECT_COUPLE_ADD_TYPE_DIALOG]
-          "
-          @create="onToCreateNewSpouse"
-          @link="onToLinkExistingSpouse"
-        />
-        <SelectParentalLinkAddTypeDialog
-          v-model:show="
-            subDialogStatus[SubDialogs.SELECT_PARENTAL_LINK_ADD_TYPE_DIALOG]
-          "
-          @create="onToCreateNewParents"
-          @link="onToLinkExistingParents"
-        />
-        <AddCoupleFromNewIndividualDialog
-          v-model:show="
-            subDialogStatus[SubDialogs.ADD_COUPLE_FROM_NEW_INDIVIDUAL_DIALOG]
-          "
-          :from-individual="selectedIndividual"
-          @added="fetch"
-        />
-        <AddParentalLinkFromNewIndividualsDialog
-          v-model:show="
-            subDialogStatus[
-              SubDialogs.ADD_PARENTAL_LINK_FROM_NEW_INDIVIDUALS_DIALOG
-            ]
-          "
-          :child="selectedIndividual"
-          @added="fetch"
+          :item="parentalLinkToEdit"
+          :from-child="childToAddNewParentalLink"
+          :from-couple="parentsToAddNewParentalLink"
+          @saved="fetchData"
+          @deleted="fetchData"
         />
       </div>
     </template>

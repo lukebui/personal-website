@@ -6,7 +6,7 @@ import {
   type Individual,
 } from "@/store/contacts";
 import { StorageSerializers, useStorage } from "@vueuse/core";
-import { LocalStorageKeys } from "@/enums";
+import { ComponentColor, LocalStorageKeys } from "@/enums";
 import { computed, ref, toRefs, type PropType } from "vue";
 import { useForm } from "vee-validate";
 import { coupleSchema } from "@/schemas";
@@ -16,7 +16,10 @@ import {
   AppDeleteConfirmDialog,
   AppSwitch,
   AppAutocomplete,
+  AppButton,
 } from "@/components/Base";
+import { PlusIcon } from "@heroicons/vue/24/solid";
+import EditIndividualDialog from "../Individuals/EditIndividualDialog.vue";
 
 const props = defineProps({
   item: { type: Object as PropType<Couple> },
@@ -34,6 +37,20 @@ const { item, fromIndividuals } = toRefs(props);
 const contactsStore = useContactsStore();
 
 const individuals = computed(() => contactsStore.individuals);
+
+const isFetching = ref(false);
+
+const fetchData = async () => {
+  try {
+    isFetching.value = true;
+
+    await contactsStore.findAllIndividuals();
+  } catch (error) {
+    alert(error);
+  } finally {
+    isFetching.value = false;
+  }
+};
 
 const formSchema = coupleSchema;
 
@@ -103,10 +120,13 @@ const getFormData = (itemValue?: Couple) => {
   }
 };
 
-const { meta, isSubmitting, handleSubmit } = useForm<FormData>({
+const { meta, isSubmitting, handleSubmit, useFieldModel } = useForm<FormData>({
   validationSchema: formSchema,
   initialValues: getFormData(item?.value),
 });
+
+const partner1 = useFieldModel("partner1");
+const partner2 = useFieldModel("partner2");
 
 const errorMessages = ref<string[]>([]);
 
@@ -139,12 +159,41 @@ const onDeleted = () => {
   deleteConfirmDialog.value = false;
   emit("deleted");
 };
+
+const editIndividualDialog = ref(false);
+const partnerToAdd = ref<1 | 2>();
+
+const addNewPartner1 = () => {
+  partnerToAdd.value = 1;
+  editIndividualDialog.value = true;
+};
+
+const addNewPartner2 = () => {
+  partnerToAdd.value = 2;
+  editIndividualDialog.value = true;
+};
+
+const onCreatedIndividual = async (individual: Individual) => {
+  await fetchData();
+
+  const matchedIndividual = individuals.value.find(
+    (tempIndividual) => tempIndividual.id === individual.id
+  );
+
+  if (partnerToAdd.value && matchedIndividual) {
+    if (partnerToAdd.value === 1) {
+      partner1.value = matchedIndividual;
+    } else {
+      partner2.value = matchedIndividual;
+    }
+  }
+};
 </script>
 
 <template>
   <AppForm
     :errors="errorMessages"
-    :loading="isSubmitting"
+    :loading="isSubmitting || isFetching"
     :can-save="
       (meta.dirty || (fromIndividuals && fromIndividuals?.length >= 2)) &&
       meta.valid
@@ -155,24 +204,48 @@ const onDeleted = () => {
     @cancel="onCancel"
   >
     <div class="mb-4 space-y-3">
-      <AppAutocomplete
-        label="Partner 1"
-        name="partner1"
-        :options="individuals"
-        option-id="id"
-        option-text="fullName"
-        return-value
-        :disabled="fromIndividuals && fromIndividuals?.length >= 1"
-      />
-      <AppAutocomplete
-        label="Partner 2"
-        name="partner2"
-        :options="individuals"
-        option-id="id"
-        option-text="fullName"
-        return-value
-        :disabled="fromIndividuals && fromIndividuals?.length >= 2"
-      ></AppAutocomplete>
+      <div class="flex items-end gap-2">
+        <div class="flex-grow">
+          <AppAutocomplete
+            label="Partner 1"
+            name="partner1"
+            :options="individuals"
+            option-id="id"
+            option-text="fullName"
+            return-value
+            :disabled="fromIndividuals && fromIndividuals?.length >= 1"
+          />
+        </div>
+        <AppButton
+          round
+          :color="ComponentColor.SECONDARY"
+          :disabled="fromIndividuals && fromIndividuals?.length >= 1"
+          @click="addNewPartner1"
+        >
+          <PlusIcon class="h-5 w-5" />
+        </AppButton>
+      </div>
+      <div class="flex items-end gap-2">
+        <div class="flex-grow">
+          <AppAutocomplete
+            label="Partner 2"
+            name="partner2"
+            :options="individuals"
+            option-id="id"
+            option-text="fullName"
+            return-value
+            :disabled="fromIndividuals && fromIndividuals?.length >= 2"
+          />
+        </div>
+        <AppButton
+          round
+          :color="ComponentColor.SECONDARY"
+          :disabled="fromIndividuals && fromIndividuals?.length >= 2"
+          @click="addNewPartner2"
+        >
+          <PlusIcon class="h-5 w-5" />
+        </AppButton>
+      </div>
       <AppSwitch name="stillMarried" label="Still married" right-label>
       </AppSwitch>
     </div>
@@ -186,5 +259,9 @@ const onDeleted = () => {
         >{{ item?.partner1.fullName }} & {{ item?.partner2.fullName }}</strong
       >? This action cannot be undone.
     </AppDeleteConfirmDialog>
+    <EditIndividualDialog
+      v-model:show="editIndividualDialog"
+      @saved="onCreatedIndividual"
+    />
   </AppForm>
 </template>
