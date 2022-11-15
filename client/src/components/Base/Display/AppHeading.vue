@@ -126,70 +126,74 @@ const secondaryActions = computed(() => {
             </div>
           </template>
         </div>
-        <div class="mt-1 flex flex-shrink-0 gap-3 md:mt-0 md:ml-4">
-          <AppButton
-            v-for="(action, actionIndex) in secondaryActions"
-            :key="actionIndex"
-            @click="action.action"
-            class="hidden sm:block"
-            outline
-          >
-            {{ action.name }}
-          </AppButton>
-
-          <AppButton
-            v-for="(action, actionIndex) in primaryActions"
-            :key="actionIndex"
-            @click="action.action"
-            :color="ComponentColor.PRIMARY"
-          >
-            {{ action.name }}
-          </AppButton>
-
-          <Menu
-            v-if="secondaryActions?.length"
-            as="div"
-            class="relative ml-3 sm:hidden"
-          >
-            <MenuButton as="template">
-              <AppButton outline>
-                More
-                <ChevronDownIcon
-                  class="-mr-1 ml-2 h-5 w-5 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                />
-              </AppButton>
-            </MenuButton>
-
-            <transition
-              enter-active-class="transition ease-out duration-200"
-              enter-from-class="transform opacity-0 scale-95"
-              enter-to-class="transform opacity-100 scale-100"
-              leave-active-class="transition ease-in duration-75"
-              leave-from-class="transform opacity-100 scale-100"
-              leave-to-class="transform opacity-0 scale-95"
-            >
-              <MenuItems
-                class="absolute left-0 z-10 mt-2 -mr-1 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700"
+        <div class="mt-1 flex-shrink-0 md:mt-0 md:ml-4">
+          <slot name="actions">
+            <div class="flex gap-3">
+              <AppButton
+                v-for="(action, actionIndex) in secondaryActions"
+                :key="actionIndex"
+                @click="action.action"
+                class="hidden sm:block"
+                outline
               >
-                <MenuItem
-                  v-for="(action, actionIndex) in secondaryActions"
-                  :key="actionIndex"
-                  v-slot="{ active }"
-                  @click="action.action"
+                {{ action.name }}
+              </AppButton>
+
+              <AppButton
+                v-for="(action, actionIndex) in primaryActions"
+                :key="actionIndex"
+                @click="action.action"
+                :color="ComponentColor.PRIMARY"
+              >
+                {{ action.name }}
+              </AppButton>
+
+              <Menu
+                v-if="secondaryActions?.length"
+                as="div"
+                class="relative ml-3 sm:hidden"
+              >
+                <MenuButton as="template">
+                  <AppButton outline>
+                    More
+                    <ChevronDownIcon
+                      class="-mr-1 ml-2 h-5 w-5 text-gray-500 dark:text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </AppButton>
+                </MenuButton>
+
+                <transition
+                  enter-active-class="transition ease-out duration-200"
+                  enter-from-class="transform opacity-0 scale-95"
+                  enter-to-class="transform opacity-100 scale-100"
+                  leave-active-class="transition ease-in duration-75"
+                  leave-from-class="transform opacity-100 scale-100"
+                  leave-to-class="transform opacity-0 scale-95"
                 >
-                  <button
-                    :class="[
-                      active ? 'bg-gray-100 dark:bg-gray-900' : '',
-                      'block w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-white',
-                    ]"
+                  <MenuItems
+                    class="absolute left-0 z-10 mt-2 -mr-1 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-700"
                   >
-                    {{ action.name }}
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </transition>
-          </Menu>
+                    <MenuItem
+                      v-for="(action, actionIndex) in secondaryActions"
+                      :key="actionIndex"
+                      v-slot="{ active }"
+                      @click="action.action"
+                    >
+                      <button
+                        :class="[
+                          active ? 'bg-gray-100 dark:bg-gray-900' : '',
+                          'block w-full px-4 py-2 text-left text-sm text-gray-700 dark:text-white',
+                        ]"
+                      >
+                        {{ action.name }}
+                      </button>
+                    </MenuItem>
+                  </MenuItems>
+                </transition>
+              </Menu>
+            </div>
+          </slot>
         </div>
       </div>
     </div>
