@@ -149,7 +149,7 @@ const filteredOptions = computed(() =>
             'cursor-not-allowed bg-gray-100 dark:bg-gray-700': localDisabled,
           }"
           @change="query = $event.target.value"
-          :display-value="(item) => (item ? getOptionText(item) : '')"
+          :display-value="(item) => (item ? getOptionText(item as SelectableInputOption) : '')"
         />
         <ComboboxButton
           class="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none"
